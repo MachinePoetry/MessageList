@@ -29,7 +29,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   public errorText: string;
   public selectedGroupId: number | null = null;
   public selectedMessageId: number | null;
-  public showGroupCreationTemplate: boolean = false;
+  public showGroupCreationForm: boolean = false;
   public editMessageGroupFormId: number | null = null;
   public showEditMessageForm: boolean = false;
   public createMessageTextarea: string = '';
@@ -40,10 +40,6 @@ export class MainComponent implements OnInit, AfterViewInit {
 
   // Create new group
 
-  public addNewGroupTemplate(): void {
-    this.showGroupCreationTemplate = true;
-  }
-
   public createNewMessageGroup(form: NgForm): void {
     let groupParams: { name: string, userId: number | null } = {
       name: form.value.name,
@@ -52,13 +48,12 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.enterMessageField.nativeElement.focus();
 
     this.httpService.post('/api/messageGroup/create', groupParams).subscribe(data => {
-      this.showGroupCreationTemplate = false;
+      this.showGroupCreationForm = false;
       this.httpService.get('api/users/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
         this.authUserMessageGroups = data;
         // scroll to end, but somewhy it scrolls not exactly to end.
         this.selectedGroupId ? this.selectedGroupId = this.selectedGroupId : this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
         this.groupMessageBlock.nativeElement.scrollTop = this.groupMessageBlock.nativeElement.scrollHeight * 2;
-        console.log(this.selectedGroupId);
       },
         error => {
           this.errorText = error.message;
@@ -84,7 +79,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.enterMessageField.nativeElement.focus();
 
     this.httpService.post('/api/messageGroup/update', groupParams).subscribe(data => {
-      this.showGroupCreationTemplate = false;
+      this.showGroupCreationForm = false;
       this.httpService.get('api/users/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
         this.authUserMessageGroups = data;
         this.editMessageGroupFormId = null;
@@ -203,12 +198,12 @@ export class MainComponent implements OnInit, AfterViewInit {
     return group.name;
   }
 
-  hideGroupCreationTemplate() {
-    this.showGroupCreationTemplate = false;
+  hideGroupCreationForm() {
+    this.showGroupCreationForm = false;
     this.enterMessageField.nativeElement.focus();
   }
 
-  hideGroupUpdateTemplate() {
+  hideGroupUpdateForm() {
     this.editMessageGroupFormId = null;
     this.enterMessageField.nativeElement.focus();
   }

@@ -43,7 +43,7 @@
                 <button type="submit" class="col-1 d-flex justify-content-center align-items-center create-new-group-button">
                   <span class="mdi mdi-check-bold mdi-24px text-light create-new-group"></span>
                 </button>
-                <div class="col-1 d-flex justify-content-center align-items-center stop-editing-existing-group" (click)="hideGroupUpdateTemplate()">
+                <div class="col-1 d-flex justify-content-center align-items-center stop-editing-existing-group" (click)="hideGroupUpdateForm()">
                   <span class="mdi mdi-close-outline mdi-24px text-light"></span>
                 </div>
               </div>
@@ -52,9 +52,9 @@
 
         </div>
 
-        <!--Button with form (template) for new group creation-->
+        <!--Button with form for new group creation-->
         <div class="row">
-          <div *ngIf="showGroupCreationTemplate" class="col-12 col-lg-11 mt-lg-2 message-group round-borders">
+          <div *ngIf="showGroupCreationForm" class="col-12 col-lg-11 mt-lg-2 message-group round-borders">
             <form #newform="ngForm" autocomplete="off" novalidate (ngSubmit)="createNewMessageGroup(newform)">
               <div class="row align-items-center py-2">
                 <div class="col-9 col-lg-8 col-xl-9">
@@ -63,15 +63,15 @@
                 <button type="submit" class="col-1 d-flex justify-content-center align-items-center create-new-group-button">
                   <span class="mdi mdi-check-bold mdi-24px text-light create-new-group"></span>
                 </button>
-                <div class="col-1 d-flex justify-content-center align-items-center" (click)="hideGroupCreationTemplate()">
+                <div class="col-1 d-flex justify-content-center align-items-center" (click)="hideGroupCreationForm()">
                   <span class="mdi mdi-close-outline mdi-24px text-light delete-new-group"></span>
                 </div>
               </div>
             </form>
           </div>
 
-          <!--Button to show form (template) for new group creation-->
-          <div class="col-12 col-lg-11 mt-lg-2 message-group round-borders" id="addNewGroupButton" (click)="addNewGroupTemplate()">
+          <!--Button to show form for new group creation-->
+          <div class="col-12 col-lg-11 mt-lg-2 message-group round-borders" id="addNewGroupButton" (click)="showGroupCreationForm = true">
             <div class="row align-items-center py-2">
               <div class="col-1"><span class="mdi mdi-plus-thick mdi-24px text-light"></span></div>
               <div class="col-9 col-lg-10"><span class="text-light"> Добавить группу </span></div>
