@@ -21,12 +21,12 @@
 
           <!--Show all user groups-->
           <div *ngFor="let group of authUserMessageGroups; trackBy: groupsTrackFn" class="col-12 col-lg-11 mt-lg-2 message-group round-borders">
-            <div *ngIf="group.id != showEditMessageGroupForm" class="row align-items-center">
+            <div *ngIf="group.id != editMessageGroupFormId" class="row align-items-center">
               <div class="col-9 col-lg-8 col-xl-9 pl-0">
                 <input type="radio" id="{{group.id}}" name="groupButton" [value]="group.id" [(ngModel)]="selectedGroupId">
                 <label for="{{group.id}}" class="col-lg-12 py-2"><span class="ml-2 text-light">{{group.name}}</span></label>
               </div>
-              <div class="col-1 d-flex justify-content-center align-items-center edit-existing-group" (click)="showEditMessageGroupForm = group.id">
+              <div class="col-1 d-flex justify-content-center align-items-center edit-existing-group" (click)="editMessageGroupFormId = group.id">
                 <span class="mdi mdi-pencil mdi-24px text-light"></span>
               </div>
               <button type="button" style="outline: none;" class="col-1 d-flex justify-content-center align-items-center delete-existing-group" (click)="deleteExistingGroup(group.id)">
@@ -35,15 +35,15 @@
             </div>
 
             <!--Form for updating existing group-->
-            <form *ngIf="group?.id == showEditMessageGroupForm && showEditMessageGroupForm != null" #editedForm="ngForm" autocomplete="off" (ngSubmit)="updateMessageGroup(group.id, editedForm.value.groupName)">
+            <form *ngIf="group?.id == editMessageGroupFormId && editMessageGroupFormId != null" #editedForm="ngForm" autocomplete="off" (ngSubmit)="updateMessageGroup(group.id, editedForm.value.groupName)">
               <div class="row align-items-center py-2">
                 <div class="col-9 col-lg-8 col-xl-9">
-                  <input type="text" class="round-borders w-100" name="groupName" ngModel>
+                  <input type="text" class="round-borders w-100" name="groupName" focus ngModel>
                 </div>
                 <button type="submit" class="col-1 d-flex justify-content-center align-items-center create-new-group-button">
                   <span class="mdi mdi-check-bold mdi-24px text-light create-new-group"></span>
                 </button>
-                <div class="col-1 d-flex justify-content-center align-items-center stop-editing-existing-group" (click)="showEditMessageGroupForm = null">
+                <div class="col-1 d-flex justify-content-center align-items-center stop-editing-existing-group" (click)="editMessageGroupFormId = null">
                   <span class="mdi mdi-close-outline mdi-24px text-light"></span>
                 </div>
               </div>
@@ -58,7 +58,7 @@
             <form #newform="ngForm" autocomplete="off" novalidate (ngSubmit)="createNewMessageGroup(newform)">
               <div class="row align-items-center py-2">
                 <div class="col-9 col-lg-8 col-xl-9">
-                  <input type="text" class="round-borders w-100" name="name" ngModel>
+                  <input type="text" class="round-borders w-100" name="name" focus ngModel>
                 </div>
                 <button type="submit" class="col-1 d-flex justify-content-center align-items-center create-new-group-button">
                   <span class="mdi mdi-check-bold mdi-24px text-light create-new-group"></span>

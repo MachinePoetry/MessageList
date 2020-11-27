@@ -29,7 +29,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   public selectedGroupId: number | null = null;
   public selectedMessageId: number | null;
   public showGroupCreationTemplate: boolean = false;
-  public showEditMessageGroupForm: number | null = null;
+  public editMessageGroupFormId: number | null = null;
   public showEditMessageForm: boolean = false;
   public createMessageTextarea: string = '';
 
@@ -84,7 +84,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       this.showGroupCreationTemplate = false;
       this.httpService.get('api/users/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
         this.authUserMessageGroups = data;
-        this.showEditMessageGroupForm = null;
+        this.editMessageGroupFormId = null;
         // scroll down to the end
         // el.nativeElement.querySelector('input').focus();
       },

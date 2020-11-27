@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ClientApp\src\app\shared\directives\" />
     <Folder Include="ClientApp\src\app\shared\modals\" />
     <Folder Include="ClientApp\src\app\shared\pipes\" />
   </ItemGroup>

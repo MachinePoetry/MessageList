@@ -17,6 +17,7 @@ import { RestoreComponent } from './components/restore/restore.component';
 import { NotFoundComponent } from './components/notFound/not-found.component';
 
 import { HttpService } from './shared/services/httpService/http-service.service'
+import { FocusDirective } from './shared/directives/focus/focus.directive'
 
 const routes: Routes = [
   { path: '', component: FrontComponent },
@@ -30,12 +31,12 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, RestoreComponent, NotFoundComponent
+    AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, RestoreComponent, NotFoundComponent, FocusDirective
   ],
   imports: [
     BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, BrowserAnimationsModule
   ],
-  exports: [],
+  exports: [FocusDirective],
   providers: [HttpService],
   bootstrap: [AppComponent]
 })
