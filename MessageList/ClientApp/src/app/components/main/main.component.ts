@@ -19,6 +19,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   @ViewChild('messageBlock') messageBlock: ElementRef;
   @ViewChild('searchBlock') searchBlock: ElementRef;
   @ViewChild('enterMessageBlock') enterMessageBlock: ElementRef;
+  @ViewChild('enterMessageField') enterMessageField: ElementRef;
   @ViewChild('messageEditingBlock') messageEditingBlock: ElementRef;
 
 
@@ -48,6 +49,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       name: form.value.name,
       userId: this.authUserInfo.id
     }
+    this.enterMessageField.nativeElement.focus();
 
     this.httpService.post('/api/messageGroup/create', groupParams).subscribe(data => {
       this.showGroupCreationTemplate = false;
@@ -79,6 +81,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       id: groupId,
       name: groupName
     }
+    this.enterMessageField.nativeElement.focus();
 
     this.httpService.post('/api/messageGroup/update', groupParams).subscribe(data => {
       this.showGroupCreationTemplate = false;
@@ -106,6 +109,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       id: groupId,
       userId: this.authUserInfo.id
     }
+    this.enterMessageField.nativeElement.focus();
 
     this.httpService.post('/api/messageGroup/delete', groupParams).subscribe(() => {
 
@@ -136,6 +140,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       text: this.createMessageTextarea,
       id: this.selectedMessageId
     }
+    this.enterMessageField.nativeElement.focus();
 
     let url: string = this.showEditMessageForm ? '/api/message/update' : '/api/message/create';
 
@@ -167,6 +172,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       id: messageId,
       authUserId: this.authUserInfo.id
     }
+    this.enterMessageField.nativeElement.focus();
 
     this.httpService.post('/api/message/delete', messageParams).subscribe(data => {
 
@@ -195,6 +201,16 @@ export class MainComponent implements OnInit, AfterViewInit {
 
   public groupsTrackFn(index, group) {
     return group.name;
+  }
+
+  hideGroupCreationTemplate() {
+    this.showGroupCreationTemplate = false;
+    this.enterMessageField.nativeElement.focus();
+  }
+
+  hideGroupUpdateTemplate() {
+    this.editMessageGroupFormId = null;
+    this.enterMessageField.nativeElement.focus();
   }
 
   private _setMessageBlockHeight(editMessageBlock?: ElementRef): void {
