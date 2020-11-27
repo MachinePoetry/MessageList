@@ -1,0 +1,154 @@
+<app-header [authUserInfo]="authUserInfo"></app-header>
+
+
+<ngb-alert [type]="'success'" [dismissible]="false" *ngIf="showAlert" style="position: absolute; top: 10%; right: 10%; z-index: 2;"> {{ report.info }} </ngb-alert>
+
+
+<div class="container-fluid position-absolute z-1" id="promoText">
+  <div class="container">
+    <div class="row">
+      <div class="col-10 offset-1 col-lg-8 offset-lg-2">
+        <h1 class="text-center">Ваши заметки в одном месте</h1>
+        <div class="dropdown-divider mt-lg-4"></div>
+        <p class="mt-lg-4 text-center">
+          Сохраняйте ваши заметки в одном месте. Делите их на группы и быстрее находите нужное.
+          Планы на будущее, видеофайлы, интересные новости и идеи - все в одном приложении
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid gradient-down">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 mb-5 small-shadow">
+        <div class="mt-5 mb-5">
+          <img src="/assets/img/11Filtered.jpg" class="d-block img-fluid" alt="promo">
+        </div>
+      </div>
+      <div class="col-8 offset-2 col-lg-6 offset-lg-3 mb-lg-5 d-flex justify-content-center align-items-center">
+        <a *ngIf="!authUserInfo?.email" routerLink="/register" class="btn login-button mt-lg-5 mb-5 px-3 py-1 px-lg-5 py-lg-3 w-100" id="registerButton"> Создать новый аккаунт </a>
+        <a *ngIf="authUserInfo?.email" routerLink="/main" class="btn login-button mt-lg-5 mb-5 px-3 py-1 px-lg-5 py-lg-3 w-100"> Перейти к списку сообщений </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid light-background" id="appDescription">
+  <div class="container light-bakground">
+    <div class="row mt-2 mt-lg-5">
+      <div class="col-lg-12 mt-2 mt-lg-4 mb-2 mb-lg-5">
+        <h1 class="text-center">Message List - это сервис, который позволит вам:</h1>
+      </div>
+      <div class="col-12 mt-2 mt-lg-4">
+        <div class="row align-items-center">
+          <div class="col-lg-4 d-flex justify-content-center align-items-center" style="border: 2px solid #1B5891">
+            <img src="/assets/img/devices.png" class="img-fluid my-2 my-lg-5" alt="Devices" />
+          </div>
+          <div class="col-lg-8">
+            <p class="mt-3 ml-lg-5">Быстро и легко сохранять информацию онлайн. После регистрации вы получите личное пространство для сохранения своих идей, планов или любой другой информации</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 mt-lg-4">
+        <div class="row align-items-center">
+          <div class="col-12 order-2 col-lg-8 order-lg-1">
+            <p class="mt-3 mt-lg-3 mr-lg-5"> Хранить сообщения в отдельных группах. Чтобы не хранить все в одном списке разделите сообщения по их содержанию. Группы можно создавать самостоятельно в любом количестве для быстрого поиска необходимой информации</p>
+          </div>
+          <div class="col-12 order-1 col-lg-4 order-lg-2 d-flex justify-content-center align-items-center" style="border: 2px solid #1B5891">
+            <img src="/assets/img/documents.png" class="img-fluid my-2 my-lg-5" alt="Documents" />
+          </div>
+        </div>
+      </div>
+      <div class="col-12 mt-2 mt-lg-4 mb-lg-5">
+        <div class="row align-items-center">
+          <div class="col-lg-4 d-flex justify-content-center align-items-center" style="border: 2px solid #1B5891">
+            <img src="/assets/img/wallet.png" class="img-fluid my-2 my-lg-5" alt="Wallet" />
+          </div>
+          <div class="col-lg-8">
+            <p class="mt-3 mt-lg-3 ml-lg-5">Приложение абсолютно бесплатно</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid gradient-up mt-md-2 mt-lg-5">
+  <div class="container gradient-up">
+    <div class="row mt-lg-5">
+      <div class="col-12 col-lg-10 offset-lg-1 mb-3 mb-lg-5" id="wasCreatedFor">
+        <h2 class="mt-3 mt-lg-5 mb-3 mb-lg-5 text-center text-light">С какой целью создавался данный сервис?</h2> <br>
+        <div class="row">
+          <div class="col-12 col-md-4" id="smartphone">
+            <img src="/assets/img/SmartphoneReady.jpg" class="img-fluid mb-3 mb-lg-5" alt="Smartphone" />
+          </div>
+          <div class="col-12 col-md-8">
+            <p class="tab-text text-light"> В эпоху цифровых технологий у человека под рукой окажется скорее смартфон или ПК, чем ручка и блокнот </p>
+            <p class="tab-text text-light"> По-этому гораздо удобнее и быстрее сохранить нужную информацию с помощью цифрового устройства. Сохраняя информацию в сети, в дальнейшем можно легко получить к ней доступ с любого ПК или гаджета </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid light-background">
+  <div class="container light-bakground mb-lg-5" id="howItWorks">
+    <div class="row mt-lg-5 mb-5">
+      <div class="col-lg-12 mt-4">
+        <h1 class="text-center">Как это работает:</h1>
+      </div>
+      <div class="col-lg-3 mt-4 mb-1 mb-lg-5">
+        <div class="row justify-content-center">
+          <img src="/assets/img/SignUp.jpg" class="img-fluid mt-lg-5" alt="SignUp" />
+        </div>
+        <h3 class="mt-lg-3 text-center">Создайте аккаунт</h3>
+        <p class="mt-lg-3 text-center">Создайте бесплатный аккаунт</p>
+      </div>
+      <div class="col-lg-3 mt-4 mb-1 mb-lg-5">
+        <div class="row justify-content-center">
+          <img src="/assets/img/AddInfo.jpg" class="img-fluid mt-lg-5" alt="AddInfo" />
+        </div>
+        <h3 class="mt-lg-3 text-center">Добавьте информацию</h3>
+        <p class="mt-lg-3 text-center">Набирайте заметки, добавляйте вложения и записывайте напоминания. Все в едином цифровом пространстве</p>
+      </div>
+      <div class="col-lg-3 mt-4 mb-1 mb-lg-5">
+        <div class="row justify-content-center">
+          <img src="/assets/img/Find.jpg" class="img-fluid mt-lg-5" alt="Find" />
+        </div>
+        <h3 class="mt-lg-3 text-center">Находите нужное</h3>
+        <p class="mt-lg-3 text-center">Создавайте группы для ваших сообщений. Таким образом вы быстрее сможете находить нужные в данный момент сообщения</p>
+      </div>
+      <div class="col-lg-3 mt-4 mb-1 mb-lg-5">
+        <div class="row justify-content-center">
+          <img src="/assets/img/GetThings.jpg" class="img-fluid mt-lg-5" alt="GetThings" />
+        </div>
+        <h3 class="mt-lg-3 text-center">Простота и надежность</h3>
+        <p class="mt-lg-3 text-center">Пользоваться Message List удивительно просто, быстро и надежно</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid light-background mt-lg-5">
+  <div class="container">
+    <div class="row mt-2 mt-md-5 small-shadow footer">
+      <div class="col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-2 mt-md-4">
+        <form id="bugReportForm" autocomplete="off" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <span id="bugReportLabel" class="footer-text">По любым вопросам и предложениям:</span>
+            <textarea #bugReportText class="form-control mt-1 mt-md-3" name="bugReportText" id="bugReportText" rows="3" [(ngModel)]="params.reportText"></textarea>
+            <span id="reportContactsLabel" class="footer-text d-block mt-3">Ваш Email или другие контакты для связи с вами (можете оставить это поле пустым):</span>
+            <input #bugReportContacts type="text" class="form-control mt-1 mt-md-3" name="reportContacts" id="reportContacts" [(ngModel)]="params.reportContacts">
+          </div>
+          <button type="submit" class="btn login-button col-md-4 offset-md-8 col-lg-3 offset-lg-9">Отправить</button>
+        </form>
+      </div>
+      <div class="col-md-6 mx-auto mt-2 mt-md-5 mb-2 mb-md-4 text-center">
+        <p class="d-flex justify-content-center align-items-center"> <span class="mdi mdi-copyright footer-text"></span> <span class="footer-text"> &nbsp; 2019 Message List Corporation Все права защищены.</span></p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,317 @@
+@font-face {
+  font-family: Galada;
+  src: url(/assets/fonts/Galada/Galada-Regular.ttf);
+}
+
+@font-face {
+  font-family: Roboto_Slab_reg;
+  src: url(/assets/fonts/Roboto_Slab/RobotoSlab-Regular.ttf);
+}
+
+@font-face {
+  font-family: Roboto_Slab_bold;
+  src: url(/assets/fonts/Roboto_Slab/RobotoSlab-Bold.ttf);
+}
+
+@keyframes rotating-hover {
+  0% {
+    transform: rotate(0deg) scale(1.1);
+  }
+
+  100% {
+    transform: rotate(-360deg) scale(1.1);
+  }
+}
+
+@keyframes rotating-active {
+  0% {
+    transform: rotate(0deg) scale(0.9);
+  }
+
+  100% {
+    transform: rotate(-360deg) scale(0.9);
+  }
+}
+
+* {
+  color: black;
+}
+
+body {
+  background-color: #F6F6F6;
+}
+
+app-header {
+    display: block;
+}
+
+.z-1 {
+  z-index: 1;
+}
+
+p {
+  font-family: Roboto_Slab_reg, Arial, sans-serif;
+  font-size: 18px;
+}
+
+h1, h2, h3 {
+  font-family: Roboto_Slab_bold, Impact, fantasy;
+}
+
+a {
+  color: #F7F7F7;
+}
+
+a:hover {
+  color: #F6F6F6;
+  text-shadow: 0px 0px 1px #F6F6F6;
+}
+
+.header {
+  background-color: #142C40;
+}
+
+.header-title {
+  font-family: Galada, Snell Roundhand, cursive;
+  font-size: 200%;
+}
+
+.settings-button {
+  line-height: 1;
+}
+
+.settings-button:hover {
+  cursor: pointer;
+  /*animation: rotating-hover 4s linear 0s infinite;*/
+}
+
+/*.settings-button:active {
+  top: 1px;
+  animation: rotating-active 4s linear 0s infinite;
+}*/
+
+.dropdown-menu,
+.dropdown-menu-right {
+  background: linear-gradient(#1B5891, rgb(13,25,47)) #1B5891;
+}
+
+.option {
+  padding: 5px 25px;
+  color: #F5F5F4;
+  background: linear-gradient(#1B5891, rgb(13,25,47)) #1B5891;
+}
+
+.option:hover {
+  color: #F5F5F4;
+  background: linear-gradient(rgb(29,107,173), rgb(13,25,47)) rgb(29,107,173);
+  cursor: pointer;
+}
+
+.option:active {
+  top: 1px;
+  background: linear-gradient(#090B18, #0A1527) #090B18;
+  box-shadow: 0 0 1px rgba(0,0,0,.5) inset, 0 2px 3px rgba(0,0,0,.5) inset, 0 1px 1px rgba(255,255,255,.1);
+}
+
+.small-shadow {
+  box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+}
+
+.light-background {
+  background-color: #F6F6F6;
+}
+
+.login-button {
+  border: 2px solid #50b6f4;
+  color: #f5f9f9;
+}
+
+.login-button:hover {
+  box-shadow: 0 0 0 2px white, 0 0 0 4px #50b6f4, 0 0 0 4px white;
+  color: #f5f9f9;
+}
+
+.margin-top-20per {
+  margin-top: 20%;
+}
+
+.w-80 {
+  width: 80%;
+}
+
+.round-borders {
+  border-radius: 5px;
+}
+
+.text-light {
+  color: #F6F6F6;
+}
+
+.gradient-up {
+  background: linear-gradient(#1B5891, rgb(13,25,47)) #1B5891;
+}
+
+.gradient-down {
+  background: linear-gradient(rgb(13,25,47), #1B5891) rgb(13,25,47);
+}
+
+/*Registration and login pages styles*/
+
+.form-container span,
+.form-container a {
+  font-size: 14px;
+}
+
+#registerSpinner,
+#loginSpinner {
+  display: none;
+}
+
+
+
+
+
+
+@media (min-width: 1201px) {
+  #promoText {
+    margin-top: 150px;
+  }
+}
+
+@media (min-width: 993px) and (max-width: 1200px) {
+  #promoText {
+    margin-top: 120px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+  #promoText {
+    margin-top: 50px;
+    font-size: 28px;
+  }
+
+  .dates-block {
+    display: none;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+
+  #promoText {
+    margin-top: 50px;
+  }
+
+  #howItWorks h1
+  #appDescription h1,
+  #promoText h1 {
+    font-size: 27px;
+  }
+
+  #howItWorks p,
+  #wasCreatedFor p,
+  #appDescription p,
+  #promoText p {
+    font-size: 15px;
+  }
+
+  #smartphone {
+    display: none;
+  }
+
+  .dates-block {
+    display: none;
+  }
+}
+
+@media (min-width: 471px) and (max-width: 576px) {
+
+  #promoText {
+    margin-top: 50px;
+  }
+
+  #promoText h1 {
+    font-size: 25px;
+  }
+
+  #promoText p {
+    font-size: 15px;
+  }
+
+  #howItWorks h1,
+  #appDescription h1 {
+    font-size: 30px;
+  }
+
+  #howItWorks p,
+  #wasCreatedFor p,
+  #appDescription p {
+    font-size: 15px;
+  }
+
+  #smartphone {
+    display: none;
+  }
+
+  #createGroupNotification {
+    font-size: 25px;
+    margin-bottom: 30vh;
+  }
+
+  .dates-block {
+    display: none;
+  }
+}
+
+@media (max-width: 470px) {
+  #lightning {
+    display: none;
+  }
+
+  #promoText {
+    margin-top: 50px;
+  }
+
+  #promoText h1 {
+    font-size: 18px;
+  }
+
+  #promoText p {
+    font-size: 8px;
+  }
+
+  #howItWorks h1,
+  #appDescription h1 {
+    font-size: 30px;
+  }
+
+  #howItWorks p,
+  #wasCreatedFor p,
+  #appDescription p {
+    font-size: 15px;
+  }
+
+  #smartphone {
+    display: none;
+  }
+
+  #createGroupNotification {
+    font-size: 25px;
+    margin-bottom: 30vh;
+  }
+
+  .dates-block {
+    display: none;
+  }
+
+  .form-container h1 {
+    font-size: 30px;
+  }
+
+  .profile-container h1 {
+    font-size: 35px;
+  }
+
+  .profile-container p {
+    font-size: 15px;
+  }
+}

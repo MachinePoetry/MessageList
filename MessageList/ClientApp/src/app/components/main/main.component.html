@@ -1,0 +1,220 @@
+<noscript>
+  <div class="panel panel-default">
+    <div class="panel-heading text-center">
+      <h3>Упс! Что-то пошло не так!</h3>
+    </div>
+    <div class="panel-body text-center">
+      <h5>Ваш браузер не обрабатывает JavaScript</h5>
+      <h5>Зайдите в настройки браузера и включите обработку скриптов</h5>
+    </div>
+  </div>
+</noscript>
+
+<app-header #appHeader [authUserInfo]="authUserInfo"></app-header>
+
+<div class="container-fluid">
+  <div class="container">
+
+    <div class="row">
+      <div class="col-lg-3">
+        <div #groupMessageBlock class="row">
+
+          <!--Show all user groups-->
+          <div *ngFor="let group of authUserMessageGroups; trackBy: groupsTrackFn" class="col-12 col-lg-11 mt-lg-2 message-group round-borders">
+            <div *ngIf="group.id != showEditMessageGroupForm" class="row align-items-center">
+              <div class="col-9 col-lg-8 col-xl-9 pl-0">
+                <input type="radio" id="{{group.id}}" name="groupButton" [value]="group.id" [(ngModel)]="selectedGroupId">
+                <label for="{{group.id}}" class="col-lg-12 py-2"><span class="ml-2 text-light">{{group.name}}</span></label>
+              </div>
+              <div class="col-1 d-flex justify-content-center align-items-center edit-existing-group" (click)="showEditMessageGroupForm = group.id">
+                <span class="mdi mdi-pencil mdi-24px text-light"></span>
+              </div>
+              <button type="button" style="outline: none;" class="col-1 d-flex justify-content-center align-items-center delete-existing-group" (click)="deleteExistingGroup(group.id)">
+                <span class="mdi mdi-close-outline mdi-24px text-light"></span>
+              </button>
+            </div>
+
+            <!--Form for updating existing group-->
+            <form *ngIf="group?.id == showEditMessageGroupForm && showEditMessageGroupForm != null" #editedForm="ngForm" autocomplete="off" (ngSubmit)="updateMessageGroup(group.id, editedForm.value.groupName)">
+              <div class="row align-items-center py-2">
+                <div class="col-9 col-lg-8 col-xl-9">
+                  <input type="text" class="round-borders w-100" name="groupName" ngModel>
+                </div>
+                <button type="submit" class="col-1 d-flex justify-content-center align-items-center create-new-group-button">
+                  <span class="mdi mdi-check-bold mdi-24px text-light create-new-group"></span>
+                </button>
+                <div class="col-1 d-flex justify-content-center align-items-center stop-editing-existing-group" (click)="showEditMessageGroupForm = null">
+                  <span class="mdi mdi-close-outline mdi-24px text-light"></span>
+                </div>
+              </div>
+            </form>
+          </div>
+
+        </div>
+
+        <!--Button with form (template) for new group creation-->
+        <div class="row">
+          <div *ngIf="showGroupCreationTemplate" class="col-12 col-lg-11 mt-lg-2 message-group round-borders">
+            <form #newform="ngForm" autocomplete="off" novalidate (ngSubmit)="createNewMessageGroup(newform)">
+              <div class="row align-items-center py-2">
+                <div class="col-9 col-lg-8 col-xl-9">
+                  <input type="text" class="round-borders w-100" name="name" ngModel>
+                </div>
+                <button type="submit" class="col-1 d-flex justify-content-center align-items-center create-new-group-button">
+                  <span class="mdi mdi-check-bold mdi-24px text-light create-new-group"></span>
+                </button>
+                <div class="col-1 d-flex justify-content-center align-items-center" (click)="showGroupCreationTemplate = false">
+                  <span class="mdi mdi-close-outline mdi-24px text-light delete-new-group"></span>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <!--Button to show form (template) for new group creation-->
+          <div class="col-12 col-lg-11 mt-lg-2 message-group round-borders" id="addNewGroupButton" (click)="addNewGroupTemplate()">
+            <div class="row align-items-center py-2">
+              <div class="col-1"><span class="mdi mdi-plus-thick mdi-24px text-light"></span></div>
+              <div class="col-9 col-lg-10"><span class="text-light"> Добавить группу </span></div>
+            </div>
+          </div>
+
+          <!--Delete group modal window-->
+          <div class="modal fade" id="deleteGroupModal" tabindex="-1" role="dialog" aria-labelledby="deleteGroupModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="deleteGroupModalLabel">Удалить группу</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  Вы действительно хотите удалить группу?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" data-dismiss="modal" id="deleteGroupModalButton">Да</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!--Search field-->
+      <div class="col-lg-6">
+        <div class="row">
+          <div #searchBlock class="col-12" id="searchBlock">
+            <div class="row justify-content-end">
+              <div class="col-auto d-flex align-items-center">
+                <input type="text" class="mx-2" style="height: 30px" id="searchField" /><span class="mdi mdi-magnify mdi-24px my-2" id="searchButton"></span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 justify-content-center" id="messageBlockSpinner">
+            <div class="spinner-border my-2" style="width: 38px; height: 38px; color: #142C40" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+
+          <!--Block with user messages-->
+          <div class="col-12">
+            <div #messageBlock class="row message-block">
+              <h2 *ngIf="authUserMessageGroups.length === 0" class="text-center mx-2" style="color: grey; margin-bottom: 40vh" id="createGroupNotification">
+                Создавайте группы в меню слева для сохранения в них ваших сообщений
+              </h2>
+              <div *ngIf="authUserMessageGroups.length > 0" class="col" style="flex: 1 0 auto;"></div>
+
+              <div *ngIf="authUserMessageGroups.length > 0">
+                <div *ngFor="let group of authUserMessageGroups">
+                  <div *ngIf="group.id == selectedGroupId">
+                    <div *ngFor="let message of group.messages; trackBy: groupsTrackFn">
+                      <div class="col-12 message" id="message{{message.id}}">
+                        <div class="row mt-lg-3">
+                          <div class="col-8 col-lg-9">
+                            <p class="text-center ml-lg-5" id="{{message.id}}messageCreatedAt"> {{parseDateToRussianLocale(message.createdAt)}} </p>
+                          </div>
+                          <div class="col-1" (click)="toggleEditingMessageForm(true, message.id)">
+                            <p class="text-center"><span class="mdi mdi-pencil mdi-dark edit-message"></span></p>
+                          </div>
+                          <button type="button" style="outline: none;" class="col-1 delete-message" data-toggle="modal" data-target="#deleteMessageModal" (click)="deleteExistingMessage(message.id)">
+                            <p class="text-center"><span class="mdi mdi-close-outline mdi-dark"></span></p>
+                          </button>
+                        </div>
+                        <p class="text-left text-wrap text-break mx-3 mb-lg-5"> {{parseMessageText(message.text)}} </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!--Delete message modal window-->
+            <div class="modal fade" id="deleteMessageModal" tabindex="-1" role="dialog" aria-labelledby="deleteMessageModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="deleteMessageModalLabel">Удалить сообщение</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body">
+                    Вы действительно хотите удалить сообщение?
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="deleteMessageModalButton">Да</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!--New mesage creating block (form)-->
+          <div #enterMessageBlock class="col-12 enter-message-block">
+
+            <div class="toast" style="position: absolute; top: -10%; right: 35%; z-index: 2;">
+              <div class="toast-body bg-danger text-light">
+              </div>
+            </div>
+
+            <div #messageEditingBlock class="col-12 d-none">
+              <div class="row">
+                <div class="col-11 mb-1"><span class="text-light"> Редактирование сообщения </span></div>
+                <div class="col-1 mb-1 close-editing-message" (click)="toggleEditingMessageForm(false, null)"><span class="mdi mdi-close text-light"></span></div>
+              </div>
+            </div>
+
+            <div class="row align-items-center justify-content-center">
+              <div class="col-auto p-0" id="attachFileButton">
+                <span class="mdi mdi-paperclip mdi-36px mdi-rotate-45"></span>
+              </div>
+              <div class="col-8 col-sm-10 px-1 px-sm-2" id="enterMessageContainer">
+                <form #createNewMessageForm="ngForm" class="form-group" id="enterMessageForm" name="enterMessageForm" autocomplete="off" (ngSubmit)="createAndUpdateMessage()">
+                  <textarea class="form-control mt-3" name="enterMessage" id="enterMessageField" placeholder="Введите сообщение" rows="1" [(ngModel)]="createMessageTextarea"></textarea>
+                </form>
+              </div>
+              <button type="submit" form="enterMessageForm" class="col-auto p-0" id="sendMessageButton">
+                <span class="mdi mdi-send-circle mdi-36px" id="sendMessageButtonIcon"></span>
+                <div class="spinner-border text-primary" style="width: 36px; height: 36px; display: none;" role="status" id="sendMessageButtonSpinner">
+                  <span class="sr-only"></span>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-3">
+        <div class="row justify-content-end">
+          <div class="col-lg-11 dates-block">
+            <div class="mt-lg-4 mb-lg-4 w-100" style="border: 1px solid red;">
+              <h2 class="text-center">In progress</h2>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,9 @@
+.profile-panel {
+  padding: 20px 0;
+  background-color: #F1F1F1;
+  border: 2px solid grey;
+}
+
+.profile-content {
+  background-color: white;
+}

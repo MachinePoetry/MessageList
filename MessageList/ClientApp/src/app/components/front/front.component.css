@@ -1,0 +1,41 @@
+#promoText p {
+  color: #142C40
+}
+
+.tab-text {
+  padding: 10px;
+  border: 2px solid #50b6f4;
+  border-left: 10px solid #50b6f4;
+}
+
+.dropdown-divider {
+  border-color: #1B5891;
+  border-width: 3px;
+}
+
+.footer {
+  background-color: #0B2B51;
+}
+
+.footer-text {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  color: #939597;
+}
+
+#bugReportText::-webkit-scrollbar { /* chrome based */
+  width: 0px;
+  background: transparent;
+}
+
+#bugReportText {
+  -ms-overflow-style: none; /* IE 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
+#reportContacts,
+#bugReportText {
+  background-color: transparent;
+  overflow: auto;
+  color: #F6F6F6;
+}

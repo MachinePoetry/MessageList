@@ -1,0 +1,212 @@
+.message-block,
+#messageBlockSpinner,
+#searchBlock,
+.dates-block {
+  border: 2px solid grey;
+}
+
+.message-block {
+  border-top: none;
+}
+
+#searchBlock {
+  border-bottom: none;
+}
+
+#searchButton:hover {
+  cursor: pointer;
+}
+
+#groupMessageBlock {
+  max-height: 400px;
+  overflow-y: scroll;
+}
+
+.message-group-noclick {
+  display: inline-block;
+  color: rgb(209,209,217);
+  text-decoration: none;
+  text-shadow: 0 -1px 2px rgba(0,0,0,.2);
+  padding: .5em 1em;
+  outline: none;
+  border-radius: 3px;
+  background: linear-gradient(#1B5891, rgb(13,25,47)) #1B5891;
+  box-shadow: 0 1px rgba(255,255,255,.2) inset, 0 3px 5px rgba(0,1,6,.5), 0 0 1px 1px rgba(0,1,6,.2);
+}
+
+.message-group {
+  position: relative;
+  display: inline-block;
+  color: rgb(209,209,217);
+  text-decoration: none;
+  text-shadow: 0 -1px 2px rgba(0,0,0,.2);
+  outline: none;
+  border-radius: 3px;
+  background: linear-gradient(#1B5891, rgb(13,25,47)) #1B5891;
+  box-shadow: 0 1px rgba(255,255,255,.2) inset, 0 3px 5px rgba(0,1,6,.5), 0 0 1px 1px rgba(0,1,6,.2);
+  transition: .2s ease-in-out;
+}
+
+.message-group:hover:not(:active) {
+  background: linear-gradient(rgb(29,107,173), rgb(13,25,47)) rgb(29,107,173);
+  cursor: pointer;
+}
+
+.message-group:active {
+  top: 1px;
+  background: linear-gradient(#090B18, #0A1527) #090B18;
+  box-shadow: 0 0 1px rgba(0,0,0,.5) inset, 0 2px 3px rgba(0,0,0,.5) inset, 0 1px 1px rgba(255,255,255,.1);
+}
+
+.message-group label {
+  height: 100%;
+  user-select: none;
+}
+
+.message-group label:hover {
+  cursor: pointer;
+}
+
+.message-group input[type=radio] {
+display: none;
+}
+
+.message-group input[type=radio]:checked + label {
+  border-radius: 2px;
+  border-left: 10px solid green;
+}
+
+.edit-existing-group:hover span {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+.edit-existing-group:active span {
+  top: 1px;
+  transform: scale(0.9);
+}
+
+.create-new-group-button,
+.delete-message,
+.delete-existing-group {
+  background-color: transparent;
+  border: none;
+}
+
+.delete-existing-group:hover span {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+.delete-existing-group:active span {
+  top: 1px;
+  transform: scale(0.9);
+}
+
+.create-new-group-button:active {
+  border: none;
+}
+
+.create-new-group:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+.create-new-group:active {
+  top: 1px;
+  transform: scale(0.9);
+}
+
+.stop-editing-existing-group:hover span {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+.stop-editing-existing-group:active span {
+  top: 1px;
+  transform: scale(0.9);
+}
+
+.delete-new-group:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+}
+
+.delete-new-group:active {
+  top: 1px;
+  transform: scale(0.9);
+}
+
+.message-block {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  overflow-y: scroll;
+}
+
+#messageBlockSpinner {
+  display: none;
+  border-top: none;
+  border-bottom: none;
+}
+
+.message {
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+}
+
+.message > p {
+  font-size: 15px;
+}
+
+.message:hover {
+  background-color: lightgrey;
+}
+
+.edit-message,
+.delete-message,
+.close-editing-message {
+  cursor: pointer;
+}
+
+#messageCreatedAt {
+  font-size: 15px;
+}
+
+.enter-message-block {
+  background: linear-gradient(rgb(29,107,173), rgb(13,25,47)) rgb(29,107,173);
+}
+
+#attachFileButton span,
+#sendMessageButton span {
+  color: #1E65A1;
+  outline: none;
+  border: none;
+}
+
+#attachFileButton span:hover {
+  cursor: pointer;
+  color: #1e96a1;
+}
+
+#attachFileButton span:active {
+  top: 1px;
+  transform: scale(0.9);
+}
+
+#sendMessageButton {
+  outline: none;
+  border: none;
+  background-color: transparent;
+}
+
+#sendMessageButton span:hover {
+  cursor: pointer;
+  color: #1e96a1;
+}
+
+#sendMessageButton span:active {
+  top: 1px;
+  transform: scale(0.9);
+}

@@ -1,0 +1,39 @@
+<noscript>
+  <div class="panel panel-default">
+    <div class="panel-heading text-center">
+      <h3>Упс! Что-то пошло не так!</h3>
+    </div>
+    <div class="panel-body text-center">
+      <h5>Ваш браузер не обрабатывает JavaScript</h5>
+      <h5>Зайдите в настройки браузера и включите обработку скриптов</h5>
+    </div>
+  </div>
+</noscript>
+
+<ngb-alert [type]="'success'" [dismissible]="false" *ngIf="showAlert" style="position: absolute; top: 10%; right: 10%; z-index: 2;"> {{ report.Status != null || undefined ? report.info : errorText }} </ngb-alert>
+
+<div class="container">
+  <div class="toast" style="position: absolute; top: 10%; right: 10%; z-index: 2;">
+    <div class="toast-body bg-danger text-light"></div>
+  </div>
+  <div class="row justify-content-center form-row">
+    <div class="col-10 col-sm-8 col-md-6 col-lg-5 col-xl-4 margin-top-20per form-group form-container round-borders gradient-down">
+      <form id="loginForm" (ngSubmit)="onSubmit()">
+        <h1 class="mt-4 text-center text-light">Вход</h1>
+        <div class="form-row">
+          <input class="col-10 offset-1 mt-4 form-control" type="text" name="email" id="loginEmail" placeholder="Email" [(ngModel)]="params.email" />
+          <input class="col-10 offset-1 mt-4 form-control" type="password" name="password" id="loginPassword" placeholder="Password" [(ngModel)]="params.password" />
+        </div>
+        <button class="mt-5 btn login-button d-flex justify-content-center align-items-center w-80 mx-auto" type="submit" id="loginButton">
+          <div class="d-flex justify-content-center align-items-center">
+            <span class="spinner-border spinner-border-sm text-light mr-3" role="status" aria-hidden="true" id="loginSpinner"></span>
+          </div>
+          Login
+        </button>
+      </form>
+      <div class="col-12 mt-3 mb-4 d-flex justify-content-center align-items-center flex-wrap">
+        <a routerLink="/restore" class="mr-1 text-decoration-none text-center" id="restore"> Забыли пароль? </a> | <a routerLink="/register" class="ml-1 text-decoration-none text-center"> Зарегистрироваться </a>
+      </div>
+    </div>
+  </div>
+</div>

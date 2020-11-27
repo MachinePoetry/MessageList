@@ -1,0 +1,66 @@
+<noscript>
+  <div class="panel panel-default">
+    <div class="panel-heading text-center">
+      <h3>Упс! Что-то пошло не так!</h3>
+    </div>
+    <div class="panel-body text-center">
+      <h5>Ваш браузер не обрабатывает JavaScript</h5>
+      <h5>Зайдите в настройки браузера и включите обработку скриптов</h5>
+    </div>
+  </div>
+</noscript>
+
+<ngb-alert [type]="'success'" [dismissible]="false" *ngIf="showAlert" style="position: absolute; top: 10%; right: 10%; z-index: 2;"> {{ report.info }} </ngb-alert>
+
+<div class="container">
+  <div class="toast" style="position: absolute; top: 10%; right: 10%; z-index: 2;">
+    <div class="toast-body bg-danger text-light"></div>
+  </div>
+  <div class="row justify-content-center form-row">
+    <div class="col-10 col-sm-8 col-md-6 col-lg-5 col-xl-4 margin-top-20per form-group form-container round-borders gradient-down">
+      <form id="registerForm" (ngSubmit)="onSubmit()">
+        <h1 class="mt-4 text-center text-light">Регистрация</h1>
+        <div class="form-row">
+          <input class="col-10 offset-1 mt-4 form-control" type="text" name="email" id="registerEmail" placeholder="Email" [(ngModel)]="params.email" />
+          <input class="col-10 offset-1 mt-4 form-control" type="password" name="password" id="registerPassword" placeholder="Password" [(ngModel)]="params.password" />
+          <input class="col-10 offset-1 mt-4 form-control" type="password" name="confirmPassword" id="registerConfirmPassword" placeholder="Password" />
+        </div>
+        <button class="mt-5 btn login-button d-flex justify-content-center align-items-center w-80 mx-auto" type="submit" id="registerButton">
+          <div class="d-flex justify-content-center align-items-center">
+            <span class="spinner-border spinner-border-sm text-light mr-3" role="status" aria-hidden="true" id="registerSpinner"></span>
+          </div>
+          Зарегистрироваться
+        </button>
+      </form>
+      <div class="col-12 mt-3 mb-4 d-flex justify-content-center align-items-center flex-wrap">
+        <span class="text-light text-center"> Создавая аккаунт вы соглашаетесь с условиями </span> <a class="text-center" id="termsOfUse" data-toggle="modal" data-target="#termsOfUseModal"> Пользовательского соглашения </a>
+      </div>
+    </div>
+  </div>
+
+  <!--Terms of use modal window-->
+  <div class="modal fade" id="termsOfUseModal" tabindex="-1" role="dialog" aria-labelledby="termsOfUseModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="termsOfUseModalLabel">Пользовательское соглашение</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          На самом деле, никакого пользовательского соглашения пока нет, но в будущем, может быть, появится.
+          <br>
+          <br>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer et nisi aliquet, aliquam sapien eget, lobortis mi.
+          Phasellus ultricies, tortor quis consectetur consequat, lectus turpis posuere mauris, in tempus ante erat ac urna.
+          Vivamus eget nibh quis diam tempus interdum id ut sapien. Sed est libero, scelerisque eu semper at.
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
