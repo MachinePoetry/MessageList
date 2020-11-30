@@ -1,10 +1,43 @@
-﻿<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <title></title>
-</head>
-<body>
+<noscript>
+  <div class="panel panel-default">
+    <div class="panel-heading text-center">
+      <h3>Упс! Что-то пошло не так!</h3>
+    </div>
+    <div class="panel-body text-center">
+      <h5>Ваш браузер не обрабатывает JavaScript</h5>
+      <h5>Зайдите в настройки браузера и включите обработку скриптов</h5>
+    </div>
+  </div>
+</noscript>
 
-</body>
-</html>
+<app-header [authUserInfo]="authUserInfo"></app-header>
+
+<div class="container-fliud">
+  <div class="container profile-container">
+    <div class="row mt-5">
+      <div class="col-12 col-lg-10 offset-lg-1 profile-panel round-border-top">
+        <h1 class="text-center">Профиль</h1>
+      </div>
+      <div class="col-lg-10 offset-lg-1 profile-content">
+        <div class="row align-items-center">
+          <div class="col-11 offset-1 offset-sm-0">
+            <h4 class="mt-5 ml-sm-5">Личные данные:</h4>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-10 offset-lg-1 profile-content">
+        <div class="row align-items-center">
+          <div class="col-4 offset-1 offset-sm-0">
+            <p class="mt-3 ml-sm-5"> Email: <i class="mdi mdi-lg mdi-help-circle-outline"></i></p>
+          </div>
+          <div class="col-6 col-md-3"><p class="mt-3 text-danger text-break" id="authUserEmail"> {{authUserInfo.email || 'Загрузка...'}} </p> </div>
+          <div class="col-10 offset-1 col-sm-6 offset-sm-3 col-md-3 offset-md-0 mt-3 mt-md-0"><button class="btn btn-success w-100" type="button"> Подтвердить </button></div>
+        </div>
+        <div class="row align-items-center mb-5">
+          <div class="col-4 offset-1 offset-sm-0"><p class="mt-3 ml-sm-5"> Дата регистрации: </p></div>
+          <div class="col-6 col-md-3"><p class="mt-3 text-success"> {{parseDateToRussianLocale(authUserInfo.createdAt) || 'Загрузка...'}} </p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

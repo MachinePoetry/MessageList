@@ -31,7 +31,7 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, RestoreComponent, NotFoundComponent, FocusDirective
+    AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, RestoreComponent, NotFoundComponent, FocusDirective
   ],
   imports: [
     BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, BrowserAnimationsModule
