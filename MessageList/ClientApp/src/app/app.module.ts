@@ -19,13 +19,15 @@ import { NotFoundComponent } from './components/notFound/not-found.component';
 import { HttpService } from './shared/services/httpService/http-service.service'
 import { FocusDirective } from './shared/directives/focus/focus.directive'
 
+import { AuthUserInfoResolver } from './shared/resolvers/auth-user-info.resolver'
+
 const routes: Routes = [
   { path: '', component: FrontComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'main', component: MainComponent },
-  { path: 'profile', component: ProfileComponent },
-  { path: 'restore', component: RestoreComponent },
+  { path: 'main', component: MainComponent, resolve: { user: AuthUserInfoResolver } },
+  { path: 'profile', component: ProfileComponent, resolve: { user: AuthUserInfoResolver } },
+  { path: 'restore', component: RestoreComponent, resolve: { user: AuthUserInfoResolver } },
   { path: '**', component: NotFoundComponent}
 ];
 
@@ -37,7 +39,7 @@ const routes: Routes = [
     BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, BrowserAnimationsModule
   ],
   exports: [FocusDirective],
-  providers: [HttpService],
+  providers: [HttpService, AuthUserInfoResolver],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
