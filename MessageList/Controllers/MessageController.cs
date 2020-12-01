@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +11,7 @@ using MessageList.Models.QueryModels;
 
 namespace MessageList.Controllers
 {
-    [Route("api/message")]
+    [Route("api/messages")]
     [ApiController]
     [Authorize]
     [RequireHttps]
@@ -19,6 +21,27 @@ namespace MessageList.Controllers
         public MessageController(ApplicationDbContext db)
         {
             _db = db;
+        }
+
+        [HttpGet("getGroupesAndMessages")]
+        public async Task<JsonResult> GetGroupesAndMessagesAsync([FromQuery] int id)
+        {
+            List<MessageGroup> messageGroups = await _db.MessageGroups.Where(mg => mg.UserId == id).Include(u => u.Messages).ToListAsync();
+            return Json(messageGroups);
+        }
+
+        [HttpGet("search")]
+        public async Task<JsonResult> GetSearchedMessagesAsync([FromQuery] int id, int groupId, string stringToSearch)
+        {
+            List<MessageGroup> messageGroups = await _db.MessageGroups.Where(mg => mg.UserId == id).Include(u => u.Messages).ToListAsync();
+            foreach (var mg in messageGroups)
+            {
+                if (mg.Id == groupId)
+                {
+                    mg.Messages = mg.Messages.Where(m => m.Text.Contains(stringToSearch)).ToList();
+                }
+            }
+            return Json(messageGroups);
         }
 
         [HttpPost("create")]

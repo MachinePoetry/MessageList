@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -46,13 +45,6 @@ namespace MessageList.Controllers
         {
             User user = await _db.Users.Where(u => u.Email.Equals(User.Identity.Name)).FirstOrDefaultAsync();
             return Json(user);
-        }
-
-        [HttpGet("getGroupesAndMessages")]
-        public async Task<JsonResult> GetGroupesAndMessages(int id)
-        {
-            List<MessageGroup> messageGroups = await _db.MessageGroups.Where(mg => mg.UserId == id).Include(u => u.Messages).ToListAsync();
-            return Json(messageGroups);
         }
 
         [HttpPost("update")]

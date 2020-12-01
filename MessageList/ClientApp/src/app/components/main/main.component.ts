@@ -32,6 +32,8 @@ export class MainComponent implements OnInit, AfterViewInit {
   public selectedMessageId: number | null;
   public showGroupCreationForm: boolean = false;
   public editMessageGroupFormId: number | null = null;
+  public searchString: string = '';
+  public isCollapsed: boolean = true;
   public showEditMessageForm: boolean = false;
   public createMessageTextarea: string = '';
 
@@ -50,7 +52,7 @@ export class MainComponent implements OnInit, AfterViewInit {
 
     this.httpService.post('/api/messageGroup/create', groupParams).subscribe(data => {
       this.showGroupCreationForm = false;
-      this.httpService.get('api/users/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
+      this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
         this.authUserMessageGroups = data;
         // scroll to end, but somewhy it scrolls not exactly to end.
         this.selectedGroupId ? this.selectedGroupId = this.selectedGroupId : this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
@@ -81,7 +83,7 @@ export class MainComponent implements OnInit, AfterViewInit {
 
     this.httpService.post('/api/messageGroup/update', groupParams).subscribe(data => {
       this.showGroupCreationForm = false;
-      this.httpService.get('api/users/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
+      this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
         this.authUserMessageGroups = data;
         this.editMessageGroupFormId = null;
         // scroll down to the end
@@ -109,7 +111,7 @@ export class MainComponent implements OnInit, AfterViewInit {
 
     this.httpService.post('/api/messageGroup/delete', groupParams).subscribe(() => {
 
-      this.httpService.get('api/users/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
+      this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
         this.authUserMessageGroups = data;
         this.selectedGroupId === groupId ? this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id : this.selectedGroupId = this.selectedGroupId;
       },
@@ -126,7 +128,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     );
   }
 
-    // Create new message
+    // Create and Update new message
 
   public createAndUpdateMessage(messageId?: number): void {
 
@@ -138,14 +140,14 @@ export class MainComponent implements OnInit, AfterViewInit {
     }
     this.enterMessageField.nativeElement.focus();
 
-    let url: string = this.showEditMessageForm ? '/api/message/update' : '/api/message/create';
+    let url: string = this.showEditMessageForm ? '/api/messages/update' : '/api/messages/create';
 
     this.httpService.post(url, messageParams).subscribe(data => {
       this.createMessageTextarea = '';
       this.selectedMessageId = null;
       this.toggleEditingMessageForm(false, null);
 
-      this.httpService.get('api/users/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
+      this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
         this.authUserMessageGroups = data;
       },
         error => {
@@ -170,9 +172,9 @@ export class MainComponent implements OnInit, AfterViewInit {
     }
     this.enterMessageField.nativeElement.focus();
 
-    this.httpService.post('/api/message/delete', messageParams).subscribe(data => {
+    this.httpService.post('/api/messages/delete', messageParams).subscribe(data => {
 
-      this.httpService.get('api/users/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
+      this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
         this.authUserMessageGroups = data;
       },
         error => {
@@ -186,6 +188,45 @@ export class MainComponent implements OnInit, AfterViewInit {
         this.showAlert = true;
       }
     );
+  }
+
+    // Search
+
+  public searchMessages(): void {
+    let searchParams: { id: number, groupId: number, stringToSearch: string } = {
+      id: this.authUserInfo.id,
+      groupId: this.selectedGroupId,
+      stringToSearch: this.searchString
+    }
+
+    if (this.searchString.length > 0) {
+      this.httpService.get('api/messages/search', searchParams).subscribe((data: MessageGroup[]) => {
+        this.authUserMessageGroups = data;
+      },
+        error => {
+          this.errorText = error.message;
+          this.showAlert = true;
+        }
+      )
+    }
+  }
+
+  public stopSearchMessages(): void {
+    this.enterMessageField.nativeElement.focus();
+
+    if (this.isCollapsed == false) {
+      this.isCollapsed = true;
+      this.searchString = '';
+
+      this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
+        this.authUserMessageGroups = data;
+      },
+        error => {
+          this.errorText = error.message;
+          this.showAlert = true;
+        }
+      )
+    }
   }
 
     // Component methods
@@ -245,7 +286,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.authUserInfo = this._route.snapshot.data['user'];
 
     if (this.authUserInfo != null) {
-      this.httpService.get('api/users/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
+      this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
         this.authUserMessageGroups = data;
         if (this.authUserMessageGroups.length > 0) {
           this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;

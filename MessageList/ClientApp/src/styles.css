@@ -147,6 +147,10 @@ a:hover {
   color: #F6F6F6;
 }
 
+.text-dark {
+    color: black;
+}
+
 .gradient-up {
   background: linear-gradient(#1B5891, rgb(13,25,47)) #1B5891;
 }
@@ -160,6 +164,16 @@ a:hover {
 .form-container span,
 .form-container a {
   font-size: 14px;
+}
+
+.login-input {
+  height: 30px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  outline: none;
+  box-shadow: none;
+  background: #F6F6F6;
 }
 
 #registerSpinner,
