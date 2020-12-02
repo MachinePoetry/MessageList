@@ -41,3 +41,75 @@ a:hover {
 #registerSpinner {
   display: none;
 }
+
+.has-float-label {
+  position: relative;
+}
+
+.has-float-label label {
+  position: absolute;
+  font-size: 80%;
+  left: 50px;
+  top: 10px;
+  cursor: text;
+  opacity: 1;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
+.has-float-label input:placeholder-shown:not(:focus) + * {
+  font-size: 100%;
+  opacity: 0.6;
+  top: 1.8em;
+}
+
+.has-float-label input::-webkit-input-placeholder {
+  opacity: 1;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
+.has-float-label input::-moz-placeholder {
+  opacity: 1;
+  -moz-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
+.has-float-label input:-ms-input-placeholder {
+  opacity: 1;
+  -ms-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
+.has-float-label input::-ms-input-placeholder {
+  opacity: 1;
+  -ms-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
+.has-float-label input::placeholder {
+  opacity: 1;
+  -webkit-transition: all 0.2s;
+  transition: all 0.2s;
+}
+
+.has-float-label input:placeholder-shown:not(:focus)::-webkit-input-placeholder {
+  opacity: 0;
+}
+
+.has-float-label input:placeholder-shown:not(:focus)::-moz-placeholder {
+  opacity: 0;
+}
+
+.has-float-label input:placeholder-shown:not(:focus):-ms-input-placeholder {
+  opacity: 0;
+}
+
+.has-float-label input:placeholder-shown:not(:focus)::-ms-input-placeholder {
+  opacity: 0;
+}
+
+.has-float-label input:placeholder-shown:not(:focus)::placeholder {
+  opacity: 0;
+}
+
