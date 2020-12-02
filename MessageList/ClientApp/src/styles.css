@@ -62,11 +62,6 @@ a {
   color: #F7F7F7;
 }
 
-a:hover {
-  color: #F6F6F6;
-  text-shadow: 0px 0px 1px #F6F6F6;
-}
-
 .header {
   background-color: #142C40;
 }
@@ -131,8 +126,22 @@ a:hover {
   color: #f5f9f9;
 }
 
-.margin-top-20per {
-  margin-top: 20%;
+.dark-login-button {
+  border: 2px solid #1B5891;
+  color: #f5f9f9;
+}
+
+.dark-login-button:hover {
+  box-shadow: 0 0 0 2px white, 0 0 0 4px #1B5891, 0 0 0 4px white;
+  color: #f5f9f9;
+}
+
+.mt-25per {
+  margin-top: 25%;
+}
+
+.lh-1 {
+  line-height: 1;
 }
 
 .w-80 {
@@ -159,27 +168,11 @@ a:hover {
   background: linear-gradient(rgb(13,25,47), #1B5891) rgb(13,25,47);
 }
 
-/*Registration and login pages styles*/
-
-.form-container span,
-.form-container a {
-  font-size: 14px;
+.dark-color-text {
+  color: #1B5891;
 }
 
-.login-input {
-  height: 30px;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  outline: none;
-  box-shadow: none;
-  background: #F6F6F6;
-}
 
-#registerSpinner,
-#loginSpinner {
-  display: none;
-}
 
 
 

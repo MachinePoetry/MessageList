@@ -12,27 +12,36 @@
 
 <ngb-alert [type]="'success'" [dismissible]="false" *ngIf="showAlert" style="position: absolute; top: 10%; right: 10%; z-index: 2;"> {{ report.Status != null || undefined ? report.info : errorText }} </ngb-alert>
 
-<div class="container">
-  <div class="toast" style="position: absolute; top: 10%; right: 10%; z-index: 2;">
-    <div class="toast-body bg-danger text-light"></div>
-  </div>
-  <div class="row justify-content-center form-row">
-    <div class="col-10 col-sm-8 col-md-6 col-lg-5 col-xl-4 margin-top-20per form-group form-container round-borders gradient-down">
-      <form id="loginForm" (ngSubmit)="onSubmit()">
-        <h1 class="mt-4 text-center text-light">Вход</h1>
-        <div class="form-row">
-          <input class="col-10 offset-1 mt-4 form-control" type="text" name="email" id="loginEmail" placeholder="Email" [(ngModel)]="params.email" />
-          <input class="col-10 offset-1 mt-4 form-control" type="password" name="password" id="loginPassword" placeholder="Password" [(ngModel)]="params.password" />
-        </div>
-        <button class="mt-5 btn login-button d-flex justify-content-center align-items-center w-80 mx-auto" type="submit" id="loginButton">
-          <div class="d-flex justify-content-center align-items-center">
-            <span class="spinner-border spinner-border-sm text-light mr-3" role="status" aria-hidden="true" id="loginSpinner"></span>
+<div class="container-fluid enter-form-wrapper">
+  <div class="container">
+    <div class="toast" style="position: absolute; top: 10%; right: 10%; z-index: 2;">
+      <div class="toast-body bg-danger text-light"></div>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-10 col-sm-8 col-md-6 col-lg-5 col-xl-4 form-group form-container mt-25per">
+        <form id="loginForm" (ngSubmit)="onSubmit()">
+          <div class="form-row justify-content-center align-items-center">
+            <span class="mdi mdi-login mdi-48px dark-color-text"></span><h1 class="dark-color-text lh-1 mt-2"> Вход </h1>
           </div>
-          Login
-        </button>
-      </form>
-      <div class="col-12 mt-3 mb-4 d-flex justify-content-center align-items-center flex-wrap">
-        <a routerLink="/restore" class="mr-1 text-decoration-none text-center" id="restore"> Забыли пароль? </a> | <a routerLink="/register" class="ml-1 text-decoration-none text-center"> Зарегистрироваться </a>
+          <div class="form-row justify-content-center mt-3">
+            <span class="col-1 mdi mdi-account mdi-24px mt-4 dark-color-text border-bottom-dark"></span>
+            <input class="col-10 mt-4" type="text" name="email" id="loginEmail" placeholder="Введите email" [(ngModel)]="params.email" />
+          </div>
+          <div class="form-row justify-content-center">
+            <span class="col-1 mdi mdi-lock mdi-24px mt-4 dark-color-text border-bottom-dark"></span>
+            <input class="col-10 mt-4" type="password" name="password" id="loginPassword" placeholder="Введите пароль" [(ngModel)]="params.password" />
+          </div>
+          <button class="mt-5 btn dark-login-button d-flex justify-content-center align-items-center w-80 mx-auto" type="submit" id="loginButton">
+            <div class="d-flex justify-content-center align-items-center">
+              <span class="spinner-border spinner-border-sm text-light mr-3" role="status" aria-hidden="true" id="loginSpinner"></span>
+            </div>
+            <span class="dark-color-text">Войти</span>
+          </button>
+        </form>
+        <div class="col-12 mt-3 mb-4 d-flex justify-content-center align-items-center flex-wrap">
+          <a routerLink="/restore" class="mr-1 text-decoration-none text-center dark-color-text" id="restore"> Забыли пароль? </a> | <a routerLink="/register" class="ml-1 text-decoration-none text-center dark-color-text"> Зарегистрироваться </a>
+        </div>
       </div>
     </div>
   </div>

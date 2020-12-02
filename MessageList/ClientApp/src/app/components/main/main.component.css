@@ -151,6 +151,16 @@ display: none;
   border-bottom: none;
 }
 
+.search-input {
+  height: 30px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  outline: none;
+  box-shadow: none;
+  background: #F6F6F6;
+}
+
 .message {
   flex: 0 0 auto;
   flex-wrap: wrap;
