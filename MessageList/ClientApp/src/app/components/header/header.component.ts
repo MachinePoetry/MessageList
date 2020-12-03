@@ -14,8 +14,6 @@ export class HeaderComponent {
   signOut() {
     this.httpService.get('api/account/signOut').subscribe(data => {
       this.authUserInfo = [];
-      // TO DO: Change this one below for routing command
-      window.location.href = "/";
     });
   }
 }

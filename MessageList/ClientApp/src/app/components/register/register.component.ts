@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { HttpService } from '../../shared/services/httpService/http-service.service';
 import { ResultInfo } from '../../shared/models/resultInfo';
 
@@ -9,7 +10,7 @@ import { ResultInfo } from '../../shared/models/resultInfo';
 })
 export class RegisterComponent {
 
-  constructor(private httpService: HttpService) { }
+  constructor(private httpService: HttpService, private _router: Router) { }
 
   public params: { email: string, password: string } = {
     email: '',
@@ -27,8 +28,7 @@ export class RegisterComponent {
       this.report = data;
       this.showAlert = true;
       if (this.report.status == 'UserCreated') {
-        // TO DO: Change tis one below for routing command
-        window.location.href = "/main";
+        this._router.navigate(['/main'])
       }
     },
       error => this.errorText = error.message);
