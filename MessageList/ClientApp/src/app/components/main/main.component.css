@@ -68,12 +68,20 @@
 }
 
 .message-group input[type=radio] {
-display: none;
+  display: none;
 }
 
-.message-group input[type=radio]:checked + label {
-  border-radius: 2px;
-  border-left: 10px solid green;
+.fakeRadioButton {
+  display: block;
+  border-radius: 3px;
+  position: relative;
+  background: #32CD32;
+  width: 14px;
+  height: 10px;
+  box-shadow: 0 0 10px 6px #32CD32;
+  top: 27px;
+  left: 10px;
+  transition: 150ms;
 }
 
 .edit-existing-group:hover span {
