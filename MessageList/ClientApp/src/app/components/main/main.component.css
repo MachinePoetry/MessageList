@@ -169,6 +169,11 @@
   background: #F6F6F6;
 }
 
+#createGroupNotification {
+  color: grey;
+  margin-bottom: 40vh;
+}
+
 .message {
   flex: 0 0 auto;
   flex-wrap: wrap;
@@ -188,8 +193,9 @@
   cursor: pointer;
 }
 
-#messageCreatedAt {
-  font-size: 15px;
+.message-created-at {
+  color: darkgrey;
+  font-size: 14px;
 }
 
 .enter-message-block {
