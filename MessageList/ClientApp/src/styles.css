@@ -62,6 +62,11 @@ a {
   color: #F7F7F7;
 }
 
+a:hover {
+  color: #F6F6F6;
+  text-shadow: 0px 0px 1px #F6F6F6;
+}
+
 .header {
   background-color: #142C40;
 }
@@ -160,16 +165,16 @@ a {
     color: black;
 }
 
+.dark-color-text {
+  color: #1B5891;
+}
+
 .gradient-up {
   background: linear-gradient(#1B5891, rgb(13,25,47)) #1B5891;
 }
 
 .gradient-down {
   background: linear-gradient(rgb(13,25,47), #1B5891) rgb(13,25,47);
-}
-
-.dark-color-text {
-  color: #1B5891;
 }
 
 

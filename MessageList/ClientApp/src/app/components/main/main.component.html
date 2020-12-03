@@ -111,10 +111,10 @@
                 <input #searchStringInput type="text" class="my-2 mx-2 search-input" id="searchField" [(ngModel)]="searchString" placeholder="Поиск" autocomplete="off" />
               </div>
               <div class="col-auto" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed" (click)="searchStringInput.focus()">
-                <button class="btn login-button text-dark" (click)="searchMessages()"> Поиск </button>
+                <button class="btn dark-login-button" (click)="searchMessages()"> <span class="dark-color-text"> Поиск </span></button>
               </div>
               <div class="col-auto" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed" [attr.aria-expanded]="!isCollapsed">
-                <button class="btn login-button text-dark" (click)="stopSearchMessages()"> Отмена </button>
+                <button class="btn dark-login-button dark-color-text" (click)="stopSearchMessages()"> <span class="dark-color-text"> Отмена </span></button>
               </div>
               <div class="col-auto d-flex align-items-center" (click)="searchStringInput.focus()">
                 <span class="mdi mdi-magnify mdi-24px my-2" id="searchButton" (click)="isCollapsed = false" [attr.aria-expanded]="!isCollapsed" [style.visibility]="isCollapsed ? 'visible' : 'hidden' "></span>
