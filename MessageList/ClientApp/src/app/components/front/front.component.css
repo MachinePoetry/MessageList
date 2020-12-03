@@ -33,6 +33,16 @@
   scrollbar-width: none; /* Firefox */
 }
 
+#bugReportText::-webkit-scrollbar { /* chrome based */
+  width: 0px;
+  background: transparent;
+}
+
+#bugReportText {
+  -ms-overflow-style: none; /* IE 10+ */
+  scrollbar-width: none; /* Firefox */
+}
+
 #reportContacts,
 #bugReportText {
   background-color: transparent;
