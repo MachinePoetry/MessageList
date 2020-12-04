@@ -10,6 +10,11 @@ a:hover {
   text-shadow: 0px 0px 1px #F6F6F6;
 }
 
+p {
+  font-family: Roboto_Slab_reg, Arial, sans-serif;
+  font-size: 18px;
+}
+
 .border-bottom-dark {
   border-bottom: 2px solid #1B5891;
 }

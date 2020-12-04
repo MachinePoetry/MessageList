@@ -25,7 +25,7 @@
               <div class="col-9 col-lg-8 col-xl-9 d-flex pl-0">
                 <input type="radio" id="{{group.id}}" name="groupButton" [value]="group.id" [(ngModel)]="selectedGroupId">
                 <div [style.visibility]="selectedGroupId == group.id ? 'visible' : 'hidden'" class="fakeRadioButton">&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                <label for="{{group.id}}" class="col-lg-12 py-2" (click)="stopSearchMessages()"><span class="ml-2 text-light">{{group.name}}</span></label>
+                <label for="{{group.id}}" class="col-lg-12 py-2" (click)="stopSearchMessages()"><span class="ml-2 text-light" id="groupLabel">{{group.name}}</span></label>
               </div>
               <div class="col-1 d-flex justify-content-center align-items-center edit-existing-group" (click)="editMessageGroupFormId = group.id">
                 <span class="mdi mdi-pencil mdi-24px text-light"></span>
@@ -75,7 +75,7 @@
           <div class="col-12 col-lg-11 mt-lg-2 message-group round-borders" id="addNewGroupButton" (click)="showGroupCreationForm = true">
             <div class="row align-items-center py-2">
               <div class="col-1"><span class="mdi mdi-plus-thick mdi-24px text-light"></span></div>
-              <div class="col-9 col-lg-10"><span class="text-light"> Добавить группу </span></div>
+              <div class="col-9 col-lg-10 d-flex align-items-center"><span class="text-light"> Добавить группу </span></div>
             </div>
           </div>
 
@@ -128,7 +128,7 @@
           </div>
 
           <!--Block with user messages-->
-          <div #messageBlock class="col-12 message-block">
+          <div #messageBlock id="messageBlock" class="col-12 message-block">
             <h2 *ngIf="authUserMessageGroups.length === 0" class="text-center mx-2" id="createGroupNotification">
               Создавайте группы в меню слева для сохранения в них ваших сообщений
             </h2>
@@ -150,7 +150,7 @@
                           <p class="text-center"><span class="mdi mdi-close-outline mdi-dark"></span></p>
                         </button>
                       </div>
-                      <p class="text-left text-wrap text-break mx-3 mb-lg-5"> {{parseMessageText(message.text)}} </p>
+                      <p class="text-left text-wrap text-break mx-3 mb-lg-5" id="messageText"> {{parseMessageText(message.text)}} </p>
                     </div>
                   </div>
                 </div>

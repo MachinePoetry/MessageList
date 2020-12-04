@@ -67,6 +67,11 @@
   cursor: pointer;
 }
 
+#groupLabel,
+#addNewGroupButton span {
+  font-family: Roboto_Slab_reg, Arial, sans-serif;
+}
+
 .message-group input[type=radio] {
   display: none;
 }
@@ -175,28 +180,29 @@
   margin-bottom: 40vh;
 }
 
+.message-created-at {
+  font-family: Roboto_Slab_reg, Arial, sans-serif;
+  color: darkgrey;
+  font-size: 14px;
+}
+
 .message {
   flex: 0 0 auto;
   flex-wrap: wrap;
-}
-
-.message > p {
-  font-size: 15px;
 }
 
 .message:hover {
   background-color: lightgrey;
 }
 
+#messageText {
+  font-family: Tahoma, Arial, sans-serif;
+}
+
 .edit-message,
 .delete-message,
 .close-editing-message {
   cursor: pointer;
-}
-
-.message-created-at {
-  color: darkgrey;
-  font-size: 14px;
 }
 
 .enter-message-block {
