@@ -163,6 +163,24 @@ export class MainComponent implements OnInit, AfterViewInit {
     );
   }
 
+  toggleEditingMessageForm(isVisible: boolean, messageId: number, messageText?: string) {
+    this.showEditMessageForm = isVisible;
+    this.selectedMessageId = messageId;
+    if (isVisible) {
+      this.messageEditingBlock.nativeElement.classList.remove('d-none');
+      this.messageEditingBlock.nativeElement.classList.add('d-block');
+      this._setMessageBlockHeight(this.messageEditingBlock);
+      this.createMessageTextarea = messageText;
+      this.enterMessageField.nativeElement.focus();
+    } else {
+      this.messageEditingBlock.nativeElement.classList.remove('d-block');
+      this.messageEditingBlock.nativeElement.classList.add('d-none');
+      this._setMessageBlockHeight();
+      this.createMessageTextarea = '';
+      this.enterMessageField.nativeElement.focus();
+    }
+  }
+
     // Delete existing message
 
   public deleteExistingMessage(messageId: number): void {
@@ -264,20 +282,6 @@ export class MainComponent implements OnInit, AfterViewInit {
 
   parseMessageText(message: string): string {
     return message.replace('\n', '<br>');
-  }
-
-  toggleEditingMessageForm(trigger: boolean, messageId: number) {
-    this.showEditMessageForm = trigger;
-    this.selectedMessageId = messageId;
-    if (trigger) {
-      this.messageEditingBlock.nativeElement.classList.remove('d-none');
-      this.messageEditingBlock.nativeElement.classList.add('d-block');
-      this._setMessageBlockHeight(this.messageEditingBlock)
-    } else {
-      this.messageEditingBlock.nativeElement.classList.remove('d-block');
-      this.messageEditingBlock.nativeElement.classList.add('d-none');
-      this._setMessageBlockHeight();
-    }
   }
 
   // Implemented interfaces
