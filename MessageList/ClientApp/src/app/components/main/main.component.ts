@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, HostListener, ViewEncapsulation, } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, HostListener, ViewEncapsulation, ChangeDetectorRef} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { HttpService } from '../../shared/services/httpService/http-service.service';
@@ -35,7 +35,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   public searchString: string = '';
   public isCollapsed: boolean = true;
   public showEditMessageForm: boolean = false;
-  public createMessageTextarea: string = '';
+  public newMessage: string = '';
 
   public authUserInfo: User;
   public authUserMessageGroups: MessageGroup[] = [];
@@ -135,17 +135,19 @@ export class MainComponent implements OnInit, AfterViewInit {
     let messageParams: { authUserId: number, messageGroupId: number | null, text: string, id: number | null } = {
       authUserId: this.authUserInfo.id,
       messageGroupId: this.selectedGroupId,
-      text: this.createMessageTextarea,
+      text: this.newMessage,
       id: this.selectedMessageId
     }
+
     this.enterMessageField.nativeElement.focus();
+    this.enterMessageField.nativeElement.value = '';
+    this.setMessageCreationFormHeight();
+    this.selectedMessageId = null;
+    this.toggleEditingMessageForm(false, null);
 
     let url: string = this.showEditMessageForm ? '/api/messages/update' : '/api/messages/create';
 
     this.httpService.post(url, messageParams).subscribe(data => {
-      this.createMessageTextarea = '';
-      this.selectedMessageId = null;
-      this.toggleEditingMessageForm(false, null);
 
       this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
         this.authUserMessageGroups = data;
@@ -170,13 +172,13 @@ export class MainComponent implements OnInit, AfterViewInit {
       this.messageEditingBlock.nativeElement.classList.remove('d-none');
       this.messageEditingBlock.nativeElement.classList.add('d-block');
       this._setMessageBlockHeight(this.messageEditingBlock);
-      this.createMessageTextarea = messageText;
+      this.newMessage = messageText;
       this.enterMessageField.nativeElement.focus();
     } else {
       this.messageEditingBlock.nativeElement.classList.remove('d-block');
       this.messageEditingBlock.nativeElement.classList.add('d-none');
       this._setMessageBlockHeight();
-      this.createMessageTextarea = '';
+      this.newMessage = '';
       this.enterMessageField.nativeElement.focus();
     }
   }
@@ -268,7 +270,13 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.enterMessageField.nativeElement.focus();
   }
 
-  private _setMessageBlockHeight(editMessageBlock?: ElementRef): void {
+  public setMessageCreationFormHeight() {
+    this.enterMessageField.nativeElement.style.height = 'auto';
+    this.enterMessageField.nativeElement.style.height = this.enterMessageField.nativeElement.scrollHeight < window.innerHeight / 5 ? this.enterMessageField.nativeElement.scrollHeight + 2 + 'px' : window.innerHeight / 5 + 'px';
+    this._setMessageBlockHeight();
+  }
+
+  public _setMessageBlockHeight(editMessageBlock?: ElementRef): void {
     let newMessageFormHeight: number = editMessageBlock ? this.enterMessageBlock.nativeElement.offsetHeight :
                                        this.enterMessageBlock.nativeElement.offsetHeight - (editMessageBlock?.nativeElement.offsetHeight || 0);
 
@@ -300,7 +308,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this._setMessageBlockHeight();
     this.groupMessageBlock.nativeElement.scrollTop = this.groupMessageBlock.nativeElement.scrollHeight;
+    this._setMessageBlockHeight();
   }
 }

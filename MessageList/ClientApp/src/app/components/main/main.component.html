@@ -200,7 +200,7 @@
               </div>
               <div class="col-8 col-sm-10 px-1 px-sm-2" id="enterMessageContainer">
                 <form #createNewMessageForm="ngForm" class="form-group" id="enterMessageForm" name="enterMessageForm" autocomplete="off" (ngSubmit)="createAndUpdateMessage()">
-                  <textarea #enterMessageField class="form-control mt-3" name="enterMessage" id="enterMessageField" placeholder="Введите сообщение" rows="1" [(ngModel)]="createMessageTextarea" autofocus> 
+                  <textarea #enterMessageField class="form-control mt-3" name="enterMessage" rows="1" id="enterMessageField" placeholder="Введите сообщение" (keydown.enter)="createAndUpdateMessage();false" (ngModelChange)="setMessageCreationFormHeight()" [(ngModel)]="newMessage" autofocus> 
                   </textarea>
                 </form>
               </div>
