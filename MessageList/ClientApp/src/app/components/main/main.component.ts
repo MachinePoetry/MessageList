@@ -56,7 +56,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       this.showGroupCreationForm = false;
       this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
         this.authUserMessageGroups = data;
-        this.selectedGroupId ? this.selectedGroupId = this.selectedGroupId : this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
+        this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
         this.isGroupesIterable = true;
       },
         error => {
