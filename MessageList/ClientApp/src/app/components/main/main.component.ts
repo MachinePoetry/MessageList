@@ -138,12 +138,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       text: this.newMessage,
       id: this.selectedMessageId
     }
-
     this.enterMessageField.nativeElement.focus();
-    this.enterMessageField.nativeElement.value = '';
-    this.setMessageCreationFormHeight();
-    this.selectedMessageId = null;
-    this.toggleEditingMessageForm(false, null);
 
     let url: string = this.showEditMessageForm ? '/api/messages/update' : '/api/messages/create';
 
@@ -163,6 +158,11 @@ export class MainComponent implements OnInit, AfterViewInit {
         this.showAlert = true;
       }
     );
+
+    this.enterMessageField.nativeElement.value = '';
+    this.toggleEditingMessageForm(false, null);
+    this.setMessageCreationFormHeight();
+    this.selectedMessageId = null;
   }
 
   toggleEditingMessageForm(isVisible: boolean, messageId: number, messageText?: string) {
@@ -171,14 +171,16 @@ export class MainComponent implements OnInit, AfterViewInit {
     if (isVisible) {
       this.messageEditingBlock.nativeElement.classList.remove('d-none');
       this.messageEditingBlock.nativeElement.classList.add('d-block');
-      this._setMessageBlockHeight(this.messageEditingBlock);
-      this.newMessage = messageText;
+      this.enterMessageField.nativeElement.value = messageText;
+      this.setMessageCreationFormHeight();
+      this._setMessageBlockHeight();
       this.enterMessageField.nativeElement.focus();
     } else {
       this.messageEditingBlock.nativeElement.classList.remove('d-block');
       this.messageEditingBlock.nativeElement.classList.add('d-none');
+      this.enterMessageField.nativeElement.value = '';
+      this.setMessageCreationFormHeight();
       this._setMessageBlockHeight();
-      this.newMessage = '';
       this.enterMessageField.nativeElement.focus();
     }
   }
@@ -276,12 +278,9 @@ export class MainComponent implements OnInit, AfterViewInit {
     this._setMessageBlockHeight();
   }
 
-  public _setMessageBlockHeight(editMessageBlock?: ElementRef): void {
-    let newMessageFormHeight: number = editMessageBlock ? this.enterMessageBlock.nativeElement.offsetHeight :
-                                       this.enterMessageBlock.nativeElement.offsetHeight - (editMessageBlock?.nativeElement.offsetHeight || 0);
-
+  public _setMessageBlockHeight(): void {
     this.messageBlock.nativeElement.style.height = window.innerHeight - this.appHeader.nativeElement.offsetHeight -
-                                       this.searchBlock.nativeElement.offsetHeight - newMessageFormHeight + 'px';
+                                                   this.searchBlock.nativeElement.offsetHeight - this.enterMessageBlock.nativeElement.offsetHeight + 'px';
   }
 
   parseDateToRussianLocale(date: string): string {
