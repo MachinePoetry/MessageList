@@ -20,12 +20,12 @@
         <div #groupMessageBlock id="groupMessageBlock" class="row">
 
           <!--Show all user groups-->
-          <div *ngFor="let group of authUserMessageGroups; trackBy: groupsTrackFn" class="col-12 col-lg-11 mt-lg-2 message-group round-borders">
+          <div #group *ngFor="let group of authUserMessageGroups; trackBy: groupsTrackFn" class="col-12 col-lg-11 mt-lg-2 message-group round-borders">
             <div *ngIf="group.id != editMessageGroupFormId" class="row align-items-center">
               <div class="col-9 col-lg-8 col-xl-9 d-flex pl-0">
                 <input type="radio" id="{{group.id}}" name="groupButton" [value]="group.id" [(ngModel)]="selectedGroupId">
                 <div [style.visibility]="selectedGroupId == group.id ? 'visible' : 'hidden'" class="fakeRadioButton">&nbsp;&nbsp;&nbsp;&nbsp;</div>
-                <label for="{{group.id}}" class="col-lg-12 py-2" (click)="stopSearchMessages()"><span class="ml-2 text-light" id="groupLabel">{{group.name}}</span></label>
+                <label for="{{group.id}}" class="col-lg-12 py-2" (click)="changeMessageGroup()"><span class="ml-2 text-light" id="groupLabel">{{group.name}}</span></label>
               </div>
               <div class="col-1 d-flex justify-content-center align-items-center edit-existing-group" (click)="editMessageGroupFormId = group.id">
                 <span class="mdi mdi-pencil mdi-24px text-light"></span>
@@ -137,7 +137,7 @@
             <div *ngIf="authUserMessageGroups.length > 0" class="w-100">
               <div *ngFor="let group of authUserMessageGroups" class="w-100">
                 <div *ngIf="group.id == selectedGroupId" class="w-100">
-                  <div *ngFor="let message of group.messages; trackBy: groupsTrackFn" class="row">
+                  <div #message *ngFor="let message of group.messages; trackBy: groupsTrackFn" class="row">
                     <div class="col-12 message" id="message{{message.id}}">
                       <div class="row mt-lg-3 align-items-center">
                         <div class="col-8 col-lg-9">

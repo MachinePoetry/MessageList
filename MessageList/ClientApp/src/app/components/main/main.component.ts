@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, HostListener, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ViewChildren, ElementRef, HostListener, QueryList } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { HttpService } from '../../shared/services/httpService/http-service.service';
@@ -15,10 +15,12 @@ export class MainComponent implements OnInit, AfterViewInit {
 
   @ViewChild('appHeader', { read: ElementRef }) appHeader: ElementRef;
   @ViewChild('groupMessageBlock') groupMessageBlock: ElementRef;
+  @ViewChildren('group') groupes: QueryList<ElementRef>;
   @ViewChild('messageBlock') messageBlock: ElementRef;
   @ViewChild('searchBlock') searchBlock: ElementRef;
   @ViewChild('enterMessageBlock') enterMessageBlock: ElementRef;
   @ViewChild('enterMessageField') enterMessageField: ElementRef;
+  @ViewChildren('message') messages: QueryList<ElementRef>;
   @ViewChild('messageEditingBlock') messageEditingBlock: ElementRef;
 
 
@@ -34,6 +36,8 @@ export class MainComponent implements OnInit, AfterViewInit {
   public isCollapsed: boolean = true;
   public showEditMessageForm: boolean = false;
   public newMessage: string = '';
+  private isMessagesIterable = true;
+  private isGroupesIterable = true;
 
   public authUserInfo: User;
   public authUserMessageGroups: MessageGroup[] = [];
@@ -52,9 +56,8 @@ export class MainComponent implements OnInit, AfterViewInit {
       this.showGroupCreationForm = false;
       this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
         this.authUserMessageGroups = data;
-        // scroll to end, but somewhy it scrolls not exactly to end.
         this.selectedGroupId ? this.selectedGroupId = this.selectedGroupId : this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
-        this.groupMessageBlock.nativeElement.scrollTop = this.groupMessageBlock.nativeElement.scrollHeight * 2;
+        this.isGroupesIterable = true;
       },
         error => {
           this.errorText = error.message;
@@ -84,8 +87,6 @@ export class MainComponent implements OnInit, AfterViewInit {
       this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
         this.authUserMessageGroups = data;
         this.editMessageGroupFormId = null;
-        // scroll down to the end
-        // el.nativeElement.querySelector('input').focus();
       },
         error => {
           this.errorText = error.message;
@@ -111,7 +112,11 @@ export class MainComponent implements OnInit, AfterViewInit {
 
       this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
         this.authUserMessageGroups = data;
-        this.selectedGroupId === groupId ? this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id : this.selectedGroupId = this.selectedGroupId;
+
+        if (this.selectedGroupId === groupId) {
+          this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
+          this.isGroupesIterable = true;
+        } 
       },
         error => {
           this.errorText = error.message;
@@ -144,6 +149,9 @@ export class MainComponent implements OnInit, AfterViewInit {
 
       this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
         this.authUserMessageGroups = data;
+        if (url === '/api/messages/create') {
+          this.isMessagesIterable = true;
+        }
       },
         error => {
           this.errorText = error.message;
@@ -260,6 +268,11 @@ export class MainComponent implements OnInit, AfterViewInit {
     return group.name;
   }
 
+  changeMessageGroup() {
+    this.stopSearchMessages();
+    this.isMessagesIterable = true;
+  }
+
   hideGroupCreationForm() {
     this.showGroupCreationForm = false;
     this.enterMessageField.nativeElement.focus();
@@ -305,7 +318,18 @@ export class MainComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.groupMessageBlock.nativeElement.scrollTop = this.groupMessageBlock.nativeElement.scrollHeight;
     this._setMessageBlockHeight();
+    this.messages.changes.subscribe((list: QueryList<ElementRef>) => {
+      if (this.isMessagesIterable) {
+        this.messageBlock.nativeElement.scrollTop = this.messageBlock.nativeElement.scrollHeight;
+        this.isMessagesIterable = false;
+      }
+    });
+    this.groupes.changes.subscribe((list: QueryList<ElementRef>) => {
+      if (this.isGroupesIterable) {
+        this.groupMessageBlock.nativeElement.scrollTop = this.groupMessageBlock.nativeElement.scrollHeight;
+        this.isGroupesIterable = false;
+      }
+    });
   }
 }
