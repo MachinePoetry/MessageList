@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, HostListener, ViewEncapsulation, ChangeDetectorRef} from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ElementRef, HostListener, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { HttpService } from '../../shared/services/httpService/http-service.service';
@@ -8,9 +8,7 @@ import { MessageGroup } from '../../shared/models/messageGroup';
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
-  styleUrls: ['./main.component.css'],
-  //TO DO: Read about it. This one below is for styles for dynamically added html. Without it styles do not work.
-  encapsulation: ViewEncapsulation.None
+  styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit, AfterViewInit {
   constructor(private httpService: HttpService, private _route: ActivatedRoute) { }
