@@ -298,10 +298,6 @@ export class MainComponent implements OnInit, AfterViewInit {
     return new Date(date).toLocaleString("ru");
   }
 
-  parseMessageText(message: string): string {
-    return message.replace('\n', '<br>');
-  }
-
   // Implemented interfaces
 
   ngOnInit() {

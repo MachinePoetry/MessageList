@@ -197,6 +197,7 @@
 
 #messageText {
   font-family: Tahoma, Arial, sans-serif;
+  white-space: pre-wrap;
 }
 
 .edit-message,
