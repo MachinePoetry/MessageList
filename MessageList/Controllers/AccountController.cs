@@ -64,6 +64,8 @@ namespace MessageList.Controllers
                 //TODO: Нужна валидация email перед редактированием и созданием пользователя
                 await _db.Users.AddAsync(new User(email: acc.Email, password: acc.Password.GetCustomAlgoHashCode(SHA256.Create())));
                 int res = await _db.SaveChangesAsync();
+                await HttpContext.SignOutAsync();
+                await Authenticate(acc.Email);
                 result = ResultInfo.CreateResultInfo(res, "UserCreated", "Регистрация прошла успешно", "UserCreationFailed", "Ошибка при попытке регистрации");
             }
 
