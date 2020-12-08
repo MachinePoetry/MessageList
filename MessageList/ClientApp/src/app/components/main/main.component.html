@@ -182,11 +182,6 @@
           <!--New mesage creating block (form)-->
           <div #enterMessageBlock class="col-12 enter-message-block">
 
-            <div class="toast" style="position: absolute; top: -10%; right: 35%; z-index: 2;">
-              <div class="toast-body bg-danger text-light">
-              </div>
-            </div>
-
             <div #messageEditingBlock class="col-12 d-none">
               <div class="row">
                 <div class="col-11 mb-1"><span class="text-light"> Редактирование сообщения </span></div>
@@ -195,7 +190,41 @@
             </div>
 
             <div class="row align-items-center justify-content-center">
-              <div class="col-auto p-0" id="attachFileButton">
+              <ng-template #attachFiles>
+                <div class="d-flex attach-file-option w-100">
+                  <div class="col-2 pl-2">
+                    <span class="mdi mdi-camera-outline mdi-18px text-light lh-1 d-block my-1"></span>
+                  </div>
+                  <div class="col-10 pl-2 pr-0">
+                    <span class="text-light text-left lh-1 d-block my-1"> Фотография </span>
+                  </div>
+                </div>
+                <div class="d-flex attach-file-option w-100">
+                  <div class="col-2 pl-2">
+                    <span class="mdi mdi-play-circle-outline mdi-18px text-light lh-1 d-block my-1"></span>
+                  </div>
+                  <div class="col-10 pl-2 pr-0">
+                    <span class="text-light text-left lh-1 d-block my-1"> Видеозапись </span>
+                  </div>
+                </div>
+                <div class="d-flex attach-file-option w-100">
+                  <div class="col-2 pl-2">
+                    <span class="mdi mdi-music mdi-18px text-light lh-1 d-block my-1"></span>
+                  </div>
+                  <div class="col-10 pl-2 pr-0">
+                    <span class="text-light text-left lh-1 d-block my-1"> Аудиозапись </span>
+                  </div>
+                </div>
+                <div class="d-flex attach-file-option w-100">
+                  <div class="col-2 pl-2">
+                    <span class="mdi mdi-file-outline mdi-18px text-light lh-1 d-block my-1"></span>
+                  </div>
+                  <div class="col-10 pl-2 pr-0">
+                    <span class="text-light text-left lh-1 d-block my-1"> Файл </span>
+                  </div>
+                </div>
+              </ng-template>
+              <div class="col-auto p-0" id="attachFileButton" [ngbTooltip]="attachFiles" triggers="click" [autoClose]="true">
                 <span class="mdi mdi-paperclip mdi-36px mdi-rotate-45"></span>
               </div>
               <div class="col-8 col-sm-10 px-1 px-sm-2" id="enterMessageContainer">

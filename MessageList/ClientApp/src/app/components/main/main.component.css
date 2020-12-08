@@ -210,6 +210,18 @@
   background: linear-gradient(rgb(29,107,173), rgb(13,25,47)) rgb(29,107,173);
 }
 
+.tooltip-inner {
+  background: linear-gradient(rgb(29,107,173), rgb(13,25,47)) rgb(29,107,173);
+  width: 140px;
+  border-radius: 3px;
+}
+
+.attach-file-option:hover {
+  color: #F5F5F4;
+  background: linear-gradient(rgb(29,107,173), rgb(13,25,47)) rgb(29,107,173);
+  cursor: pointer;
+} 
+
 #attachFileButton span,
 #sendMessageButton span {
   color: #1E65A1;

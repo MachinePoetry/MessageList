@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ViewChildren, ElementRef, HostListener, QueryList } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild, ViewChildren, ElementRef, HostListener, ViewEncapsulation, QueryList } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { HttpService } from '../../shared/services/httpService/http-service.service';
@@ -8,6 +8,7 @@ import { MessageGroup } from '../../shared/models/messageGroup';
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
+  encapsulation: ViewEncapsulation.None,
   styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit, AfterViewInit {
