@@ -6,31 +6,33 @@ import { ResultInfo } from '../../shared/models/resultInfo';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
-  providers: [HttpService]
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
 
-  constructor(private httpService: HttpService, private _router: Router) {  }
+  constructor(private _httpService: HttpService, private _router: Router) {  }
 
   public params: { email: string, password: string } = {
     email: '',
     password: ''
   }
 
-  public showAlert: boolean;
-  public report: ResultInfo;
-  public errorText: string;
+  public showAlert: boolean = false;
+  public alertText: string = '';
+  public _report: ResultInfo = new ResultInfo();
 
-  onSubmit(): void {
-    this.httpService.post('/api/account/login', this.params).subscribe((data: ResultInfo) => {
-      this.report = data;
+  public onSubmit(): void {
+    this._httpService.post('/api/account/login', this.params).subscribe((data: ResultInfo) => {
+      this._report = data;
+      this.params.email = this.params.password = ''; 
+      this.alertText = this._report.info;
       this.showAlert = true;
-      if (this.report.status == 'AuthSuccess') {
+      setTimeout(() => this.showAlert = false, 5000);
+      if (this._report.status == 'AuthSuccess') {
         this._router.navigate(['/main'])
       }
     },
-      error => this.errorText = error.message);
+      error => this.alertText = error.message);
   }
 
 }

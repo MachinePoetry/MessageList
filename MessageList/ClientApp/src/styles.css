@@ -58,7 +58,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 app-header {
-    display: block;
+  display: block;
 }
 
 .z-1 {
@@ -76,6 +76,13 @@ a {
 a:hover {
   color: #F6F6F6;
   text-shadow: 0px 0px 1px #F6F6F6;
+}
+
+.ng-alert {
+  position: absolute;
+  top: 10%;
+  right: 10%;
+  z-index: 2;
 }
 
 .header {

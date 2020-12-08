@@ -9,32 +9,33 @@ import { ResultInfo } from '../../shared/models/resultInfo';
 })
 
 export class FrontComponent implements OnInit {
-  constructor(private httpService: HttpService) { }
+  constructor(private _httpService: HttpService) { }
 
   public params: { reportText: string, reportContacts: string } = {
     reportText: '',
     reportContacts: ''
   }
 
-  public showAlert: boolean;
-  public report: ResultInfo;
-  public errorText: string;
+  public showAlert: boolean = false;
+  public alertText: string = '';
+  private _report: ResultInfo = new ResultInfo();
 
   public authUserInfo: any;
 
-  onSubmit(): void {
-    this.httpService.post('/api/bugReport/create', this.params).subscribe((data: ResultInfo) => {
-      this.params.reportText = '';
-      this.params.reportContacts = '';
-      this.report = data;
+  public onSubmit(): void {
+    this._httpService.post('/api/bugReport/create', this.params).subscribe((data: ResultInfo) => {
+      this._report = data;
+      this.params.reportText = this.params.reportContacts = '';
+      this.alertText = this._report.info;
       this.showAlert = true;
+      setTimeout(() => this.showAlert = false, 5000);
     },
-      error => this.errorText = error.message
+      error => this.alertText = error.message
     );
   }
 
   ngOnInit() {
-    this.httpService.get('api/users/getAuthUserInfo').subscribe(data => {
+    this._httpService.get('api/users/getAuthUserInfo').subscribe(data => {
       this.authUserInfo = data;
     });
   }

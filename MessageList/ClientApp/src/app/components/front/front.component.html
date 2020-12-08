@@ -1,7 +1,7 @@
 <app-header [authUserInfo]="authUserInfo"></app-header>
 
 
-<ngb-alert [type]="'success'" [dismissible]="false" *ngIf="showAlert" style="position: absolute; top: 10%; right: 10%; z-index: 2;"> {{ report.info }} </ngb-alert>
+<ngb-alert #selfClosingAlert type="success" class="ng-alert" [dismissible]="false" *ngIf="showAlert" (closed)="report = {}"> {{ alertText }} </ngb-alert>
 
 
 <div class="container-fluid position-absolute z-1" id="promoText">

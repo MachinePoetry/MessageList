@@ -10,27 +10,28 @@ import { ResultInfo } from '../../shared/models/resultInfo';
 })
 export class RegisterComponent {
 
-  constructor(private httpService: HttpService, private _router: Router) { }
+  constructor(private _httpService: HttpService, private _router: Router) { }
 
   public params: { email: string, password: string } = {
     email: '',
     password: ''
   }
 
-  public showAlert: boolean;
-  public report: ResultInfo;
-  public errorText: string;
+  public showAlert: boolean = false;
+  public alertText: string = '';
+  private _report: ResultInfo = new ResultInfo();
 
-  onSubmit(): void {
-    this.httpService.post('/api/account/register', this.params).subscribe((data: ResultInfo) => {
-      this.params.email = '';
-      this.params.password = '';
-      this.report = data;
+  public onSubmit(): void {
+    this._httpService.post('/api/account/register', this.params).subscribe((data: ResultInfo) => {
+      this._report = data;
+      this.params.email = this.params.password = ''; 
+      this.alertText = this._report.info;
       this.showAlert = true;
-      if (this.report.status == 'UserCreated') {
+      setTimeout(() => this.showAlert = false, 5000);
+      if (this._report.status == 'UserCreated') {
         this._router.navigate(['/main'])
       }
     },
-      error => this.errorText = error.message);
+      error => this.alertText = error.message);
   }
 }
