@@ -32,12 +32,12 @@
           <div class="form-row justify-content-center has-float-label">
             <span class="col-1 mdi mdi-lock mdi-24px mt-4 dark-color-text border-bottom-dark"></span>
             <input class="col-10 mt-4" type="password" name="password" id="registerPassword" placeholder="Введите пароль" [(ngModel)]="params.password" />
-            <label for="registerEmail"> Пароль </label>
+            <label for="registerPassword"> Пароль </label>
           </div>
           <div class="form-row justify-content-center has-float-label">
             <span class="col-1 mdi mdi-lock mdi-24px mt-4 dark-color-text border-bottom-dark"></span>
-            <input class="col-10 mt-4" type="password" name="confirmPassword" id="registerConfirmPassword" placeholder="Подтвердите пароль" />
-            <label for="registerEmail"> Пароль </label>
+            <input class="col-10 mt-4" type="password" name="confirmPassword" id="registerConfirmPassword" placeholder="Подтвердите пароль" [(ngModel)]="params.confirmPassword" />
+            <label for="registerConfirmPassword"> Пароль </label>
           </div>
           <button class="mt-5 btn dark-login-button d-flex justify-content-center align-items-center w-80 mx-auto" type="submit" id="registerButton">
             <div class="d-flex justify-content-center align-items-center">

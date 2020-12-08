@@ -12,9 +12,10 @@ export class RegisterComponent {
 
   constructor(private _httpService: HttpService, private _router: Router) { }
 
-  public params: { email: string, password: string } = {
+  public params: { email: string, password: string, confirmPassword: string } = {
     email: '',
-    password: ''
+    password: '',
+    confirmPassword: ''
   }
 
   public showAlert: boolean = false;
@@ -24,7 +25,7 @@ export class RegisterComponent {
   public onSubmit(): void {
     this._httpService.post('/api/account/register', this.params).subscribe((data: ResultInfo) => {
       this._report = data;
-      this.params.email = this.params.password = ''; 
+      this.params.email = this.params.password = this.params.confirmPassword = ''; 
       this.alertText = this._report.info;
       this.showAlert = true;
       setTimeout(() => this.showAlert = false, 5000);
