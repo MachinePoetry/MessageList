@@ -294,10 +294,6 @@ export class MainComponent implements OnInit, AfterViewInit {
                                                    this.searchBlock.nativeElement.offsetHeight - this.enterMessageBlock.nativeElement.offsetHeight + 'px';
   }
 
-  parseDateToRussianLocale(date: string): string {
-    return new Date(date).toLocaleString("ru");
-  }
-
   // Implemented interfaces
 
   ngOnInit() {

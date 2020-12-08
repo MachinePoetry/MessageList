@@ -18,6 +18,7 @@ import { NotFoundComponent } from './components/notFound/not-found.component';
 
 import { HttpService } from './shared/services/httpService/http-service.service'
 import { FocusDirective } from './shared/directives/focus/focus.directive'
+import { DateToLocalePipe } from './shared/pipes/dateToLocale/date-to-locale.pipe'
 
 import { AuthUserInfoResolver } from './shared/resolvers/auth-user-info.resolver'
 
@@ -33,7 +34,8 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, RestoreComponent, NotFoundComponent, FocusDirective
+    AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, RestoreComponent, NotFoundComponent,
+    FocusDirective, DateToLocalePipe
   ],
   imports: [
     BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, BrowserAnimationsModule
