@@ -16,6 +16,7 @@ export class FrontComponent implements OnInit {
     reportContacts: ''
   }
 
+  public isDisabled: boolean = false;
   public showAlert: boolean = false;
   public alertText: string = '';
   private _report: ResultInfo = new ResultInfo();
@@ -23,8 +24,10 @@ export class FrontComponent implements OnInit {
   public authUserInfo: any;
 
   public onSubmit(): void {
+    this.isDisabled = true;
     this._httpService.post('/api/bugReport/create', this.params).subscribe((data: ResultInfo) => {
       this._report = data;
+      this.isDisabled = false;
       this.params.reportText = this.params.reportContacts = '';
       this.alertText = this._report.info;
       this.showAlert = true;

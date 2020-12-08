@@ -143,7 +143,7 @@
             <span id="reportContactsLabel" class="footer-text d-block mt-3">Ваш Email или другие контакты для связи с вами (можете оставить это поле пустым):</span>
             <input #bugReportContacts type="text" class="form-control mt-1 mt-md-3" name="reportContacts" id="reportContacts" [(ngModel)]="params.reportContacts">
           </div>
-          <button type="submit" class="btn login-button col-md-4 offset-md-8 col-lg-3 offset-lg-9">Отправить</button>
+          <button type="submit" class="btn login-button col-md-4 offset-md-8 col-lg-3 offset-lg-9" [disabled]="isDisabled">Отправить</button>
         </form>
       </div>
       <div class="col-md-6 mx-auto mt-2 mt-md-5 mb-2 mb-md-4 text-center">

@@ -17,13 +17,16 @@ export class LoginComponent {
     password: ''
   }
 
+  public isDisabled: boolean = false;
   public showAlert: boolean = false;
   public alertText: string = '';
   public _report: ResultInfo = new ResultInfo();
 
   public onSubmit(): void {
+    this.isDisabled = true;
     this._httpService.post('/api/account/login', this.params).subscribe((data: ResultInfo) => {
       this._report = data;
+      this.isDisabled = false;
       this.params.email = this.params.password = ''; 
       this.alertText = this._report.info;
       this.showAlert = true;

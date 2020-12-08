@@ -34,7 +34,7 @@
             <input class="col-10 mt-4" type="password" name="password" id="loginPassword" placeholder="Введите пароль" [(ngModel)]="params.password" />
             <label for="loginPassword"> Пароль </label>
           </div>
-          <button class="mt-5 btn dark-login-button d-flex justify-content-center align-items-center w-80 mx-auto" type="submit" id="loginButton">
+          <button class="mt-5 btn dark-login-button d-flex justify-content-center align-items-center w-80 mx-auto" type="submit" [disabled]="isDisabled" id="loginButton">
             <div class="d-flex justify-content-center align-items-center">
               <span class="spinner-border spinner-border-sm text-light mr-3" role="status" aria-hidden="true" id="loginSpinner"></span>
             </div>
