@@ -37,10 +37,10 @@
             <label for="registerConfirmPassword"> Пароль </label>
           </div>
           <button class="mt-5 btn dark-login-button d-flex justify-content-center align-items-center w-80 mx-auto" type="submit" [disabled]="isDisabled" id="registerButton">
-            <div class="d-flex justify-content-center align-items-center">
-              <span class="spinner-border spinner-border-sm text-light mr-3" role="status" aria-hidden="true" id="registerSpinner"></span>
-            </div>
             <span class="dark-color-text">Зарегистрироваться</span>
+            <div *ngIf="isSpinnerShow" class="d-flex justify-content-center align-items-center">
+              <span class="mdi mdi-loading mdi-spin mdi-18px dark-color-text lh-1"></span>
+            </div>
           </button>
         </form>
         <div class="col-12 mt-3 mb-4 d-flex justify-content-center align-items-center flex-wrap">

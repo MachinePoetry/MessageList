@@ -18,15 +18,18 @@ export class FrontComponent implements OnInit {
   }
 
   public isDisabled: boolean = false;
+  public isSpinnerShow: boolean = false;
   private _report: ResultInfo = new ResultInfo();
 
   public authUserInfo: any;
 
   public onSubmit(): void {
     this.isDisabled = true;
+    this.isSpinnerShow = true;
     this._httpService.post('/api/bugReport/create', this.params).subscribe((data: ResultInfo) => {
       this._report = data;
       this.isDisabled = false;
+      this.isSpinnerShow = false;
       this._toastService.showSuccess(this._report.info);
     },
       error => this._toastService.showDanger(error.message)

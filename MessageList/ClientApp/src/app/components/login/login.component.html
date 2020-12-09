@@ -32,10 +32,10 @@
             <label for="loginPassword"> Пароль </label>
           </div>
           <button class="mt-5 btn dark-login-button d-flex justify-content-center align-items-center w-80 mx-auto" type="submit" [disabled]="isDisabled" id="loginButton">
-            <div class="d-flex justify-content-center align-items-center">
-              <span class="spinner-border spinner-border-sm text-light mr-3" role="status" aria-hidden="true" id="loginSpinner"></span>
+            <span class="dark-color-text">Войти</span> &nbsp;
+            <div *ngIf="isSpinnerShow" class="d-flex justify-content-center align-items-center">
+              <span class="mdi mdi-loading mdi-spin mdi-18px dark-color-text lh-1"></span>
             </div>
-            <span class="dark-color-text">Войти</span>
           </button>
         </form>
         <div class="col-12 mt-3 mb-4 d-flex justify-content-center align-items-center flex-wrap">

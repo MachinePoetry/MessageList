@@ -19,13 +19,16 @@ export class LoginComponent {
   }
 
   public isDisabled: boolean = false;
+  public isSpinnerShow: boolean = false;
   private _report: ResultInfo = new ResultInfo();
 
   public onSubmit(): void {
     this.isDisabled = true;
+    this.isSpinnerShow = true;
     this._httpService.post('/api/account/login', this.params).subscribe((data: ResultInfo) => {
       this._report = data;
       this.isDisabled = false;
+      this.isSpinnerShow = false;
       this._toastService.showSuccess(this._report.info);
       if (this._report.status == 'AuthSuccess') {
         this._router.navigate(['/main'])
