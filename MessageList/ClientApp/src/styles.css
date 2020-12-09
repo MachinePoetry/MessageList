@@ -61,6 +61,13 @@ app-header {
   display: block;
 }
 
+.pbar {
+  position: absolute;
+  top: 0px;
+  height: 7px;
+  border-radius: 0;
+}
+
 .z-1 {
   z-index: 1;
 }

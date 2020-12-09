@@ -20,16 +20,29 @@ export class LoginComponent {
 
   public isDisabled: boolean = false;
   public isSpinnerShow: boolean = false;
+  public progressBarValue: number = 0;
+  public isHidden: boolean = false;
   private _report: ResultInfo = new ResultInfo();
 
   public onSubmit(): void {
+    this.isHidden = false;
+    this.progressBarValue = 0;
     this.isDisabled = true;
     this.isSpinnerShow = true;
+    this.progressBarValue = 30;
     this._httpService.post('/api/account/login', this.params).subscribe((data: ResultInfo) => {
+      this.progressBarValue = 50;
       this._report = data;
       this.isDisabled = false;
       this.isSpinnerShow = false;
       this._toastService.showSuccess(this._report.info);
+      this.progressBarValue = 100;
+      if (this.progressBarValue === 100) {
+        setTimeout(() => {
+          this.isHidden = true;
+          this.progressBarValue = 0;
+        }, 700);
+      }
       if (this._report.status == 'AuthSuccess') {
         this._router.navigate(['/main'])
       }
