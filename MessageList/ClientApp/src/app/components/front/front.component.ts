@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpService } from '../../shared/services/httpService/http-service.service'
+import { HttpService } from '../../shared/services/httpService/http-service.service';
+import { ToastService } from '../../shared/services/toastService/toast.service';
 import { ResultInfo } from '../../shared/models/resultInfo';
 
 @Component({
@@ -9,7 +10,7 @@ import { ResultInfo } from '../../shared/models/resultInfo';
 })
 
 export class FrontComponent implements OnInit {
-  constructor(private _httpService: HttpService) { }
+  constructor(private _httpService: HttpService, private _toastService: ToastService) { }
 
   public params: { reportText: string, reportContacts: string } = {
     reportText: '',
@@ -17,8 +18,6 @@ export class FrontComponent implements OnInit {
   }
 
   public isDisabled: boolean = false;
-  public showAlert: boolean = false;
-  public alertText: string = '';
   private _report: ResultInfo = new ResultInfo();
 
   public authUserInfo: any;
@@ -28,13 +27,11 @@ export class FrontComponent implements OnInit {
     this._httpService.post('/api/bugReport/create', this.params).subscribe((data: ResultInfo) => {
       this._report = data;
       this.isDisabled = false;
-      this.params.reportText = this.params.reportContacts = '';
-      this.alertText = this._report.info;
-      this.showAlert = true;
-      setTimeout(() => this.showAlert = false, 5000);
+      this._toastService.showSuccess(this._report.info);
     },
-      error => this.alertText = error.message
+      error => this._toastService.showDanger(error.message)
     );
+    this.params.reportText = this.params.reportContacts = '';
   }
 
   ngOnInit() {

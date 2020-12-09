@@ -10,7 +10,7 @@
   </div>
 </noscript>
 
-<ngb-alert #selfClosingAlert type="success" class="ng-alert" [dismissible]="false" *ngIf="showAlert" (closed)="report = {}"> {{ alertText }} </ngb-alert>
+<app-toasts class="toasts-container"></app-toasts>
 
 <div class="container-fluid enter-form-wrapper">
   <div class="container">

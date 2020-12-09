@@ -15,8 +15,10 @@ import { MainComponent } from './components/main/main.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { RestoreComponent } from './components/restore/restore.component';
 import { NotFoundComponent } from './components/notFound/not-found.component';
+import { ToastsContainer } from './components/toastsContainer/toasts-container.component';
 
 import { HttpService } from './shared/services/httpService/http-service.service'
+import { ToastService } from './shared/services/toastService/toast.service'
 import { FocusDirective } from './shared/directives/focus/focus.directive'
 import { DateToLocalePipe } from './shared/pipes/dateToLocale/date-to-locale.pipe'
 
@@ -35,13 +37,13 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, RestoreComponent, NotFoundComponent,
-    FocusDirective, DateToLocalePipe
+    ToastsContainer, FocusDirective, DateToLocalePipe
   ],
   imports: [
     BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, BrowserAnimationsModule
   ],
   exports: [FocusDirective],
-  providers: [HttpService, AuthUserInfoResolver],
+  providers: [HttpService, ToastService, AuthUserInfoResolver],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpService } from '../../shared/services/httpService/http-service.service';
+import { ToastService } from '../../shared/services/toastService/toast.service';
 import { ResultInfo } from '../../shared/models/resultInfo';
 
 @Component({
@@ -10,7 +11,7 @@ import { ResultInfo } from '../../shared/models/resultInfo';
 })
 export class RegisterComponent {
 
-  constructor(private _httpService: HttpService, private _router: Router) { }
+  constructor(private _httpService: HttpService, private _router: Router, private _toastService: ToastService) { }
 
   public params: { email: string, password: string, confirmPassword: string } = {
     email: '',
@@ -19,8 +20,6 @@ export class RegisterComponent {
   }
 
   public isDisabled: boolean = false;
-  public showAlert: boolean = false;
-  public alertText: string = '';
   private _report: ResultInfo = new ResultInfo();
 
   public onSubmit(): void {
@@ -28,14 +27,12 @@ export class RegisterComponent {
     this._httpService.post('/api/account/register', this.params).subscribe((data: ResultInfo) => {
       this._report = data;
       this.isDisabled = false;
-      this.params.email = this.params.password = this.params.confirmPassword = ''; 
-      this.alertText = this._report.info;
-      this.showAlert = true;
-      setTimeout(() => this.showAlert = false, 5000);
+      this._toastService.showSuccess(this._report.info);
       if (this._report.status == 'UserCreated') {
         this._router.navigate(['/main'])
       }
     },
-      error => this.alertText = error.message);
+      error => this._toastService.showDanger(error.message)
+    );
   }
 }

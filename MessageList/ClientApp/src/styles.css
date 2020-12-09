@@ -131,6 +131,12 @@ a:hover {
   box-shadow: 0 0 1px rgba(0,0,0,.5) inset, 0 2px 3px rgba(0,0,0,.5) inset, 0 1px 1px rgba(255,255,255,.1);
 }
 
+.toasts-container {
+  position: absolute;
+  left: 80%;
+  top: 5%;
+}
+
 .small-shadow {
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
 }
@@ -175,10 +181,10 @@ a:hover {
   border-radius: 5px;
 }
 
-.text-light {
+/*.text-light span p {
   color: #F6F6F6;
 }
-
+*/
 .text-dark {
     color: black;
 }
