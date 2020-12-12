@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpService } from '../../shared/services/httpService/http-service.service';
 import { ToastService } from '../../shared/services/toastService/toast.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { TermsOfUseModal } from '../../shared/modals/termsOfUse/terms-of-use.modal';
 import { ResultInfo } from '../../shared/models/resultInfo';
 
 @Component({
@@ -11,7 +13,7 @@ import { ResultInfo } from '../../shared/models/resultInfo';
 })
 export class RegisterComponent {
 
-  constructor(private _httpService: HttpService, private _router: Router, private _toastService: ToastService) { }
+  constructor(private _httpService: HttpService, private _router: Router, private _toastService: ToastService, private _modalService: NgbModal) { }
 
   public params: { email: string, password: string, confirmPassword: string } = {
     email: '',
@@ -24,6 +26,10 @@ export class RegisterComponent {
   public progressBarValue: number = 0;
   public isHidden: boolean = false;
   private _report: ResultInfo = new ResultInfo();
+
+  public open() {
+    this._modalService.open(TermsOfUseModal);
+  }
 
   public onSubmit(): void {
     this.isHidden = false;

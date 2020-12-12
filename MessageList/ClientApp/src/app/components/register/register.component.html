@@ -46,33 +46,7 @@
           </button>
         </form>
         <div class="col-12 mt-3 mb-4 d-flex justify-content-center align-items-center flex-wrap">
-          <span class="text-center dark-color-text"> Создавая аккаунт вы соглашаетесь с условиями </span> <a class="text-center" id="termsOfUse" data-toggle="modal" data-target="#termsOfUseModal"><ins class="dark-color-text"> "Пользовательского соглашения" </ins></a>
-        </div>
-      </div>
-    </div>
-
-
-    <!--Terms of use modal window-->
-    <div class="modal fade" id="termsOfUseModal" tabindex="-1" role="dialog" aria-labelledby="termsOfUseModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="termsOfUseModalLabel">Пользовательское соглашение</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            На самом деле, никакого пользовательского соглашения пока нет, но в будущем, может быть, появится.
-            <br>
-            <br>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer et nisi aliquet, aliquam sapien eget, lobortis mi.
-            Phasellus ultricies, tortor quis consectetur consequat, lectus turpis posuere mauris, in tempus ante erat ac urna.
-            Vivamus eget nibh quis diam tempus interdum id ut sapien. Sed est libero, scelerisque eu semper at.
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
-          </div>
+          <span class="text-center dark-color-text"> Создавая аккаунт вы соглашаетесь с условиями </span> <a style="cursor: pointer" class="text-center" (click)="open()"><ins class="dark-color-text"> "Пользовательского соглашения" </ins></a>
         </div>
       </div>
     </div>
