@@ -30,7 +30,7 @@
               <div class="col-1 d-flex justify-content-center align-items-center edit-existing-group" (click)="editMessageGroupFormId = group.id">
                 <span class="mdi mdi-pencil mdi-24px text-light"></span>
               </div>
-              <button type="button" style="outline: none;" class="col-1 d-flex justify-content-center align-items-center delete-existing-group" (click)="deleteExistingGroup(group.id)">
+              <button type="button" style="outline: none;" class="col-1 d-flex justify-content-center align-items-center delete-existing-group" (click)="modalOpen('post' ,'Удаление группы', 'Вы действительно хотите удалить группу сообщений?', group.id, 'api/messageGroup/delete')">
                 <span class="mdi mdi-close-outline mdi-24px text-light"></span>
               </button>
             </div>
@@ -76,27 +76,6 @@
             <div class="row align-items-center py-2">
               <div class="col-1"><span class="mdi mdi-plus-thick mdi-24px text-light"></span></div>
               <div class="col-9 col-lg-10 d-flex align-items-center"><span class="text-light"> Добавить группу </span></div>
-            </div>
-          </div>
-
-          <!--Delete group modal window-->
-          <div class="modal fade" id="deleteGroupModal" tabindex="-1" role="dialog" aria-labelledby="deleteGroupModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="deleteGroupModalLabel">Удалить группу</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  Вы действительно хотите удалить группу?
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-primary" data-dismiss="modal" id="deleteGroupModalButton">Да</button>
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -146,33 +125,12 @@
                         <div class="col-1" (click)="toggleEditingMessageForm(true, message.id, message.text)">
                           <p class="text-center"><span class="mdi mdi-pencil mdi-dark edit-message"></span></p>
                         </div>
-                        <button type="button" style="outline: none;" class="col-1 delete-message" data-toggle="modal" data-target="#deleteMessageModal" (click)="deleteExistingMessage(message.id)">
+                        <button type="button" style="outline: none;" class="col-1 delete-message" (click)="modalOpen('post' ,'Удаление сообщения', 'Вы действительно хотите удалить сообщение?', message.id, 'api/messages/delete')">
                           <p class="text-center"><span class="mdi mdi-close-outline mdi-dark"></span></p>
                         </button>
                       </div>
                       <p class="text-left text-break mx-3 mb-lg-5" id="messageText"> {{message.text}} </p>
                     </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!--Delete message modal window-->
-            <div class="modal fade" id="deleteMessageModal" tabindex="-1" role="dialog" aria-labelledby="deleteMessageModalLabel" aria-hidden="true">
-              <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="deleteMessageModalLabel">Удалить сообщение</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    Вы действительно хотите удалить сообщение?
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="deleteMessageModalButton">Да</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
                   </div>
                 </div>
               </div>

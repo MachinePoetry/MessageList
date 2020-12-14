@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using MessageList.Data;
 using MessageList.Models;
+using MessageList.Models.QueryModels;
 
 namespace MessageList.Controllers
 {
@@ -47,11 +48,11 @@ namespace MessageList.Controllers
         }
 
         [HttpPost("delete")]
-        public async Task<JsonResult> DeleteMessageGroup([FromBody] MessageGroup mg)
+        public async Task<JsonResult> DeleteMessageGroup([FromBody] QueryMessageGroup mg)
         {
             int res = 0;
             MessageGroup messageGroup = await _db.MessageGroups.FirstOrDefaultAsync(mGroup => mGroup.Id == mg.Id);
-            User user = await _db.Users.FirstOrDefaultAsync(u => u.Id == mg.UserId);
+            User user = await _db.Users.FirstOrDefaultAsync(u => u.Id == mg.AuthUserId);
             if (messageGroup != null && user != null && user.Email.Equals(User.Identity.Name))
             {
                 _db.MessageGroups.Remove(messageGroup);

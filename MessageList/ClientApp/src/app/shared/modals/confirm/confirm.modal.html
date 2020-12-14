@@ -1,0 +1,13 @@
+<div class="modal-header">
+  <h5 class="modal-title"><span> {{modalWindowParams.header}} </span></h5>
+  <button type="button" class="close" aria-label="Close" (click)="cancel('crossButton')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  {{modalWindowParams.body}}
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" (click)="ok('okButton')"> Ok </button>
+  <button type="button" class="btn btn-primary" (click)="cancel('cancelButton')"> Cancel </button>
+</div>

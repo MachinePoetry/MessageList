@@ -22,7 +22,8 @@ import { ToastService } from './shared/services/toastService/toast.service'
 import { FocusDirective } from './shared/directives/focus/focus.directive'
 import { DateToLocalePipe } from './shared/pipes/dateToLocale/date-to-locale.pipe'
 
-import { TermsOfUseModal } from './shared/modals/termsOfUse/terms-of-use.modal'
+import { TermsOfUseModal } from './shared/modals/termsOfUse/terms-of-use.modal';
+import { ConfirmModal } from './shared/modals/confirm/confirm.modal';
 
 import { AuthUserInfoResolver } from './shared/resolvers/auth-user-info.resolver'
 
@@ -39,7 +40,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, RestoreComponent, NotFoundComponent,
-    ToastsContainer, FocusDirective, DateToLocalePipe, TermsOfUseModal
+    ToastsContainer, FocusDirective, DateToLocalePipe, TermsOfUseModal, ConfirmModal
   ],
   imports: [
     BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, BrowserAnimationsModule

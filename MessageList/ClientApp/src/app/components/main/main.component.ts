@@ -2,8 +2,12 @@ import { Component, OnInit, AfterViewInit, ViewChild, ViewChildren, ElementRef, 
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { HttpService } from '../../shared/services/httpService/http-service.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ConfirmModal } from '../../shared/modals/confirm/confirm.modal';
+import { ConfirmModalParams } from '../../shared/models/confirmModalParams';
 import { User } from '../../shared/models/user';
 import { MessageGroup } from '../../shared/models/messageGroup';
+
 
 @Component({
   selector: 'app-main',
@@ -12,7 +16,7 @@ import { MessageGroup } from '../../shared/models/messageGroup';
   styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit, AfterViewInit {
-  constructor(private httpService: HttpService, private _route: ActivatedRoute) { }
+  constructor(private httpService: HttpService, private _route: ActivatedRoute, private _modalService: NgbModal) { }
 
   @ViewChild('appHeader', { read: ElementRef }) appHeader: ElementRef;
   @ViewChild('groupMessageBlock') groupMessageBlock: ElementRef;
@@ -102,36 +106,6 @@ export class MainComponent implements OnInit, AfterViewInit {
     );
   }
 
-  public deleteExistingGroup(groupId: number): void {
-    let groupParams: { id: number, userId: number } = {
-      id: groupId,
-      userId: this.authUserInfo.id
-    }
-    this.enterMessageField.nativeElement.focus();
-
-    this.httpService.post('/api/messageGroup/delete', groupParams).subscribe(() => {
-
-      this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
-        this.authUserMessageGroups = data;
-
-        if (this.selectedGroupId === groupId) {
-          this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
-          this.isGroupesIterable = true;
-        } 
-      },
-        error => {
-          this.errorText = error.message;
-          this.showAlert = true;
-        }
-      )
-    },
-      error => {
-        this.errorText = error.message;
-        this.showAlert = true;
-      }
-    );
-  }
-
     // Create and Update new message
 
   public createAndUpdateMessage(messageId?: number): void {
@@ -192,33 +166,6 @@ export class MainComponent implements OnInit, AfterViewInit {
     }
   }
 
-    // Delete existing message
-
-  public deleteExistingMessage(messageId: number): void {
-    let messageParams: { id: number, authUserId: number | null } = {
-      id: messageId,
-      authUserId: this.authUserInfo.id
-    }
-    this.enterMessageField.nativeElement.focus();
-
-    this.httpService.post('/api/messages/delete', messageParams).subscribe(data => {
-
-      this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
-        this.authUserMessageGroups = data;
-      },
-        error => {
-          this.errorText = error.message;
-          this.showAlert = true;
-        }
-      )
-    },
-      error => {
-        this.errorText = error.message;
-        this.showAlert = true;
-      }
-    );
-  }
-
     // Search
 
   public searchMessages(): void {
@@ -256,6 +203,29 @@ export class MainComponent implements OnInit, AfterViewInit {
         }
       )
     }
+  }
+
+    // Modals
+
+  public modalOpen(requesetMethod: string, header: string, body: string, entityId: number, url: string) {
+    let modalRef = this._modalService.open(ConfirmModal);
+    modalRef.result.then((result) => {
+      if (result === 'okButton') {
+        this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
+          this.authUserMessageGroups = data;
+
+          if (url === 'api/messageGroup/delete' && this.selectedGroupId === entityId) {
+            this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
+            this.isGroupesIterable = true;
+          }
+          this.enterMessageField.nativeElement.focus();
+        },
+          error => { }
+        );
+      }
+    }, (reason) => { });
+    modalRef.componentInstance.modalWindowParams = new ConfirmModalParams(requesetMethod, header, body, this.authUserInfo, entityId, url);
+    modalRef.hidden.subscribe(() => this.enterMessageField.nativeElement.focus());
   }
 
     // Component methods

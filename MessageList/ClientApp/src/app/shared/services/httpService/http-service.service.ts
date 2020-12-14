@@ -8,11 +8,9 @@ export class HttpService {
 
   constructor(private http: HttpClient) { }
 
-  query: Observable<Object>;
-
-  get(url: string): Observable<Object>
-  get(url: string, queryParams: Object): Observable<Object>
-  get(url: string, queryParams?: Object): Observable<Object> {
+  // arrow notation here is mostly to save 'this' as current object for using get/post/etc in other methods and delegates outside http-service
+  public get = (url: string, queryParams?: Object) => {
+    let query: Observable<Object>;
 
     if (queryParams) {
       let httpParams: HttpParams = new HttpParams();
@@ -21,15 +19,15 @@ export class HttpService {
         httpParams = httpParams.set(param, queryParams[param]);
       }
 
-      this.query = this.http.get(url, { params: httpParams });
+      query = this.http.get(url, { params: httpParams });
     }
     else {
-      this.query = this.http.get(url);
+      query = this.http.get(url);
     }
-    return this.query;
+    return query;
   }
 
-  post(url: string, params: Object): Observable<Object> {
+  public post = (url: string, params: Object) => {
     return this.http.post(url, params);
   }
 }
