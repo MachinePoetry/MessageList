@@ -140,6 +140,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       this.messageEditingBlock.nativeElement.classList.remove('d-block');
       this.messageEditingBlock.nativeElement.classList.add('d-none');
       this.enterMessageField.nativeElement.value = '';
+      this.newMessage = '';
       this.setMessageCreationFormHeight();
       this._setMessageBlockHeight();
       this.enterMessageField.nativeElement.focus();
