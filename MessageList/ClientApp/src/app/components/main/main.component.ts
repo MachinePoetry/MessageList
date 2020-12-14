@@ -77,7 +77,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     );
   }
 
-  // Update and delete existing group
+  // Update existing group
 
   public updateMessageGroup(groupId: number, groupName: string): void {
     let groupParams: { userId: number, id: number | null, name: string } = {
@@ -141,6 +141,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     );
 
     this.enterMessageField.nativeElement.value = '';
+    this.newMessage = '';
     this.toggleEditingMessageForm(false, null);
     this.setMessageCreationFormHeight();
     this.selectedMessageId = null;
