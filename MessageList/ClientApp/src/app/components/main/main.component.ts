@@ -59,16 +59,10 @@ export class MainComponent implements OnInit, AfterViewInit {
 
     this.httpService.post('/api/messageGroup/create', groupParams).subscribe(data => {
       this.showGroupCreationForm = false;
-      this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
-        this.authUserMessageGroups = data;
+      this._refreshGroupsAndMessages(() => {
         this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
         this.isGroupesIterable = true;
-      },
-        error => {
-          this.errorText = error.message;
-          this.showAlert = true;
-        }
-      )
+      });
     },
       error => {
         this.errorText = error.message;
@@ -89,15 +83,7 @@ export class MainComponent implements OnInit, AfterViewInit {
 
     this.httpService.post('/api/messageGroup/update', groupParams).subscribe(data => {
       this.showGroupCreationForm = false;
-      this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
-        this.authUserMessageGroups = data;
-        this.editMessageGroupFormId = null;
-      },
-        error => {
-          this.errorText = error.message;
-          this.showAlert = true;
-        }
-      )
+      this._refreshGroupsAndMessages(() => { this.editMessageGroupFormId = null; });
     },
       error => {
         this.errorText = error.message;
@@ -121,18 +107,11 @@ export class MainComponent implements OnInit, AfterViewInit {
     let url: string = this.showEditMessageForm ? '/api/messages/update' : '/api/messages/create';
 
     this.httpService.post(url, messageParams).subscribe(data => {
-
-      this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
-        this.authUserMessageGroups = data;
+      this._refreshGroupsAndMessages(() => {
         if (url === '/api/messages/create') {
           this.isMessagesIterable = true;
         }
-      },
-        error => {
-          this.errorText = error.message;
-          this.showAlert = true;
-        }
-      )
+      });
     },
       error => {
         this.errorText = error.message;
@@ -195,14 +174,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       this.isCollapsed = true;
       this.searchString = '';
 
-      this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
-        this.authUserMessageGroups = data;
-      },
-        error => {
-          this.errorText = error.message;
-          this.showAlert = true;
-        }
-      )
+      this._refreshGroupsAndMessages();
     }
   }
 
@@ -212,17 +184,13 @@ export class MainComponent implements OnInit, AfterViewInit {
     let modalRef = this._modalService.open(ConfirmModal);
     modalRef.result.then((result) => {
       if (result === 'okButton') {
-        this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
-          this.authUserMessageGroups = data;
-
+        this._refreshGroupsAndMessages(() => {
           if (url === 'api/messageGroup/delete' && this.selectedGroupId === entityId) {
             this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
             this.isGroupesIterable = true;
           }
           this.enterMessageField.nativeElement.focus();
-        },
-          error => { }
-        );
+        });
       }
     }, (reason) => { });
     modalRef.componentInstance.modalWindowParams = new ConfirmModalParams(requesetMethod, header, body, this.authUserInfo, entityId, url);
@@ -234,6 +202,20 @@ export class MainComponent implements OnInit, AfterViewInit {
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     this._setMessageBlockHeight();
+  }
+
+  private _refreshGroupsAndMessages(addActionsToPromise?: () => void) {
+    this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
+      this.authUserMessageGroups = data;
+      if (addActionsToPromise) {
+        addActionsToPromise();
+      }
+    },
+      error => {
+        this.errorText = error.message;
+        this.showAlert = true;
+      }
+    )
   }
 
   public groupsTrackFn(index, group) {
@@ -272,8 +254,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.authUserInfo = this._route.snapshot.data['user'];
 
     if (this.authUserInfo != null) {
-      this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
-        this.authUserMessageGroups = data;
+      this._refreshGroupsAndMessages(() => {
         if (this.authUserMessageGroups.length > 0) {
           this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
         }
