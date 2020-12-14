@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit, ViewChild, ViewChildren, ElementRef, 
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { HttpService } from '../../shared/services/httpService/http-service.service';
+import { ToastService } from '../../shared/services/toastService/toast.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmModal } from '../../shared/modals/confirm/confirm.modal';
 import { ConfirmModalParams } from '../../shared/models/confirmModalParams';
@@ -16,7 +17,7 @@ import { MessageGroup } from '../../shared/models/messageGroup';
   styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit, AfterViewInit {
-  constructor(private httpService: HttpService, private _route: ActivatedRoute, private _modalService: NgbModal) { }
+  constructor(private httpService: HttpService, private _route: ActivatedRoute, private _toastService: ToastService, private _modalService: NgbModal) { }
 
   @ViewChild('appHeader', { read: ElementRef }) appHeader: ElementRef;
   @ViewChild('groupMessageBlock') groupMessageBlock: ElementRef;
@@ -64,10 +65,7 @@ export class MainComponent implements OnInit, AfterViewInit {
         this.isGroupesIterable = true;
       });
     },
-      error => {
-        this.errorText = error.message;
-        this.showAlert = true;
-      }
+      error => this._toastService.showDanger(error.message)
     );
   }
 
@@ -85,10 +83,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       this.showGroupCreationForm = false;
       this._refreshGroupsAndMessages(() => { this.editMessageGroupFormId = null; });
     },
-      error => {
-        this.errorText = error.message;
-        this.showAlert = true;
-      }
+      error => this._toastService.showDanger(error.message)
     );
   }
 
@@ -113,10 +108,7 @@ export class MainComponent implements OnInit, AfterViewInit {
         }
       });
     },
-      error => {
-        this.errorText = error.message;
-        this.showAlert = true;
-      }
+      error => this._toastService.showDanger(error.message)
     );
 
     this.enterMessageField.nativeElement.value = '';
@@ -160,10 +152,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       this.httpService.get('api/messages/search', searchParams).subscribe((data: MessageGroup[]) => {
         this.authUserMessageGroups = data;
       },
-        error => {
-          this.errorText = error.message;
-          this.showAlert = true;
-        }
+        error => this._toastService.showDanger(error.message)
       )
     }
   }
@@ -212,10 +201,7 @@ export class MainComponent implements OnInit, AfterViewInit {
         addActionsToPromise();
       }
     },
-      error => {
-        this.errorText = error.message;
-        this.showAlert = true;
-      }
+      error => this._toastService.showDanger(error.message)
     )
   }
 
