@@ -109,7 +109,7 @@
           </div>
 
           <!--Block with user messages-->
-          <div #messageBlock id="messageBlock" class="col-12 message-block">
+          <div #messageBlock id="messageBlock" class="col-12 message-block" (scroll)="uploadNewMessages()">
             <h2 *ngIf="authUserMessageGroups.length === 0" class="text-center mx-2" id="createGroupNotification">
               Создавайте группы в меню слева для сохранения в них ваших сообщений
             </h2>

@@ -41,11 +41,14 @@ export class MainComponent implements OnInit, AfterViewInit {
   public searchString: string = '';
   public isCollapsed: boolean = true;
   public showEditMessageForm: boolean = false;
+  private _previousMessageBlockHeight: number | null = null;
   public newMessage: string = '';
+  private _messagesToLoadCounter: number = 30;
+  private _freezeScrollBar = false;
   private isMessagesIterable = true;
   private isGroupesIterable = true;
 
-  public authUserInfo: User;
+  public authUserInfo: User = new User();
   public authUserMessageGroups: MessageGroup[] = [];
 
 
@@ -60,10 +63,12 @@ export class MainComponent implements OnInit, AfterViewInit {
 
     this.httpService.post('/api/messageGroup/create', groupParams).subscribe(data => {
       this.showGroupCreationForm = false;
-      this._refreshGroupsAndMessages(() => {
+      this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
+        () => {
         this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
         this.isGroupesIterable = true;
-      });
+        }
+      );
     },
       error => this._toastService.showDanger(error.message)
     );
@@ -81,7 +86,11 @@ export class MainComponent implements OnInit, AfterViewInit {
 
     this.httpService.post('/api/messageGroup/update', groupParams).subscribe(data => {
       this.showGroupCreationForm = false;
-      this._refreshGroupsAndMessages(() => { this.editMessageGroupFormId = null; });
+      this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
+        () => {
+          this.editMessageGroupFormId = null;
+        }
+      );
     },
       error => this._toastService.showDanger(error.message)
     );
@@ -102,11 +111,13 @@ export class MainComponent implements OnInit, AfterViewInit {
     let url: string = this.showEditMessageForm ? '/api/messages/update' : '/api/messages/create';
 
     this.httpService.post(url, messageParams).subscribe(data => {
-      this._refreshGroupsAndMessages(() => {
-        if (url === '/api/messages/create') {
-          this.isMessagesIterable = true;
+      this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
+        () => {
+          if (url === '/api/messages/create') {
+            this.isMessagesIterable = true;
+          }
         }
-      });
+      );
     },
       error => this._toastService.showDanger(error.message)
     );
@@ -159,12 +170,11 @@ export class MainComponent implements OnInit, AfterViewInit {
 
   public stopSearchMessages(): void {
     this.enterMessageField.nativeElement.focus();
-
     if (this.isCollapsed == false) {
       this.isCollapsed = true;
       this.searchString = '';
-
-      this._refreshGroupsAndMessages();
+      this.isMessagesIterable = true;
+      this._refreshGroupsAndMessages({ id: this.authUserInfo.id });
     }
   }
 
@@ -174,13 +184,15 @@ export class MainComponent implements OnInit, AfterViewInit {
     let modalRef = this._modalService.open(ConfirmModal);
     modalRef.result.then((result) => {
       if (result === 'okButton') {
-        this._refreshGroupsAndMessages(() => {
-          if (url === 'api/messageGroup/delete' && this.selectedGroupId === entityId) {
-            this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
-            this.isGroupesIterable = true;
+        this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
+          () => {
+            if (url === 'api/messageGroup/delete' && this.selectedGroupId === entityId) {
+              this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
+              this.isGroupesIterable = true;
+            }
+            this.enterMessageField.nativeElement.focus();
           }
-          this.enterMessageField.nativeElement.focus();
-        });
+        );
       }
     }, (reason) => { });
     modalRef.componentInstance.modalWindowParams = new ConfirmModalParams(requesetMethod, header, body, this.authUserInfo, entityId, url);
@@ -194,8 +206,11 @@ export class MainComponent implements OnInit, AfterViewInit {
     this._setMessageBlockHeight();
   }
 
-  private _refreshGroupsAndMessages(addActionsToPromise?: () => void) {
-    this.httpService.get('api/messages/getGroupesAndMessages', { id: this.authUserInfo.id }).subscribe((data: MessageGroup[]) => {
+  private _refreshGroupsAndMessages(userMesagesParams: object, addActionsToPromise?: () => void) {
+    if (!userMesagesParams.hasOwnProperty('counter')) {
+      this._messagesToLoadCounter = 30;
+    }
+    this.httpService.get('api/messages/getGroupesAndMessages', userMesagesParams).subscribe((data: MessageGroup[]) => {
       this.authUserMessageGroups = data;
       if (addActionsToPromise) {
         addActionsToPromise();
@@ -205,6 +220,19 @@ export class MainComponent implements OnInit, AfterViewInit {
     )
   }
 
+  public uploadNewMessages(): void {
+    this._previousMessageBlockHeight = this.messageBlock.nativeElement.scrollHeight;
+    if (this.messageBlock.nativeElement.scrollTop === 0) {
+      let messagesInBlockAmount = this.authUserMessageGroups.filter(group => group.id === this.selectedGroupId)[0].messages.length;
+      this.isMessagesIterable = false;
+      if (messagesInBlockAmount === this._messagesToLoadCounter) {  // после поиска  перестает работать. Надо обнулять counter, наверно
+        this._messagesToLoadCounter += 30;
+        this._freezeScrollBar = true;
+        this._refreshGroupsAndMessages({ id: this.authUserInfo.id, counter: this._messagesToLoadCounter, groupId: this.selectedGroupId });
+      }
+    }
+  }
+
   public groupsTrackFn(index, group) {
     return group.name;
   }
@@ -212,6 +240,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   changeMessageGroup() {
     this.stopSearchMessages();
     this.isMessagesIterable = true;
+    this._messagesToLoadCounter = 30;
   }
 
   hideGroupCreationForm() {
@@ -241,11 +270,13 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.authUserInfo = this._route.snapshot.data['user'];
 
     if (this.authUserInfo != null) {
-      this._refreshGroupsAndMessages(() => {
-        if (this.authUserMessageGroups.length > 0) {
-          this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
+      this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
+        () => {
+          if (this.authUserMessageGroups.length > 0) {
+            this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
+          }
         }
-      });
+      );
     }
   }
 
@@ -255,6 +286,10 @@ export class MainComponent implements OnInit, AfterViewInit {
       if (this.isMessagesIterable) {
         this.messageBlock.nativeElement.scrollTop = this.messageBlock.nativeElement.scrollHeight;
         this.isMessagesIterable = false;
+      }
+      if (this._freezeScrollBar) {
+        this.messageBlock.nativeElement.scrollTop = this.messageBlock.nativeElement.scrollHeight - this._previousMessageBlockHeight;
+        this._freezeScrollBar = false;
       }
     });
     this.groupes.changes.subscribe((list: QueryList<ElementRef>) => {

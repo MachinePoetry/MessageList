@@ -24,9 +24,18 @@ namespace MessageList.Controllers
         }
 
         [HttpGet("getGroupesAndMessages")]
-        public async Task<JsonResult> GetGroupesAndMessagesAsync([FromQuery] int id)
+        public async Task<JsonResult> GetGroupesAndMessagesAsync([FromQuery] int id, int? counter, int? groupId)
         {
-            List<MessageGroup> messageGroups = await _db.MessageGroups.Where(mg => mg.UserId == id).Include(u => u.Messages).ToListAsync();
+            // Application returns only 30 messages for every group for the first load. More messages are uploaded only for group from params 
+            List<MessageGroup> messageGroups = await _db.MessageGroups.Where(mg => mg.UserId == id).Include(m => m.Messages).ToListAsync();
+            messageGroups.All(mg => { mg.Messages = mg.Messages.AsEnumerable().Reverse().Take(30).Reverse().ToList(); return true; });
+
+            if (counter != null && groupId != null)
+            {
+                List<Message> messages = await _db.Messages.Where(mes => mes.MessageGroupId == groupId).OrderBy(m => m.CreatedAt)
+                                               .Reverse().Take((int)counter).Reverse().ToListAsync();
+                messageGroups.FirstOrDefault(m => m.Id == groupId).Messages = messages;
+            }
             return Json(messageGroups);
         }
 
