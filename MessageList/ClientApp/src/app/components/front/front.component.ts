@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { HttpService } from '../../shared/services/httpService/http-service.service';
 import { ToastService } from '../../shared/services/toastService/toast.service';
 import { ResultInfo } from '../../shared/models/resultInfo';
@@ -23,18 +24,20 @@ export class FrontComponent implements OnInit {
 
   public authUserInfo: any;
 
-  public onSubmit(): void {
-    this.isDisabled = true;
-    this.isSpinnerShow = true;
-    this._httpService.post('/api/bugReport/create', this.params).subscribe((data: ResultInfo) => {
-      this._report = data;
-      this.isDisabled = false;
-      this.isSpinnerShow = false;
-      this._toastService.showSuccess(this._report.info);
-    },
-      error => this._toastService.showDanger(error.message)
-    );
-    this.params.reportText = this.params.reportContacts = '';
+  public onSubmit(form: NgForm): void {
+    if (form.valid) {
+      this.isDisabled = true;
+      this.isSpinnerShow = true;
+      this._httpService.post('/api/bugReport/create', this.params).subscribe((data: ResultInfo) => {
+        this._report = data;
+        this.isDisabled = false;
+        this.isSpinnerShow = false;
+        this._toastService.showSuccess(this._report.info);
+      },
+        error => this._toastService.showDanger(error.message)
+      );
+      form.resetForm();
+    }
   }
 
   ngOnInit() {

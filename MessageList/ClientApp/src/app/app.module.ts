@@ -4,6 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { Routes, RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from "@angular/common"
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
@@ -43,7 +44,7 @@ const routes: Routes = [
     ToastsContainer, FocusDirective, DateToLocalePipe, TermsOfUseModal, ConfirmModal
   ],
   imports: [
-    BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, BrowserAnimationsModule
+    BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, CommonModule, BrowserAnimationsModule
   ],
   exports: [FocusDirective],
   providers: [HttpService, ToastService, AuthUserInfoResolver],

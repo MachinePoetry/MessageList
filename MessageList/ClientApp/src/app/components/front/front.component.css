@@ -3,6 +3,16 @@ p {
   font-size: 18px;
 }
 
+input.ng-invalid.submitted,
+textarea.ng-invalid.submitted,
+input.ng-invalid.ng-dirty,
+textarea.ng-invalid.ng-dirty,
+input.ng-invalid.ng-touched,
+textarea.ng-invalid.ng-touched {
+  border: 2px solid red;
+  box-shadow: 0 0 10px red;
+}
+
 #promoText p {
   color: #142C40
 }
