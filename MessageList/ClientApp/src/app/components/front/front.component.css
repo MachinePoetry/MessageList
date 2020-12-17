@@ -3,8 +3,8 @@ p {
   font-size: 18px;
 }
 
-input.ng-invalid.submitted,
-textarea.ng-invalid.submitted,
+input.ng-invalid.submit-error,
+textarea.ng-invalid.submit-error,
 input.ng-invalid.ng-dirty,
 textarea.ng-invalid.ng-dirty,
 input.ng-invalid.ng-touched,
