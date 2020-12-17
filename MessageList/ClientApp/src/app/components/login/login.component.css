@@ -5,6 +5,15 @@ input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px #F6F6F6 inset;
 }
 
+span.submit-error,
+#loginEmail.ng-invalid.submit-error,
+#loginEmail.ng-invalid.ng-touched,
+#loginPassword.ng-invalid.ng-touched,
+#loginPassword.ng-invalid.ng-dirty,
+#loginPassword.ng-invalid.submit-error {
+  border-bottom: 2px solid #DC143C;
+}
+
 a:hover {
   color: black;
   text-shadow: 0px 0px 1px #F6F6F6;
@@ -13,6 +22,10 @@ a:hover {
 p {
   font-family: Roboto_Slab_reg, Arial, sans-serif;
   font-size: 18px;
+}
+
+.alert-text {
+  color: #DC143C;
 }
 
 .border-bottom-dark {
@@ -37,7 +50,6 @@ p {
   border-top: none;
   border-left: none;
   border-right: none;
-  border-bottom: 2px solid #1B5891;
   outline: none;
   background-color: #F6F6F6;
 }
