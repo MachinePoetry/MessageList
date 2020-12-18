@@ -19,25 +19,62 @@
 
     <div class="row justify-content-center">
       <div class="col-10 col-sm-8 col-md-6 col-lg-5 col-xl-4 form-group form-container mt-25per">
-        <form id="registerForm" (ngSubmit)="onSubmit()">
+        <form #registerForm="ngForm" id="registerForm" (ngSubmit)="onSubmit(registerForm)" novalidate>
           <div class="form-row justify-content-center align-items-center">
             <span class="mdi mdi-account-check mdi-48px dark-color-text"></span><h1 class="dark-color-text lh-1 mt-2"> Регистрация </h1>
           </div>
+
           <div class="form-row justify-content-center mt-3 has-float-label">
-            <span class="col-1 mdi mdi-account mdi-24px mt-4 dark-color-text border-bottom-dark"></span>
-            <input class="col-10 mt-4" type="text" name="email" id="registerEmail" placeholder="Введите email" [(ngModel)]="params.email" />
-            <label for="registerEmail"> Email </label>
+            <span class="col-1 mdi mdi-account mdi-24px mt-4 dark-color-text border-bottom-dark" [ngClass]="{'submit-error': email.invalid && (email.touched || registerForm.submitted)}"></span>
+            <input #email="ngModel" class="col-10 mt-4" [ngClass]="{'submit-error': registerForm.submitted}" type="text" name="email" id="registerEmail" placeholder="Введите email" [(ngModel)]="params.email" required pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$" maxlength="300" />
+            <label for="registerEmail" [ngClass]="{'alert-text': email.invalid && (email.touched || registerForm.submitted)}"> Email </label>
           </div>
+          <div class="form-row justify-content-center">
+            <div *ngIf="email.invalid && (email.touched || registerForm.submitted)">
+              <div *ngIf="email.errors?.required">
+                <span class="alert-text">Введите email</span>
+              </div>
+              <div *ngIf="email.errors?.pattern">
+                <span class="alert-text">Неправильный формат email</span>
+              </div>
+            </div>
+          </div>
+
           <div class="form-row justify-content-center has-float-label">
-            <span class="col-1 mdi mdi-lock mdi-24px mt-4 dark-color-text border-bottom-dark"></span>
-            <input class="col-10 mt-4" type="password" name="password" id="registerPassword" placeholder="Введите пароль" [(ngModel)]="params.password" />
-            <label for="registerPassword"> Пароль </label>
+            <span class="col-1 mdi mdi-lock mdi-24px mt-4 dark-color-text border-bottom-dark" [ngClass]="{'submit-error': password.invalid && (password.touched || registerForm.submitted)}"></span>
+            <input #password="ngModel" class="col-10 mt-4" [ngClass]="{'submit-error': registerForm.submitted}" type="password" name="password" id="registerPassword" placeholder="Введите пароль" [(ngModel)]="params.password" required pattern="^.{1,20}$" maxlength="21" validateEqual=”confirmPassword” errorToTargetControl=”true” />
+            <label for="registerPassword" [ngClass]="{'alert-text': password.invalid && (password.touched || registerForm.submitted)}"> Пароль </label>
           </div>
+          <div class="form-row justify-content-center">
+            <div *ngIf="password.invalid && (password.touched || password.dirty || registerForm.submitted)">
+              <div *ngIf="password.errors?.required">
+                <span class="alert-text">Введите пароль</span>
+              </div>
+              <div *ngIf="password.errors?.pattern">
+                <span class="alert-text">Допустимая длина пароля не более 20 символов</span>
+              </div>
+            </div>
+          </div>
+
           <div class="form-row justify-content-center has-float-label">
-            <span class="col-1 mdi mdi-lock mdi-24px mt-4 dark-color-text border-bottom-dark"></span>
-            <input class="col-10 mt-4" type="password" name="confirmPassword" id="registerConfirmPassword" placeholder="Подтвердите пароль" [(ngModel)]="params.confirmPassword" />
-            <label for="registerConfirmPassword"> Пароль </label>
+            <span class="col-1 mdi mdi-lock mdi-24px mt-4 dark-color-text border-bottom-dark" [ngClass]="{'submit-error': confirmPassword.invalid && (confirmPassword.touched || registerForm.submitted)}"></span>
+            <input #confirmPassword="ngModel" class="col-10 mt-4" [ngClass]="{'submit-error': registerForm.submitted}" type="password" name="confirmPassword" id="registerConfirmPassword" placeholder="Подтвердите пароль" [(ngModel)]="params.confirmPassword" required pattern="^.{1,20}$" maxlength="21" validateEqual=”password” />
+            <label for="registerConfirmPassword" [ngClass]="{'alert-text': confirmPassword.invalid && (confirmPassword.touched || registerForm.submitted)}"> Пароль </label>
           </div>
+          <div class="form-row justify-content-center">
+            <div *ngIf="confirmPassword.invalid && (confirmPassword.touched || registerForm.submitted)">
+              <div *ngIf="confirmPassword.errors?.required">
+                <span class="alert-text"> Введите пароль </span>
+              </div>
+              <div *ngIf="confirmPassword.errors?.validateNotEqual">
+                <span class="alert-text"> Пароли не совпадают </span>
+              </div>
+              <div *ngIf="confirmPassword.errors?.pattern">
+                <span class="alert-text">Допустимая длина пароля не более 20 символов</span>
+              </div>
+            </div>
+          </div>
+
           <button class="mt-5 btn dark-login-button d-flex justify-content-center align-items-center w-80 mx-auto" type="submit" [disabled]="isDisabled" id="registerButton">
             <span class="dark-color-text">Зарегистрироваться</span>
             <div *ngIf="isSpinnerShow" class="d-flex justify-content-center align-items-center">

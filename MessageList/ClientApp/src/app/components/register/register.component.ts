@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpService } from '../../shared/services/httpService/http-service.service';
 import { ToastService } from '../../shared/services/toastService/toast.service';
@@ -24,37 +25,40 @@ export class RegisterComponent {
   public isDisabled: boolean = false;
   public isSpinnerShow: boolean = false;
   public progressBarValue: number = 0;
-  public isHidden: boolean = false;
+  public isHidden: boolean = true;
   private _report: ResultInfo = new ResultInfo();
 
-  public open() {
+  public open(): void {
     this._modalService.open(TermsOfUseModal);
   }
 
-  public onSubmit(): void {
-    this.isHidden = false;
-    this.progressBarValue = 0;
-    this.isDisabled = true;
-    this.isSpinnerShow = true;
-    this.progressBarValue = 30;
-    this._httpService.post('/api/account/register', this.params).subscribe((data: ResultInfo) => {
-      this.progressBarValue = 50;
-      this._report = data;
-      this.isDisabled = false;
-      this.isSpinnerShow = false;
-      this._toastService.showSuccess(this._report.info);
-      this.progressBarValue = 100;
-      if (this.progressBarValue === 100) {
-        setTimeout(() => {
-          this.isHidden = true;
-          this.progressBarValue = 0;
-        }, 700);
-      }
-      if (this._report.status == 'UserCreated') {
-        this._router.navigate(['/main'])
-      }
-    },
-      error => this._toastService.showDanger(error.message)
-    );
+  public onSubmit(form: NgForm): void {
+    if (form.valid) {
+      this.isHidden = false;
+      this.progressBarValue = 0;
+      this.isDisabled = true;
+      this.isSpinnerShow = true;
+      this.progressBarValue = 30;
+      this._httpService.post('/api/account/register', this.params).subscribe((data: ResultInfo) => {
+        this.progressBarValue = 50;
+        this._report = data;
+        this.isDisabled = false;
+        this.isSpinnerShow = false;
+        this._toastService.showSuccess(this._report.info);
+        this.progressBarValue = 100;
+        if (this.progressBarValue === 100) {
+          setTimeout(() => {
+            this.isHidden = true;
+            this.progressBarValue = 0;
+          }, 700);
+        }
+        if (this._report.status == 'UserCreated') {
+          this._router.navigate(['/main'])
+        }
+      },
+        error => this._toastService.showDanger(error.message)
+      );
+      form.resetForm({ email: this.params.email, password: this.params.password, confirmPassword: this.params.confirmPassword });
+    }
   }
 }

@@ -18,15 +18,16 @@ import { RestoreComponent } from './components/restore/restore.component';
 import { NotFoundComponent } from './components/notFound/not-found.component';
 import { ToastsContainer } from './components/toastsContainer/toasts-container.component';
 
-import { HttpService } from './shared/services/httpService/http-service.service'
-import { ToastService } from './shared/services/toastService/toast.service'
-import { FocusDirective } from './shared/directives/focus/focus.directive'
-import { DateToLocalePipe } from './shared/pipes/dateToLocale/date-to-locale.pipe'
+import { HttpService } from './shared/services/httpService/http-service.service';
+import { ToastService } from './shared/services/toastService/toast.service';
+import { FocusDirective } from './shared/directives/focus/focus.directive';
+import { EqualValidatorDirective } from './shared/directives/equalValidator/equal-validator.directive';
+import { DateToLocalePipe } from './shared/pipes/dateToLocale/date-to-locale.pipe';
 
 import { TermsOfUseModal } from './shared/modals/termsOfUse/terms-of-use.modal';
 import { ConfirmModal } from './shared/modals/confirm/confirm.modal';
 
-import { AuthUserInfoResolver } from './shared/resolvers/auth-user-info.resolver'
+import { AuthUserInfoResolver } from './shared/resolvers/auth-user-info.resolver';
 
 const routes: Routes = [
   { path: '', component: FrontComponent },
@@ -41,12 +42,12 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, RestoreComponent, NotFoundComponent,
-    ToastsContainer, FocusDirective, DateToLocalePipe, TermsOfUseModal, ConfirmModal
+    ToastsContainer, FocusDirective, EqualValidatorDirective, DateToLocalePipe, TermsOfUseModal, ConfirmModal
   ],
   imports: [
     BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, CommonModule, BrowserAnimationsModule
   ],
-  exports: [FocusDirective],
+  exports: [FocusDirective, EqualValidatorDirective],
   providers: [HttpService, ToastService, AuthUserInfoResolver],
   bootstrap: [AppComponent]
 })
