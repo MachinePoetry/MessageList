@@ -134,24 +134,23 @@ export class MainComponent implements OnInit, AfterViewInit {
     }
   }
 
+  private _toggleForm(css1: string, css2: string, value: string) {
+    this.messageEditingBlock.nativeElement.classList.remove(css1);
+    this.messageEditingBlock.nativeElement.classList.add(css2);
+    this.enterMessageField.nativeElement.value = value;
+    this.setMessageCreationFormHeight();
+    this._setMessageBlockHeight();
+    this.enterMessageField.nativeElement.focus();
+  }
+
   public toggleEditingMessageForm(isVisible: boolean, messageId: number, messageText?: string): void {
     this.showEditMessageForm = isVisible;
     this.selectedMessageId = messageId;
     if (isVisible) {
-      this.messageEditingBlock.nativeElement.classList.remove('d-none');
-      this.messageEditingBlock.nativeElement.classList.add('d-block');
-      this.enterMessageField.nativeElement.value = messageText;
-      this.setMessageCreationFormHeight();
-      this._setMessageBlockHeight();
-      this.enterMessageField.nativeElement.focus();
+      this._toggleForm('d-none', 'd-block', messageText);
     } else {
-      this.messageEditingBlock.nativeElement.classList.remove('d-block');
-      this.messageEditingBlock.nativeElement.classList.add('d-none');
-      this.enterMessageField.nativeElement.value = '';
+      this._toggleForm('d-block', 'd-none', '');
       this.newMessage = '';
-      this.setMessageCreationFormHeight();
-      this._setMessageBlockHeight();
-      this.enterMessageField.nativeElement.focus();
     }
   }
 
@@ -236,7 +235,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     if (this.messageBlock.nativeElement.scrollTop === 0) {
       let messagesInBlockAmount = this.authUserMessageGroups.filter(group => group.id === this.selectedGroupId)[0].messages.length;
       this._isMessagesIterable = false;
-      if (messagesInBlockAmount === this._messagesToLoadCounter) {  // после поиска  перестает работать. Надо обнулять counter, наверно
+      if (messagesInBlockAmount === this._messagesToLoadCounter) {
         this._messagesToLoadCounter += 30;
         this._freezeScrollBar = true;
         this._refreshGroupsAndMessages({ id: this.authUserInfo.id, counter: this._messagesToLoadCounter, groupId: this.selectedGroupId });
