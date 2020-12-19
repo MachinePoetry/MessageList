@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 
 export class HttpService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private _http: HttpClient) { }
 
   // arrow notation here is mostly to save 'this' as current object for using get/post/etc in other methods and delegates outside http-service
   public get = (url: string, queryParams?: Object) => {
@@ -19,15 +19,15 @@ export class HttpService {
         httpParams = httpParams.set(param, queryParams[param]);
       }
 
-      query = this.http.get(url, { params: httpParams });
+      query = this._http.get(url, { params: httpParams });
     }
     else {
-      query = this.http.get(url);
+      query = this._http.get(url);
     }
     return query;
   }
 
   public post = (url: string, params: Object) => {
-    return this.http.post(url, params);
+    return this._http.post(url, params);
   }
 }
