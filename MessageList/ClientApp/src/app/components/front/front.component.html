@@ -47,14 +47,16 @@
             <img src="/assets/img/devices.png" class="img-fluid my-2 my-lg-5" alt="Devices" />
           </div>
           <div class="col-lg-8">
-            <p class="mt-3 ml-lg-5">Быстро и легко сохранять информацию онлайн. После регистрации вы получите личное пространство для сохранения своих идей, планов или любой другой информации</p>
+            <p class="mt-3 ml-lg-5">Быстро и легко сохранять информацию онлайн. После регистрации вы получите личное пространство для сохранения своих идей,
+                                    планов или любой другой информации</p>
           </div>
         </div>
       </div>
       <div class="col-12 mt-lg-4">
         <div class="row align-items-center">
           <div class="col-12 order-2 col-lg-8 order-lg-1">
-            <p class="mt-3 mt-lg-3 mr-lg-5"> Хранить сообщения в отдельных группах. Чтобы не хранить все в одном списке разделите сообщения по их содержанию. Группы можно создавать самостоятельно в любом количестве для быстрого поиска необходимой информации</p>
+            <p class="mt-3 mt-lg-3 mr-lg-5"> Хранить сообщения в отдельных группах. Чтобы не хранить все в одном списке разделите сообщения по их содержанию.
+                                             Группы можно создавать самостоятельно в любом количестве для быстрого поиска необходимой информации</p>
           </div>
           <div class="col-12 order-1 col-lg-4 order-lg-2 d-flex justify-content-center align-items-center" style="border: 2px solid #1B5891">
             <img src="/assets/img/documents.png" class="img-fluid my-2 my-lg-5" alt="Documents" />
@@ -86,7 +88,8 @@
           </div>
           <div class="col-12 col-md-8">
             <p class="tab-text text-light"> В эпоху цифровых технологий у человека под рукой окажется скорее смартфон или ПК, чем ручка и блокнот </p>
-            <p class="tab-text text-light"> По-этому гораздо удобнее и быстрее сохранить нужную информацию с помощью цифрового устройства. Сохраняя информацию в сети, в дальнейшем можно легко получить к ней доступ с любого ПК или гаджета </p>
+            <p class="tab-text text-light"> По-этому гораздо удобнее и быстрее сохранить нужную информацию с помощью цифрового устройства.
+                                            Сохраняя информацию в сети, в дальнейшем можно легко получить к ней доступ с любого ПК или гаджета </p>
           </div>
         </div>
       </div>
@@ -140,7 +143,8 @@
           <div class="form-group">
 
             <span id="bugReportLabel" class="footer-text">По любым вопросам и предложениям:</span>
-            <textarea #bugReportText="ngModel" class="form-control mt-1 mt-md-3" [ngClass]="{'submit-error': bugReportForm.submitted}" name="bugReportText" id="bugReportText" rows="3" [(ngModel)]="params.reportText" required pattern="^(.|\n){0,4001}$" maxlength="4010"></textarea>
+            <textarea #bugReportText="ngModel" class="form-control mt-1 mt-md-3" [ngClass]="{'submit-error': bugReportForm.submitted}" name="bugReportText" id="bugReportText" rows="3"
+                      [(ngModel)]="params.reportText" required pattern="^(.|\n){0,4001}$" maxlength="4010"></textarea>
             <div *ngIf="bugReportText.invalid && (bugReportText.touched || bugReportText.dirty ||bugReportForm.submitted)">
               <div *ngIf="bugReportText.errors?.required">
                 <span class="text-danger">Введите текст сообщения</span>
@@ -151,7 +155,8 @@
             </div>
 
             <span id="reportContactsLabel" class="footer-text d-block mt-3">Ваш Email или другие контакты для связи с вами (можете оставить это поле пустым):</span>
-            <input #bugReportContacts="ngModel" type="text" class="form-control mt-1 mt-md-3" [ngClass]="{'submit-error': bugReportForm.submitted}" name="reportContacts" id="reportContacts" [(ngModel)]="params.reportContacts" pattern="^(.|\n){0,401}$" maxlength="410">
+            <input #bugReportContacts="ngModel" type="text" class="form-control mt-1 mt-md-3" [ngClass]="{'submit-error': bugReportForm.submitted}" name="reportContacts"
+                   id="reportContacts" [(ngModel)]="params.reportContacts" pattern="^(.|\n){0,401}$" maxlength="410">
             <div *ngIf="bugReportContacts.errors?.pattern">
               <span class="text-danger">Допустимая длина текста не более 400 символов</span>
             </div>
@@ -166,7 +171,9 @@
         </form>
       </div>
       <div class="col-md-6 mx-auto mt-2 mt-md-5 mb-2 mb-md-4 text-center">
-        <p class="d-flex justify-content-center align-items-center"> <span class="mdi mdi-copyright footer-text"></span> <span class="footer-text"> &nbsp; 2019 Message List Corporation Все права защищены.</span></p>
+        <p class="d-flex justify-content-center align-items-center">
+          <span class="mdi mdi-copyright footer-text"></span> <span class="footer-text"> &nbsp; 2021 Message List </span>
+        </p>
       </div>
     </div>
   </div>
