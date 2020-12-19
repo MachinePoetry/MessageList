@@ -17,7 +17,7 @@ import { MessageGroup } from '../../shared/models/messageGroup';
   styleUrls: ['./main.component.css']
 })
 export class MainComponent implements OnInit, AfterViewInit {
-  constructor(private httpService: HttpService, private _route: ActivatedRoute, private _toastService: ToastService, private _modalService: NgbModal) { }
+  constructor(private _httpService: HttpService, private _route: ActivatedRoute, private _toastService: ToastService, private _modalService: NgbModal) { }
 
   @ViewChild('appHeader', { read: ElementRef }) appHeader: ElementRef;
   @ViewChild('groupMessageBlock') groupMessageBlock: ElementRef;
@@ -32,8 +32,6 @@ export class MainComponent implements OnInit, AfterViewInit {
 
   // Component variables
 
-  public showAlert: boolean;
-  public errorText: string;
   public selectedGroupId: number | null = null;
   public selectedMessageId: number | null;
   public showGroupCreationForm: boolean = false;
@@ -45,8 +43,8 @@ export class MainComponent implements OnInit, AfterViewInit {
   public newMessage: string = '';
   private _messagesToLoadCounter: number = 30;
   private _freezeScrollBar = false;
-  private isMessagesIterable = true;
-  private isGroupesIterable = true;
+  private _isMessagesIterable = true;
+  private _isGroupesIterable = true;
   private readonly _notOnlySpaceBar = /\S/;
 
   public authUserInfo: User = new User();
@@ -63,12 +61,12 @@ export class MainComponent implements OnInit, AfterViewInit {
       }
       this.enterMessageField.nativeElement.focus();
 
-      this.httpService.post('/api/messageGroup/create', groupParams).subscribe(data => {
+      this._httpService.post('/api/messageGroup/create', groupParams).subscribe(data => {
         this.showGroupCreationForm = false;
         this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
           () => {
             this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
-            this.isGroupesIterable = true;
+            this._isGroupesIterable = true;
           }
         );
       },
@@ -88,7 +86,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       }
       this.enterMessageField.nativeElement.focus();
 
-      this.httpService.post('/api/messageGroup/update', groupParams).subscribe(data => {
+      this._httpService.post('/api/messageGroup/update', groupParams).subscribe(data => {
         this.showGroupCreationForm = false;
         this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
           () => {
@@ -115,11 +113,11 @@ export class MainComponent implements OnInit, AfterViewInit {
 
       let url: string = this.showEditMessageForm ? '/api/messages/update' : '/api/messages/create';
 
-      this.httpService.post(url, messageParams).subscribe(data => {
+      this._httpService.post(url, messageParams).subscribe(data => {
         this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
           () => {
             if (url === '/api/messages/create') {
-              this.isMessagesIterable = true;
+              this._isMessagesIterable = true;
             }
           }
         );
@@ -168,7 +166,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       }
 
       if (this.searchString.length > 0) {
-        this.httpService.get('api/messages/search', searchParams).subscribe((data: MessageGroup[]) => {
+        this._httpService.get('api/messages/search', searchParams).subscribe((data: MessageGroup[]) => {
           this.authUserMessageGroups = data;
         },
           error => this._toastService.showDanger(error.message)
@@ -186,7 +184,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     if (this.isCollapsed == false) {
       this.isCollapsed = true;
       this.searchString = '';
-      this.isMessagesIterable = true;
+      this._isMessagesIterable = true;
       this._refreshGroupsAndMessages({ id: this.authUserInfo.id });
     }
   }
@@ -201,7 +199,7 @@ export class MainComponent implements OnInit, AfterViewInit {
           () => {
             if (url === 'api/messageGroup/delete' && this.selectedGroupId === entityId) {
               this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
-              this.isGroupesIterable = true;
+              this._isGroupesIterable = true;
             }
             this.enterMessageField.nativeElement.focus();
           }
@@ -223,7 +221,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     if (!userMesagesParams.hasOwnProperty('counter')) {
       this._messagesToLoadCounter = 30;
     }
-    this.httpService.get('api/messages/getGroupesAndMessages', userMesagesParams).subscribe((data: MessageGroup[]) => {
+    this._httpService.get('api/messages/getGroupesAndMessages', userMesagesParams).subscribe((data: MessageGroup[]) => {
       this.authUserMessageGroups = data;
       if (addActionsToPromise) {
         addActionsToPromise();
@@ -237,7 +235,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     this._previousMessageBlockHeight = this.messageBlock.nativeElement.scrollHeight;
     if (this.messageBlock.nativeElement.scrollTop === 0) {
       let messagesInBlockAmount = this.authUserMessageGroups.filter(group => group.id === this.selectedGroupId)[0].messages.length;
-      this.isMessagesIterable = false;
+      this._isMessagesIterable = false;
       if (messagesInBlockAmount === this._messagesToLoadCounter) {  // после поиска  перестает работать. Надо обнулять counter, наверно
         this._messagesToLoadCounter += 30;
         this._freezeScrollBar = true;
@@ -252,7 +250,7 @@ export class MainComponent implements OnInit, AfterViewInit {
 
   changeMessageGroup() {
     this.stopSearchMessages();
-    this.isMessagesIterable = true;
+    this._isMessagesIterable = true;
     this._messagesToLoadCounter = 30;
   }
 
@@ -296,9 +294,9 @@ export class MainComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this._setMessageBlockHeight();
     this.messages.changes.subscribe((list: QueryList<ElementRef>) => {
-      if (this.isMessagesIterable) {
+      if (this._isMessagesIterable) {
         this.messageBlock.nativeElement.scrollTop = this.messageBlock.nativeElement.scrollHeight;
-        this.isMessagesIterable = false;
+        this._isMessagesIterable = false;
       }
       if (this._freezeScrollBar) {
         this.messageBlock.nativeElement.scrollTop = this.messageBlock.nativeElement.scrollHeight - this._previousMessageBlockHeight;
@@ -306,9 +304,9 @@ export class MainComponent implements OnInit, AfterViewInit {
       }
     });
     this.groupes.changes.subscribe((list: QueryList<ElementRef>) => {
-      if (this.isGroupesIterable) {
+      if (this._isGroupesIterable) {
         this.groupMessageBlock.nativeElement.scrollTop = this.groupMessageBlock.nativeElement.scrollHeight;
-        this.isGroupesIterable = false;
+        this._isGroupesIterable = false;
       }
     });
   }

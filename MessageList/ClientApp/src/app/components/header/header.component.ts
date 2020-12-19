@@ -7,12 +7,12 @@ import { HttpService } from '../../shared/services/httpService/http-service.serv
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  constructor(private httpService: HttpService) { };
+  constructor(private _httpService: HttpService) { };
 
   @Input() public authUserInfo: any;
 
   signOut() {
-    this.httpService.get('api/account/signOut').subscribe(data => {
+    this._httpService.get('api/account/signOut').subscribe(data => {
       this.authUserInfo = [];
     });
   }

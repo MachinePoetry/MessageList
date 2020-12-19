@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { HttpService } from '../../shared/services/httpService/http-service.service';
 import { User } from '../../shared/models/user';
 
 @Component({
@@ -9,9 +8,8 @@ import { User } from '../../shared/models/user';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  constructor(private httpService: HttpService, private _route: ActivatedRoute) { }
+  constructor(private _route: ActivatedRoute) { }
 
-  public errorText: string;
   public authUserInfo: User; 
 
   parseDateToRussianLocale(date: string): string {

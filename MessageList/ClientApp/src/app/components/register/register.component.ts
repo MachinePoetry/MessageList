@@ -12,6 +12,7 @@ import { ResultInfo } from '../../shared/models/resultInfo';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
+
 export class RegisterComponent {
 
   constructor(private _httpService: HttpService, private _router: Router, private _toastService: ToastService, private _modalService: NgbModal) { }
