@@ -151,7 +151,7 @@
             </div>
 
             <span id="reportContactsLabel" class="footer-text d-block mt-3">Ваш Email или другие контакты для связи с вами (можете оставить это поле пустым):</span>
-            <input #bugReportContacts="ngModel" type="text" class="form-control mt-1 mt-md-3" [ngClass]="{'submit-error': bugReportForm.submitted}" name="reportContacts" id="reportContacts" [(ngModel)]="params.reportContacts" pattern="^^(.|\n){0,401}$" maxlength="410">
+            <input #bugReportContacts="ngModel" type="text" class="form-control mt-1 mt-md-3" [ngClass]="{'submit-error': bugReportForm.submitted}" name="reportContacts" id="reportContacts" [(ngModel)]="params.reportContacts" pattern="^(.|\n){0,401}$" maxlength="410">
             <div *ngIf="bugReportContacts.errors?.pattern">
               <span class="text-danger">Допустимая длина текста не более 400 символов</span>
             </div>
