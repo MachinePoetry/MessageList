@@ -27,13 +27,15 @@ export class RegisterComponent {
   public progressBarValue: number = 0;
   public isHidden: boolean = true;
   private _report: ResultInfo = new ResultInfo();
+  private readonly _notOnlySpaceBar = /\S/;
 
   public open(): void {
     this._modalService.open(TermsOfUseModal);
   }
 
   public onSubmit(form: NgForm): void {
-    if (form.valid) {
+    if (form.valid && this._notOnlySpaceBar.test(this.params.email) && this._notOnlySpaceBar.test(this.params.password) &&
+      this._notOnlySpaceBar.test(this.params.confirmPassword)) {
       this.isHidden = false;
       this.progressBarValue = 0;
       this.isDisabled = true;

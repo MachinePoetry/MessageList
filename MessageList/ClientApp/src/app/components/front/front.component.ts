@@ -21,11 +21,12 @@ export class FrontComponent implements OnInit {
   public isDisabled: boolean = false;
   public isSpinnerShow: boolean = false;
   private _report: ResultInfo = new ResultInfo();
+  private readonly _notOnlySpaceBar = /\S/;
 
   public authUserInfo: any;
 
   public onSubmit(form: NgForm): void {
-    if (form.valid) {
+    if (form.valid && this._notOnlySpaceBar.test(this.params.reportText) && this._notOnlySpaceBar.test(this.params.reportContacts)) {
       this.isDisabled = true;
       this.isSpinnerShow = true;
       this._httpService.post('/api/bugReport/create', this.params).subscribe((data: ResultInfo) => {

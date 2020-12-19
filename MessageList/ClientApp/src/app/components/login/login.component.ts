@@ -24,9 +24,10 @@ export class LoginComponent {
   public progressBarValue: number = 0;
   public isHidden: boolean = true;
   private _report: ResultInfo = new ResultInfo();
+  private readonly _notOnlySpaceBar = /\S/;
 
   public onSubmit(form: NgForm): void {
-    if (form.valid) {
+    if (form.valid && this._notOnlySpaceBar.test(this.params.email) && this._notOnlySpaceBar.test(this.params.password)) {
       this.isHidden = false;
       this.progressBarValue = 0;
       this.isDisabled = true;
