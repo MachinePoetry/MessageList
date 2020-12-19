@@ -97,9 +97,9 @@
   width: 14px;
   height: 10px;
   box-shadow: 0 0 10px 6px #32CD32;
-  top: 27px;
+  top: 10px;
   left: 10px;
-  transition: 150ms;
+  transition: 100ms;
 }
 
 .edit-existing-group:hover span {
