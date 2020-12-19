@@ -10,8 +10,8 @@ import { ResultInfo } from '../../shared/models/resultInfo';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
 
+export class LoginComponent {
   constructor(private _httpService: HttpService, private _router: Router, private _toastService: ToastService) { }
 
   public params: { email: string, password: string } = {

@@ -3,7 +3,7 @@ import { Injectable, TemplateRef } from '@angular/core';
 @Injectable()
 
 export class ToastService {
-  toasts: any[] = [];
+  public toasts: any[] = [];
 
   public show(textOrTpl: string | TemplateRef<any>, options: any = {}): void {
     this.toasts.push({ textOrTpl, ...options });

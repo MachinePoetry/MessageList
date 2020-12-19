@@ -5,10 +5,11 @@ import { HttpService } from '../../shared/services/httpService/http-service.serv
 import { map } from 'rxjs/operators'
 
 @Injectable()
+
 export class AuthUserInfoResolver implements Resolve<Object> {
   constructor(private _httpService: HttpService, private _router: Router) { }
 
-  resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Object> {
+  public resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<Object> {
     return this._httpService.get('api/users/getAuthUserInfo').pipe(map(data => data ? data = data : this._router.navigate(['/login'])));
   }
 }

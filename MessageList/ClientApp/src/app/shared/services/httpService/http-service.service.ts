@@ -5,7 +5,6 @@ import { Observable } from 'rxjs';
 @Injectable()
 
 export class HttpService {
-
   constructor(private _http: HttpClient) { }
 
   // arrow notation here is mostly to save 'this' as current object for using get/post/etc in other methods and delegates outside http-service

@@ -16,12 +16,12 @@ export class EqualValidatorDirective implements Validator {
   // somewhy value of this attributes returns with double ""__"". It looks like  ""string inside validateEqual"". That's why they are substringed.
   constructor(@Attribute('validateEqual') public validateEqual: string, @Attribute('errorToTargetControl') public errorToTargetControl: string) { }
 
-  private get _isReverse() {
+  private get _isReverse(): boolean {
     if (!this.errorToTargetControl) return false;
     return this.errorToTargetControl.substring(1, this.errorToTargetControl.length - 1) === 'true' ? true : false;
   }
 
-  validate(control: AbstractControl): { [key: string]: any } {
+  public validate(control: AbstractControl): { [key: string]: any } {
     let validateEqualValue = this.validateEqual.substring(1, this.validateEqual.length - 1);
 
     let value = control.value;

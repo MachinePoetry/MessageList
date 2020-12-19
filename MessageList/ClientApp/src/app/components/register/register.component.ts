@@ -14,7 +14,6 @@ import { ResultInfo } from '../../shared/models/resultInfo';
 })
 
 export class RegisterComponent {
-
   constructor(private _httpService: HttpService, private _router: Router, private _toastService: ToastService, private _modalService: NgbModal) { }
 
   public params: { email: string, password: string, confirmPassword: string } = {

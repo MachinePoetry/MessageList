@@ -7,6 +7,7 @@ import { User } from '../../shared/models/user';
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.css']
 })
+
 export class ProfileComponent implements OnInit {
   constructor(private _route: ActivatedRoute) { }
 

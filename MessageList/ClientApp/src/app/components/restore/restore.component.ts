@@ -5,6 +5,7 @@ import { Component } from '@angular/core';
   templateUrl: './restore.component.html',
   styleUrls: ['./restore.component.css']
 })
+
 export class RestoreComponent {
 
 }

@@ -16,6 +16,7 @@ import { MessageGroup } from '../../shared/models/messageGroup';
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['./main.component.css']
 })
+
 export class MainComponent implements OnInit, AfterViewInit {
   constructor(private _httpService: HttpService, private _route: ActivatedRoute, private _toastService: ToastService, private _modalService: NgbModal) { }
 
@@ -125,7 +126,6 @@ export class MainComponent implements OnInit, AfterViewInit {
         error => this._toastService.showDanger(error.message)
       );
 
-      //this.enterMessageField.nativeElement.value = '';
       form.resetForm();
       this.newMessage = '';
       this.toggleEditingMessageForm(false, null);
@@ -134,7 +134,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     }
   }
 
-  toggleEditingMessageForm(isVisible: boolean, messageId: number, messageText?: string) {
+  public toggleEditingMessageForm(isVisible: boolean, messageId: number, messageText?: string): void {
     this.showEditMessageForm = isVisible;
     this.selectedMessageId = messageId;
     if (isVisible) {
@@ -191,7 +191,7 @@ export class MainComponent implements OnInit, AfterViewInit {
 
     // Modals
 
-  public modalOpen(requesetMethod: string, header: string, body: string, entityId: number, url: string) {
+  public modalOpen(requesetMethod: string, header: string, body: string, entityId: number, url: string): void {
     let modalRef = this._modalService.open(ConfirmModal);
     modalRef.result.then((result) => {
       if (result === 'okButton') {
@@ -217,7 +217,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     this._setMessageBlockHeight();
   }
 
-  private _refreshGroupsAndMessages(userMesagesParams: object, addActionsToPromise?: () => void) {
+  private _refreshGroupsAndMessages(userMesagesParams: object, addActionsToPromise?: () => void): void {
     if (!userMesagesParams.hasOwnProperty('counter')) {
       this._messagesToLoadCounter = 30;
     }
@@ -244,33 +244,33 @@ export class MainComponent implements OnInit, AfterViewInit {
     }
   }
 
-  public groupsTrackFn(index, group) {
+  public groupsTrackFn(index, group): void {
     return group.name;
   }
 
-  changeMessageGroup() {
+  public changeMessageGroup(): void {
     this.stopSearchMessages();
     this._isMessagesIterable = true;
     this._messagesToLoadCounter = 30;
   }
 
-  hideGroupCreationForm() {
+  public hideGroupCreationForm(): void {
     this.showGroupCreationForm = false;
     this.enterMessageField.nativeElement.focus();
   }
 
-  hideGroupUpdateForm() {
+  public hideGroupUpdateForm(): void {
     this.editMessageGroupFormId = null;
     this.enterMessageField.nativeElement.focus();
   }
 
-  public setMessageCreationFormHeight() {
+  public setMessageCreationFormHeight(): void {
     this.enterMessageField.nativeElement.style.height = 'auto';
     this.enterMessageField.nativeElement.style.height = this.enterMessageField.nativeElement.scrollHeight < window.innerHeight / 5 ? this.enterMessageField.nativeElement.scrollHeight + 2 + 'px' : window.innerHeight / 5 + 'px';
     this._setMessageBlockHeight();
   }
 
-  public _setMessageBlockHeight(): void {
+  private _setMessageBlockHeight(): void {
     this.messageBlock.nativeElement.style.height = window.innerHeight - this.appHeader.nativeElement.offsetHeight -
                                                    this.searchBlock.nativeElement.offsetHeight - this.enterMessageBlock.nativeElement.offsetHeight + 'px';
   }
