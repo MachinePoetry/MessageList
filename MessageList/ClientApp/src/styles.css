@@ -13,29 +13,7 @@
   src: url(/assets/fonts/Roboto_Slab/RobotoSlab-Bold.ttf);
 }
 
-@keyframes rotating-hover {
-  0% {
-    transform: rotate(0deg) scale(1.1);
-  }
-
-  100% {
-    transform: rotate(-360deg) scale(1.1);
-  }
-}
-
-@keyframes rotating-active {
-  0% {
-    transform: rotate(0deg) scale(0.9);
-  }
-
-  100% {
-    transform: rotate(-360deg) scale(0.9);
-  }
-}
-
-* {
-  color: black;
-}
+  /*styles stop common HTML tags*/ 
 
 body {
   background-color: #F6F6F6;
@@ -58,21 +36,6 @@ body::-webkit-scrollbar-thumb {
   border-radius: 0;
 }
 
-app-header {
-  display: block;
-}
-
-.pbar {
-  position: absolute;
-  top: 0px;
-  height: 7px;
-  border-radius: 0;
-}
-
-.z-1 {
-  z-index: 1;
-}
-
 h1, h2, h3 {
   font-family: Roboto_Slab_bold, Impact, fantasy;
 }
@@ -86,66 +49,14 @@ a:hover {
   text-shadow: 0px 0px 1px #F6F6F6;
 }
 
-.ng-alert {
-  position: absolute;
-  top: 10%;
-  right: 10%;
-  z-index: 2;
-}
-
-.header {
-  background-color: #142C40;
-}
-
-.header-title {
-  font-family: Galada, Snell Roundhand, cursive;
-  font-size: 200%;
-}
-
-.settings-button {
-  line-height: 1;
-}
-
-.settings-button:hover {
-  cursor: pointer;
-  /*animation: rotating-hover 4s linear 0s infinite;*/
-}
-
-/*.settings-button:active {
-  top: 1px;
-  animation: rotating-active 4s linear 0s infinite;
-}*/
-
-.dropdown-menu,
-.dropdown-menu-right {
-  background: linear-gradient(#1B5891, rgb(13,25,47)) #1B5891;
-}
-
-.option {
-  padding: 5px 25px;
-  color: #F5F5F4;
-  background: linear-gradient(#1B5891, rgb(13,25,47)) #1B5891;
-}
-
-.option:hover {
-  color: #F5F5F4;
-  background: linear-gradient(rgb(29,107,173), rgb(13,25,47)) rgb(29,107,173);
-  cursor: pointer;
-}
-
-.option:active {
-  top: 1px;
-  background: linear-gradient(#090B18, #0A1527) #090B18;
-  box-shadow: 0 0 1px rgba(0,0,0,.5) inset, 0 2px 3px rgba(0,0,0,.5) inset, 0 1px 1px rgba(255,255,255,.1);
-}
-
-.toasts-container {
+app-header {
   display: block;
-  position: absolute;
-  left: 80%;
-  top: 5%;
-  overflow-y: hidden;
-  max-height: 70vh;
+}
+
+  /*styles stop common CSS classes*/
+
+.z-1 {
+  z-index: 1;
 }
 
 .small-shadow {
@@ -167,8 +78,8 @@ a:hover {
 }
 
 .dark-login-button {
-  border: 2px solid #1B5891;
-  color: #f5f9f9;
+border: 2px solid #1B5891;
+color: #f5f9f9;
 }
 
 .dark-login-button:hover {
@@ -192,12 +103,8 @@ a:hover {
   border-radius: 5px;
 }
 
-/*.text-light span p {
-  color: #F6F6F6;
-}
-*/
 .text-dark {
-    color: black;
+  color: black;
 }
 
 .dark-color-text {
@@ -211,6 +118,23 @@ a:hover {
 .gradient-down {
   background: linear-gradient(rgb(13,25,47), #1B5891) rgb(13,25,47);
 }
+
+.pbar {
+  position: absolute;
+  top: 0px;
+  height: 7px;
+  border-radius: 0;
+}
+
+.toasts-container {
+  display: block;
+  position: absolute;
+  left: 80%;
+  top: 5%;
+  overflow-y: hidden;
+  max-height: 70vh;
+}
+
 
 
 

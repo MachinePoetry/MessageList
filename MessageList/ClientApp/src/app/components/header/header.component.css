@@ -2,3 +2,43 @@ p {
   font-family: Roboto_Slab_reg, Arial, sans-serif;
   font-size: 18px;
 }
+
+.header {
+  background-color: #142C40;
+}
+
+.header-title {
+  font-family: Galada, Snell Roundhand, cursive;
+  font-size: 200%;
+}
+
+.settings-button {
+  line-height: 1;
+}
+
+.settings-button:hover {
+  cursor: pointer;
+}
+
+.dropdown-menu,
+.dropdown-menu-right {
+  background: linear-gradient(#1B5891, rgb(13,25,47)) #1B5891;
+}
+
+.option {
+  padding: 5px 25px;
+  color: #F5F5F4;
+  background: linear-gradient(#1B5891, rgb(13,25,47)) #1B5891;
+}
+
+.option:hover {
+  color: #F5F5F4;
+  background: linear-gradient(rgb(29,107,173), rgb(13,25,47)) rgb(29,107,173);
+  cursor: pointer;
+}
+
+.option:active {
+  top: 1px;
+  background: linear-gradient(#090B18, #0A1527) #090B18;
+  box-shadow: 0 0 1px rgba(0,0,0,.5) inset, 0 2px 3px rgba(0,0,0,.5) inset, 0 1px 1px rgba(255,255,255,.1);
+}
