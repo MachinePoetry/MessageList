@@ -5,6 +5,23 @@
   border: 2px solid grey;
 }
 
+#searchInput.ng-invalid.ng-dirty,
+#searchInput.ng-invalid.submit-error {
+  border-bottom: 2px solid #DC143C;
+}
+
+#updateGroupName.ng-invalid.ng-touched,
+#updateGroupName.ng-invalid.ng-dirty,
+#updateGroupName.ng-invalid.submit-error,
+#newGroupName.ng-invalid.ng-touched,
+#newGroupName.ng-invalid.ng-dirty,
+#newGroupName.ng-invalid.submit-error,
+#enterMessageField.ng-invalid.ng-dirty,
+#enterMessageField.ng-invalid.submit-error {
+  border: 2px solid #DC143C;
+  box-shadow: 0 0 5px #DC143C;
+}
+
 .message-block {
   border-top: none;
 }

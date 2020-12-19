@@ -38,10 +38,10 @@
             </div>
 
             <!--Form for updating existing group-->
-            <form *ngIf="group?.id == editMessageGroupFormId && editMessageGroupFormId != null" #editedForm="ngForm" autocomplete="off" (ngSubmit)="updateMessageGroup(group.id, editedForm.value.groupName)">
+            <form *ngIf="group?.id == editMessageGroupFormId && editMessageGroupFormId != null" #editForm="ngForm" autocomplete="off" (ngSubmit)="updateMessageGroup(group.id, editForm)">
               <div class="row align-items-center py-2">
                 <div class="col-9 col-lg-8 col-xl-9">
-                  <input type="text" class="round-borders w-100" name="groupName" focus ngModel>
+                  <input #updateGroupName type="text" class="round-borders w-100" [ngClass]="{'submit-error': editForm.submitted}" name="updateGroupName" id="updateGroupName" ngModel focus required pattern="^.{1,20}$" maxlength="21">
                 </div>
                 <button type="submit" class="col-1 d-flex justify-content-center align-items-center create-new-group-button">
                   <span class="mdi mdi-check-bold mdi-24px text-light create-new-group"></span>
@@ -61,7 +61,7 @@
             <form #newform="ngForm" autocomplete="off" novalidate (ngSubmit)="createNewMessageGroup(newform)">
               <div class="row align-items-center py-2">
                 <div class="col-9 col-lg-8 col-xl-9">
-                  <input type="text" class="round-borders w-100" name="name" focus ngModel>
+                  <input #newGroupName type="text" class="round-borders w-100" [ngClass]="{'submit-error': newform.submitted}" name="newGroupName" id="newGroupName" ngModel focus required pattern="^.{1,20}$" maxlength="21">
                 </div>
                 <button type="submit" class="col-1 d-flex justify-content-center align-items-center create-new-group-button">
                   <span class="mdi mdi-check-bold mdi-24px text-light create-new-group"></span>
@@ -86,25 +86,22 @@
       <!--Search field-->
       <div class="col-lg-6">
         <div class="row">
-          <div #searchBlock class="col-12" id="searchBlock">
+          <div #searchBlock class="col-12 py-0" id="searchBlock">
             <div class="row justify-content-end">
-              <div class="col-auto" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
-                <input #searchStringInput type="text" class="my-2 mx-2 search-input" id="searchField" [(ngModel)]="searchString" placeholder="Поиск" autocomplete="off" />
+              <div class="col-auto my-0" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed">
+                <form #searchForm="ngForm" class="form-group my-0" id="searchForm" name="searchForm" autocomplete="off" (ngSubmit)="searchMessages(searchForm)">
+                  <input #searchInput type="text" class="mt-3 mx-2 h-50 search-input" [ngClass]="{'submit-error': searchForm.submitted}" id="searchInput" [(ngModel)]="searchString" name="searchInput" placeholder="Поиск" autocomplete="off" required pattern="^.{1,20}$" maxlength="21" />
+                </form>
               </div>
-              <div class="col-auto" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed" (click)="searchStringInput.focus()">
-                <button class="btn dark-login-button" (click)="searchMessages()"> <span class="dark-color-text"> Поиск </span></button>
+              <div class="col-auto my-0" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed" (click)="searchInput.focus()">
+                <button class="btn dark-login-button mt-1" type="submit" form="searchForm"> <span class="dark-color-text"> Поиск </span></button>
               </div>
-              <div class="col-auto" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed" [attr.aria-expanded]="!isCollapsed">
-                <button class="btn dark-login-button dark-color-text" (click)="stopSearchMessages()"> <span class="dark-color-text"> Отмена </span></button>
+              <div class="col-auto my-0" #collapse="ngbCollapse" [(ngbCollapse)]="isCollapsed" [attr.aria-expanded]="!isCollapsed">
+                <button class="btn dark-login-button dark-color-text mt-1" (click)="stopSearchMessages(searchForm)"> <span class="dark-color-text"> Отмена </span></button>
               </div>
-              <div class="col-auto d-flex align-items-center" (click)="searchStringInput.focus()">
+              <div class="col-auto d-flex align-items-center" (click)="searchInput.focus()">
                 <span class="mdi mdi-magnify mdi-24px my-2" id="searchButton" (click)="isCollapsed = false" [attr.aria-expanded]="!isCollapsed" [style.visibility]="isCollapsed ? 'visible' : 'hidden' "></span>
               </div>
-            </div>
-          </div>
-          <div class="col-12 justify-content-center" id="messageBlockSpinner">
-            <div class="spinner-border my-2" style="width: 38px; height: 38px; color: #142C40" role="status">
-              <span class="sr-only">Loading...</span>
             </div>
           </div>
 
@@ -188,8 +185,10 @@
                 <span class="mdi mdi-paperclip mdi-36px mdi-rotate-45"></span>
               </div>
               <div class="col-8 col-sm-10 px-1 px-sm-2" id="enterMessageContainer">
-                <form #createNewMessageForm="ngForm" class="form-group" id="enterMessageForm" name="enterMessageForm" autocomplete="off" (ngSubmit)="createAndUpdateMessage()">
-                  <textarea #enterMessageField class="form-control mt-3" name="enterMessage" rows="1" id="enterMessageField" placeholder="Введите сообщение" (keydown.enter)="createAndUpdateMessage();false" (ngModelChange)="setMessageCreationFormHeight()" [(ngModel)]="newMessage" autofocus> 
+                <form #createNewMessageForm="ngForm" class="form-group" id="enterMessageForm" name="enterMessageForm" autocomplete="off" (ngSubmit)="createAndUpdateMessage(createNewMessageForm)">
+                  <textarea #enterMessageField class="form-control mt-3" [ngClass]="{'submit-error': createNewMessageForm.submitted}"  name="enterMessage" rows="1"
+                            id="enterMessageField" placeholder="Введите сообщение" (keydown.enter)="createAndUpdateMessage(createNewMessageForm);false" (ngModelChange)="setMessageCreationFormHeight()"
+                            [(ngModel)]="newMessage" autofocus pattern="^.{1,5001}$" maxlength="5010"> 
                   </textarea>
                 </form>
               </div>

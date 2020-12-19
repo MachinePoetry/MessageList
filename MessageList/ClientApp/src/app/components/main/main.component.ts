@@ -47,6 +47,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   private _freezeScrollBar = false;
   private isMessagesIterable = true;
   private isGroupesIterable = true;
+  private readonly _notOnlySpaceBar = /\S/;
 
   public authUserInfo: User = new User();
   public authUserMessageGroups: MessageGroup[] = [];
@@ -55,78 +56,84 @@ export class MainComponent implements OnInit, AfterViewInit {
   // Create new group
 
   public createNewMessageGroup(form: NgForm): void {
-    let groupParams: { name: string, userId: number | null } = {
-      name: form.value.name,
-      userId: this.authUserInfo.id
-    }
-    this.enterMessageField.nativeElement.focus();
+    if (form.valid && this._notOnlySpaceBar.test(form.value.newGroupName)) {
+      let groupParams: { name: string, userId: number | null } = {
+        name: form.value.newGroupName,
+        userId: this.authUserInfo.id
+      }
+      this.enterMessageField.nativeElement.focus();
 
-    this.httpService.post('/api/messageGroup/create', groupParams).subscribe(data => {
-      this.showGroupCreationForm = false;
-      this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
-        () => {
-        this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
-        this.isGroupesIterable = true;
-        }
+      this.httpService.post('/api/messageGroup/create', groupParams).subscribe(data => {
+        this.showGroupCreationForm = false;
+        this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
+          () => {
+            this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
+            this.isGroupesIterable = true;
+          }
+        );
+      },
+        error => this._toastService.showDanger(error.message)
       );
-    },
-      error => this._toastService.showDanger(error.message)
-    );
+    }
   }
 
   // Update existing group
 
-  public updateMessageGroup(groupId: number, groupName: string): void {
-    let groupParams: { userId: number, id: number | null, name: string } = {
-      userId: this.authUserInfo.id,
-      id: groupId,
-      name: groupName
-    }
-    this.enterMessageField.nativeElement.focus();
+  public updateMessageGroup(groupId: number, form: NgForm): void {
+    if (form.valid && this._notOnlySpaceBar.test(form.value.updateGroupName)) {
+      let groupParams: { userId: number, id: number | null, name: string } = {
+        userId: this.authUserInfo.id,
+        id: groupId,
+        name: form.value.updateGroupName
+      }
+      this.enterMessageField.nativeElement.focus();
 
-    this.httpService.post('/api/messageGroup/update', groupParams).subscribe(data => {
-      this.showGroupCreationForm = false;
-      this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
-        () => {
-          this.editMessageGroupFormId = null;
-        }
+      this.httpService.post('/api/messageGroup/update', groupParams).subscribe(data => {
+        this.showGroupCreationForm = false;
+        this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
+          () => {
+            this.editMessageGroupFormId = null;
+          }
+        );
+      },
+        error => this._toastService.showDanger(error.message)
       );
-    },
-      error => this._toastService.showDanger(error.message)
-    );
+    }
   }
 
     // Create and Update new message
 
-  public createAndUpdateMessage(messageId?: number): void {
+  public createAndUpdateMessage(form: NgForm): void {
+    if (form.valid && this._notOnlySpaceBar.test(this.newMessage)) {
+      let messageParams: { authUserId: number, messageGroupId: number | null, text: string, id: number | null } = {
+        authUserId: this.authUserInfo.id,
+        messageGroupId: this.selectedGroupId,
+        text: this.newMessage,
+        id: this.selectedMessageId
+      }
+      this.enterMessageField.nativeElement.focus();
 
-    let messageParams: { authUserId: number, messageGroupId: number | null, text: string, id: number | null } = {
-      authUserId: this.authUserInfo.id,
-      messageGroupId: this.selectedGroupId,
-      text: this.newMessage,
-      id: this.selectedMessageId
-    }
-    this.enterMessageField.nativeElement.focus();
+      let url: string = this.showEditMessageForm ? '/api/messages/update' : '/api/messages/create';
 
-    let url: string = this.showEditMessageForm ? '/api/messages/update' : '/api/messages/create';
-
-    this.httpService.post(url, messageParams).subscribe(data => {
-      this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
-        () => {
-          if (url === '/api/messages/create') {
-            this.isMessagesIterable = true;
+      this.httpService.post(url, messageParams).subscribe(data => {
+        this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
+          () => {
+            if (url === '/api/messages/create') {
+              this.isMessagesIterable = true;
+            }
           }
-        }
+        );
+      },
+        error => this._toastService.showDanger(error.message)
       );
-    },
-      error => this._toastService.showDanger(error.message)
-    );
 
-    this.enterMessageField.nativeElement.value = '';
-    this.newMessage = '';
-    this.toggleEditingMessageForm(false, null);
-    this.setMessageCreationFormHeight();
-    this.selectedMessageId = null;
+      //this.enterMessageField.nativeElement.value = '';
+      form.resetForm();
+      this.newMessage = '';
+      this.toggleEditingMessageForm(false, null);
+      this.setMessageCreationFormHeight();
+      this.selectedMessageId = null;
+    }
   }
 
   toggleEditingMessageForm(isVisible: boolean, messageId: number, messageText?: string) {
@@ -152,24 +159,30 @@ export class MainComponent implements OnInit, AfterViewInit {
 
     // Search
 
-  public searchMessages(): void {
-    let searchParams: { id: number, groupId: number, stringToSearch: string } = {
-      id: this.authUserInfo.id,
-      groupId: this.selectedGroupId,
-      stringToSearch: this.searchString
-    }
+  public searchMessages(form: NgForm): void {
+    if (form.valid && this._notOnlySpaceBar.test(this.searchString)) {
+      let searchParams: { id: number, groupId: number, stringToSearch: string } = {
+        id: this.authUserInfo.id,
+        groupId: this.selectedGroupId,
+        stringToSearch: this.searchString
+      }
 
-    if (this.searchString.length > 0) {
-      this.httpService.get('api/messages/search', searchParams).subscribe((data: MessageGroup[]) => {
-        this.authUserMessageGroups = data;
-      },
-        error => this._toastService.showDanger(error.message)
-      )
+      if (this.searchString.length > 0) {
+        this.httpService.get('api/messages/search', searchParams).subscribe((data: MessageGroup[]) => {
+          this.authUserMessageGroups = data;
+        },
+          error => this._toastService.showDanger(error.message)
+        )
+        form.resetForm({ searchInput: this.searchString});
+      }
     }
   }
 
-  public stopSearchMessages(): void {
+  public stopSearchMessages(form?: NgForm): void {
     this.enterMessageField.nativeElement.focus();
+    if (form) {
+      form.resetForm();
+    }
     if (this.isCollapsed == false) {
       this.isCollapsed = true;
       this.searchString = '';
