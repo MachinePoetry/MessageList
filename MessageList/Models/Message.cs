@@ -5,16 +5,20 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MessageList.Models
 {
+    [Table("messages")]
     public class Message
     {
+        [Column("id")]
         public int Id { get; set; }
+        [Column("text")]
         [Required]
         [MaxLength(5000)]
         public string Text { get; set; }
+        [Column("created_at")]
         [Required]
         public DateTime CreatedAt { get; set; }
+        [Column("related_message_group")]
         [Required]
-        [Column("RelatedMessageGroup")]
         public int MessageGroupId {get; set;}
         [JsonIgnore]
         public MessageGroup MessageGroup { get; set; }
