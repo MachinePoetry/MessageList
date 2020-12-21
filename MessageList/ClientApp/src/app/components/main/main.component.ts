@@ -199,6 +199,7 @@ export class MainComponent implements OnInit, AfterViewInit {
             if (url === 'api/messageGroup/delete' && this.selectedGroupId === entityId) {
               this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
               this._isGroupesIterable = true;
+              this._isMessagesIterable = true;
             }
             this.enterMessageField.nativeElement.focus();
           }
