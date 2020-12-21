@@ -28,7 +28,8 @@
             <span class="col-1 mdi mdi-account mdi-24px mt-4 dark-color-text border-bottom-dark"
                   [ngClass]="{'submit-error': email.invalid && (email.touched || registerForm.submitted)}"></span>
             <input #email="ngModel" class="col-10 mt-4" [ngClass]="{'submit-error': registerForm.submitted}" type="text" name="email" id="registerEmail"
-                   placeholder="Введите email" [(ngModel)]="params.email" required pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$" maxlength="300" />
+                   placeholder="Введите email" [(ngModel)]="params.email" required pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
+                   (keydown.enter)="onSubmit(registerForm)" maxlength="300" />
             <label for="registerEmail" [ngClass]="{'alert-text': email.invalid && (email.touched || registerForm.submitted)}"> Email </label>
           </div>
           <div class="form-row justify-content-center">
@@ -47,7 +48,7 @@
                   [ngClass]="{'submit-error': password.invalid && (password.touched || password.dirty || registerForm.submitted)}"></span>
             <input #password="ngModel" class="col-10 mt-4" [ngClass]="{'submit-error': registerForm.submitted}" type="password" name="password" id="registerPassword"
                    placeholder="Введите пароль" [(ngModel)]="params.password" required pattern="^.{1,20}$" minlength="4" maxlength="21"
-                   validateEqual=”confirmPassword” errorToTargetControl=”true” />
+                   (keydown.enter)="onSubmit(registerForm)" validateEqual=”confirmPassword” errorToTargetControl=”true” />
             <label for="registerPassword" [ngClass]="{'alert-text': password.invalid && (password.touched || password.dirty || registerForm.submitted)}"> Пароль </label>
           </div>
           <div class="form-row justify-content-center">
@@ -68,7 +69,8 @@
             <span class="col-1 mdi mdi-lock mdi-24px mt-4 dark-color-text border-bottom-dark"
                   [ngClass]="{'submit-error': confirmPassword.invalid && (confirmPassword.touched || registerForm.submitted)}"></span>
             <input #confirmPassword="ngModel" class="col-10 mt-4" [ngClass]="{'submit-error': registerForm.submitted}" type="password" name="confirmPassword" id="registerConfirmPassword"
-                   placeholder="Подтвердите пароль" [(ngModel)]="params.confirmPassword" required pattern="^.{1,20}$" minlength="4" maxlength="21" validateEqual=”password” />
+                   placeholder="Подтвердите пароль" [(ngModel)]="params.confirmPassword" required pattern="^.{1,20}$" minlength="4" maxlength="21"
+                   (keydown.enter)="onSubmit(registerForm)" validateEqual=”password” />
             <label for="registerConfirmPassword" [ngClass]="{'alert-text': confirmPassword.invalid && (confirmPassword.touched || registerForm.submitted)}"> Пароль </label>
           </div>
           <div class="form-row justify-content-center">
