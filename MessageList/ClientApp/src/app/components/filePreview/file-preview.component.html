@@ -1,0 +1,19 @@
+<div #imageBlockContainer class="d-flex flex-wrap w-100 file-container">
+  <div #imageBlock *ngFor="let imageBlock of fileCollection.images" class="image-block mr-1 mb-1" [style.width.%]="imageWidth()">
+    <img class="img-fluid" src="{{imageBlock.src}}" alt="{{imageBlock.name}}">
+    <div class="close-button" (click)="deleteImage(imageBlock)"><span class="mdi mdi-close-box lh-1 close"></span></div>
+    <div class="enlarge-image" (click)="enlargeImage()"><span class="mdi mdi-magnify-plus-outline mdi-36px mdi-rotate-90 lh-1 close"></span></div>
+  </div>
+</div>
+<div class="w-100 file-container" *ngIf="fileCollection.video.length">
+  <div *ngFor="let video of fileCollection.video">
+  </div>
+</div>
+<div class="w-100 file-container" *ngIf="fileCollection.audio.length">
+  <div *ngFor="let audio of fileCollection.audio">
+  </div>
+</div>
+<div class="w-100 file-container" *ngIf="fileCollection.files.length">
+  <div *ngFor="let file of fileCollection.files">
+  </div>
+</div>

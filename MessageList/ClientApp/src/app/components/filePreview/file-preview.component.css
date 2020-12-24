@@ -1,0 +1,28 @@
+.file-container {
+  max-height: 10vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.image-block {
+  display: inline-block;
+  position: relative;
+}
+
+.close-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: auto;
+  width: auto;
+  cursor: pointer;
+}
+
+.enlarge-image {
+  position: absolute;
+  top: 30%;
+  right: 35%;
+  height: auto;
+  width: auto;
+  cursor: pointer;
+}
