@@ -1,19 +1,23 @@
 <div #imageBlockContainer class="d-flex flex-wrap w-100 file-container">
-  <div #imageBlock *ngFor="let imageBlock of fileCollection.images" class="image-block mr-1 mb-1" [style.width.%]="imageWidth()">
-    <img class="img-fluid" src="{{imageBlock.src}}" alt="{{imageBlock.name}}">
-    <div class="close-button" (click)="deleteImage(imageBlock)"><span class="mdi mdi-close-box lh-1 close"></span></div>
+  <div #imageBlock *ngFor="let imageBlock of fileCollection.images" class="image-block mr-1 mb-1" [style.width.%]="setImageWidth()">
+    <img class="img-fluid" [src]="imageBlock.src | safeUrl" alt="{{imageBlock.name}}">
+    <div class="close-button" (click)="deleteFile(imageBlock)"><span class="mdi mdi-close-box lh-1 close"></span></div>
     <div class="enlarge-image" (click)="enlargeImage()"><span class="mdi mdi-magnify-plus-outline mdi-36px mdi-rotate-90 lh-1 close"></span></div>
   </div>
 </div>
-<div class="w-100 file-container" *ngIf="fileCollection.video.length">
-  <div *ngFor="let video of fileCollection.video">
+<div #videoBlockContainer class="d-flex flex-wrap w-100 file-container">
+  <div #videoBlock *ngFor="let videoBlock of fileCollection.video" class="image-block embed-responsive mr-1 mb-1" [style.width.%]="setImageWidth()">
+    <video [src]="videoBlock.src | safeUrl" class="embed-responsive-item" controls></video>
+    <div class="close-button" (click)="deleteFile(videoBlock)"><span class="mdi mdi-close-box lh-1 close"></span></div>
   </div>
 </div>
-<div class="w-100 file-container" *ngIf="fileCollection.audio.length">
-  <div *ngFor="let audio of fileCollection.audio">
+<div #audioBlockContainer class="w-100 file-container">
+  <div #audioBlock *ngFor="let audioBlock of fileCollection.audio">
+    <audio [src]="audioBlock.src | safeUrl" type="{{audioBlock.type}}" controls></audio>
   </div>
 </div>
-<div class="w-100 file-container" *ngIf="fileCollection.files.length">
-  <div *ngFor="let file of fileCollection.files">
+<div #fileBlockContainer class="d-flex flex-wrap w-100 file-container">
+  <div #fileBlock *ngFor="let fileBlock of fileCollection.files" class="w-auto mr-1" style="border: 1px solid black">
+    <span class="mx-2">{{fileBlock.name}}</span>
   </div>
 </div>

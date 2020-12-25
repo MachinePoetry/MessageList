@@ -1,5 +1,4 @@
 .file-container {
-  max-height: 10vh;
   overflow-y: scroll;
   overflow-x: hidden;
 }
