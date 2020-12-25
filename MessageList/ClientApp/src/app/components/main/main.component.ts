@@ -3,9 +3,12 @@ import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { HttpService } from '../../shared/services/httpService/http-service.service';
 import { ToastService } from '../../shared/services/toastService/toast.service';
+import { FileService } from '../../shared/services/fileService/file.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmModal } from '../../shared/modals/confirm/confirm.modal';
 import { ConfirmModalParams } from '../../shared/models/confirmModalParams';
+import { AttachFileModal } from '../../shared/modals/attachFile/attach-file.modal';
+import { AttachFileModalParams } from '../../shared/models/attachFileModalParams';
 import { User } from '../../shared/models/user';
 import { MessageGroup } from '../../shared/models/messageGroup';
 
@@ -18,7 +21,8 @@ import { MessageGroup } from '../../shared/models/messageGroup';
 })
 
 export class MainComponent implements OnInit, AfterViewInit {
-  constructor(private _httpService: HttpService, private _route: ActivatedRoute, private _toastService: ToastService, private _modalService: NgbModal) { }
+  constructor(private _httpService: HttpService, private _route: ActivatedRoute, private _toastService: ToastService,
+              private _modalService: NgbModal, private _fileService: FileService) { }
 
   @ViewChild('appHeader', { read: ElementRef }) appHeader: ElementRef;
   @ViewChild('groupMessageBlock') groupMessageBlock: ElementRef;
@@ -46,6 +50,9 @@ export class MainComponent implements OnInit, AfterViewInit {
   private _freezeScrollBar = false;
   private _isMessagesIterable = true;
   private _isGroupesIterable = true;
+  public fileCollection: { images: File[], video: File[], audio: File[], files: File[] } = {
+    images: [], video: [], audio: [], files: []
+  };
   private readonly _notOnlySpaceBar = /\S/;
 
   public authUserInfo: User = new User();
@@ -210,6 +217,23 @@ export class MainComponent implements OnInit, AfterViewInit {
     modalRef.hidden.subscribe(() => this.enterMessageField.nativeElement.focus());
   }
 
+  public attachFileModalOpen(modalType: string, header: string, entity: string) {
+    let modalRef = this._modalService.open(AttachFileModal, { centered: true });
+    modalRef.result.then((result) => {
+      if (Array.isArray(result) && result.length > 0) {
+        for (var file of result) {
+          let reader = new FileReader();
+          reader.onload = function (e) { 
+            file.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+          this.fileCollection[this._fileService.getFileCollectionType(result)].push(file);
+        }
+      }
+    }, (reason) => { });
+    modalRef.componentInstance.modalWindowParams = new AttachFileModalParams(modalType, header, entity);
+  }
+
     // Component methods
 
   @HostListener('window:resize', ['$event'])
@@ -262,6 +286,11 @@ export class MainComponent implements OnInit, AfterViewInit {
   public hideGroupUpdateForm(): void {
     this.editMessageGroupFormId = null;
     this.enterMessageField.nativeElement.focus();
+  }
+
+  public setChangedFilesCollection(files: any): void {
+    this.fileCollection = files;
+    this._setMessageBlockHeight();
   }
 
   public setMessageCreationFormHeight(): void {

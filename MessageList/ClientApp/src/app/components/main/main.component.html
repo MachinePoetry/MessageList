@@ -158,40 +158,40 @@
 
             <div class="row align-items-center justify-content-center">
               <ng-template #attachFiles>
-                <div class="d-flex attach-file-option w-100">
+                <div class="d-flex attach-file-option w-100" (click)="attachFileModalOpen('image' ,'Добавление фотографии', 'Для загрузки доступны фото размером не более 1 Мб')">
                   <div class="col-2 pl-2 my-1">
-                    <span class="mdi mdi-camera-outline mdi-18px text-light lh-1 d-block my-1"></span>
+                    <span class="mdi mdi-camera-outline attach-file-icon text-light lh-1 d-block my-1"></span>
                   </div>
-                  <div class="col-10 pl-2 pr-0 my-1">
-                    <span class="text-light text-left lh-1 d-block my-1"> Фотография </span>
+                  <div class="col-10 pl-3 pr-0 my-1">
+                    <span class="text-light text-left lh-1 d-block my-2"> Фотография </span>
                   </div>
                 </div>
-                <div class="d-flex attach-file-option w-100">
+                <div class="d-flex attach-file-option w-100" (click)="attachFileModalOpen('video' ,'Добавление видео', 'Для загрузки доступны видео размером не более 100 Мб')">
                   <div class="col-2 pl-2 my-1">
-                    <span class="mdi mdi-play-circle-outline mdi-18px text-light lh-1 d-block my-1"></span>
+                    <span class="mdi mdi-play-circle-outline attach-file-icon text-light lh-1 d-block my-1"></span>
                   </div>
-                  <div class="col-10 pl-2 pr-0 my-1">
-                    <span class="text-light text-left lh-1 d-block my-1"> Видеозапись </span>
+                  <div class="col-10 pl-3 pr-0 my-1">
+                    <span class="text-light text-left lh-1 d-block my-2"> Видеозапись </span>
                   </div>
                 </div>
-                <div class="d-flex attach-file-option w-100">
+                <div class="d-flex attach-file-option w-100" (click)="attachFileModalOpen('audio' ,'Добавление аудиофайла', 'Для загрузки доступны аудиофайлы размером не более 20 Мб')">
                   <div class="col-2 pl-2 my-1">
-                    <span class="mdi mdi-music mdi-18px text-light lh-1 d-block my-1"></span>
+                    <span class="mdi mdi-music attach-file-icon text-light lh-1 d-block my-1"></span>
                   </div>
-                  <div class="col-10 pl-2 pr-0 my-1">
-                    <span class="text-light text-left lh-1 d-block my-1"> Аудиозапись </span>
+                  <div class="col-10 pl-3 pr-0 my-1">
+                    <span class="text-light text-left lh-1 d-block my-2"> Аудиозапись </span>
                   </div>
                 </div>
-                <div class="d-flex attach-file-option w-100">
+                <div class="d-flex attach-file-option w-100" (click)="attachFileModalOpen('file' ,'Добавление файла', 'Для загрузки доступны файлы размером не более 100 Мб')">
                   <div class="col-2 pl-2 my-1">
-                    <span class="mdi mdi-file-outline mdi-18px text-light lh-1 d-block my-1"></span>
+                    <span class="mdi mdi-file-outline attach-file-icon text-light lh-1 d-block my-1"></span>
                   </div>
-                  <div class="col-10 pl-2 pr-0 my-1">
-                    <span class="text-light text-left lh-1 d-block my-1"> Файл </span>
+                  <div class="col-10 pl-3 pr-0 my-1">
+                    <span class="text-light text-left lh-1 d-block my-2"> Файл </span>
                   </div>
                 </div>
               </ng-template>
-              <div class="col-auto p-0" id="attachFileButton" [ngbTooltip]="attachFiles" triggers="click" [autoClose]="true">
+              <div class="col-auto p-0" id="attachFileButton" [ngbTooltip]="attachFiles" tooltipClass="attach-files" triggers="click" [autoClose]="true">
                 <span class="mdi mdi-paperclip mdi-36px mdi-rotate-45"></span>
               </div>
               <div class="col-8 col-sm-10 px-1 px-sm-2" id="enterMessageContainer">
@@ -201,6 +201,9 @@
                             [(ngModel)]="newMessage" autofocus pattern="^.{1,5001}$" maxlength="5010"> 
                   </textarea>
                 </form>
+                <div class="w-100">
+                  <app-file-preview [fileCollection]="fileCollection" (changeFilesEvent)="setChangedFilesCollection($event)"></app-file-preview>
+                </div>
               </div>
               <button type="submit" form="enterMessageForm" class="col-auto p-0" id="sendMessageButton">
                 <span class="mdi mdi-send-circle mdi-36px" id="sendMessageButtonIcon"></span>
