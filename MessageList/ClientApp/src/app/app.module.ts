@@ -14,18 +14,23 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { MainComponent } from './components/main/main.component';
 import { ProfileComponent } from './components/profile/profile.component';
+import { FilePreviewComponent } from './components/filePreview/file-preview.component';
 import { RestoreComponent } from './components/restore/restore.component';
 import { NotFoundComponent } from './components/notFound/not-found.component';
 import { ToastsContainer } from './components/toastsContainer/toasts-container.component';
 
 import { HttpService } from './shared/services/httpService/http-service.service';
 import { ToastService } from './shared/services/toastService/toast.service';
+import { FileService } from './shared/services/fileService/file.service';
 import { FocusDirective } from './shared/directives/focus/focus.directive';
 import { EqualValidatorDirective } from './shared/directives/equalValidator/equal-validator.directive';
 import { DateToLocalePipe } from './shared/pipes/dateToLocale/date-to-locale.pipe';
+import { SafeUrl } from './shared/pipes/safeUrl/safe-url.pipe';
 
 import { TermsOfUseModal } from './shared/modals/termsOfUse/terms-of-use.modal';
 import { ConfirmModal } from './shared/modals/confirm/confirm.modal';
+import { AttachFileModal } from './shared/modals/attachFile/attach-file.modal';
+import { AttachFileFromWebModal } from './shared/modals/attachFileFromWeb/attach-file-from-web.modal';
 
 import { AuthUserInfoResolver } from './shared/resolvers/auth-user-info.resolver';
 
@@ -41,14 +46,14 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, RestoreComponent, NotFoundComponent,
-    ToastsContainer, FocusDirective, EqualValidatorDirective, DateToLocalePipe, TermsOfUseModal, ConfirmModal
+    AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, FilePreviewComponent, RestoreComponent,
+    NotFoundComponent, ToastsContainer, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrl, TermsOfUseModal, ConfirmModal, AttachFileModal, AttachFileFromWebModal
   ],
   imports: [
     BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, CommonModule, BrowserAnimationsModule
   ],
   exports: [FocusDirective, EqualValidatorDirective],
-  providers: [HttpService, ToastService, AuthUserInfoResolver],
+  providers: [HttpService, ToastService, FileService, AuthUserInfoResolver],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
