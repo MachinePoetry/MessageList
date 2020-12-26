@@ -10,7 +10,9 @@ import { FileService } from '../../shared/services/fileService/file.service';
 export class FilePreviewComponent implements AfterViewInit {
   constructor(private _fileService: FileService) { }
 
-  @Input() fileCollection: any;
+  @Input() public fileCollection: { images: File[], video: File[], audio: File[], files: File[] } = {
+    images: [], video: [], audio: [], files: []
+  };
   @Output() changeFilesEvent = new EventEmitter<any>();
 
   @ViewChild('imageBlockContainer') imageBlockContainer: ElementRef;

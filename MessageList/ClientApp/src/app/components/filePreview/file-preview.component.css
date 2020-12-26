@@ -1,3 +1,7 @@
+span {
+  font-family: Tahoma, Arial, sans-serif;
+}
+
 .file-container {
   overflow-y: scroll;
   overflow-x: hidden;
@@ -6,6 +10,24 @@
 .image-block {
   display: inline-block;
   position: relative;
+}
+
+#fileName {
+  font-size: 12px;
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+
+#fileSize {
+  font-size: 12px;
+  color: #939597;
+  margin-top: 2px;
+}
+
+.simple-close-button {
+  font-size: 18px;
+  color: #939597;
+  cursor: pointer;
 }
 
 .close-button {
@@ -17,7 +39,7 @@
   cursor: pointer;
 }
 
-.enlarge-image {
+.enlarge-image-button {
   position: absolute;
   top: 30%;
   right: 35%;
