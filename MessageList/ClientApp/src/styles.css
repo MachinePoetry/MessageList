@@ -100,6 +100,10 @@ color: #f5f9f9;
   line-height: 1;
 }
 
+.w-10 {
+  width: 10%;
+}
+
 .w-15 {
   width: 15%;
 }
