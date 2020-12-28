@@ -12,8 +12,13 @@
   </div>
 </div>
 <div #audioBlockContainer class="w-100 file-container">
-  <div #audioBlock *ngFor="let audioBlock of fileCollection.audio">
-    <audio [src]="audioBlock.src | safeUrl" type="{{audioBlock.type}}" controls></audio>
+  <div #audioBlock *ngFor="let audioFile of fileCollection.audio" class="d-flex w-100">
+    <div class="w-90">
+      <app-audio-player [audioFile]="audioFile"></app-audio-player>
+    </div>
+    <div class="d-flex w-10 justify-content-center align-items-center">
+      <span class="mdi mdi-close-thick lh-1 simple-close-button" (click)="deleteFile(audioBlock)"></span>
+    </div>
   </div>
 </div>
 <div #fileBlockContainer class="d-flex flex-wrap w-100 file-container mb-2">

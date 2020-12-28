@@ -64,7 +64,7 @@ export class FilePreviewComponent implements AfterViewInit {
   ngAfterViewInit() {
     this._showPreview(this.imageBlockContainer, this.imageBlocks, 'images', '10vh', '0px');
     this._showPreview(this.videoBlockContainer, this.videoBlocks, 'video', '10vh', '0px');
-    this._showPreview(this.audioBlockContainer, this.audioBlocks, 'audio', '10vh', '0px');
+    this._showPreview(this.audioBlockContainer, this.audioBlocks, 'audio', '5vh', '0px');
     this._showPreview(this.fileBlockContainer, this.fileBlocks, 'files', '5vh', '0px');
   }
 }

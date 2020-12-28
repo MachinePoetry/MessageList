@@ -120,6 +120,10 @@ color: #f5f9f9;
   width: 80%;
 }
 
+.w-90 {
+  width: 90%;
+}
+
 .round-borders {
   border-radius: 5px;
 }
