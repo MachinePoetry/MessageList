@@ -26,6 +26,7 @@ import { FocusDirective } from './shared/directives/focus/focus.directive';
 import { EqualValidatorDirective } from './shared/directives/equalValidator/equal-validator.directive';
 import { DateToLocalePipe } from './shared/pipes/dateToLocale/date-to-locale.pipe';
 import { SafeUrl } from './shared/pipes/safeUrl/safe-url.pipe';
+import { SecondsToTimePipe } from './shared/pipes/secondsToTime/seconds-to-time.pipe';
 
 import { TermsOfUseModal } from './shared/modals/termsOfUse/terms-of-use.modal';
 import { ConfirmModal } from './shared/modals/confirm/confirm.modal';
@@ -47,7 +48,8 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, FilePreviewComponent, RestoreComponent,
-    NotFoundComponent, ToastsContainer, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrl, TermsOfUseModal, ConfirmModal, AttachFileModal, AttachFileFromWebModal
+    NotFoundComponent, ToastsContainer, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrl, SecondsToTimePipe, TermsOfUseModal,
+    ConfirmModal, AttachFileModal, AttachFileFromWebModal
   ],
   imports: [
     BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, CommonModule, BrowserAnimationsModule
@@ -56,4 +58,5 @@ const routes: Routes = [
   providers: [HttpService, ToastService, FileService, AuthUserInfoResolver],
   bootstrap: [AppComponent]
 })
+
 export class AppModule { }
