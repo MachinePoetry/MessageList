@@ -18,6 +18,7 @@ import { FilePreviewComponent } from './components/filePreview/file-preview.comp
 import { RestoreComponent } from './components/restore/restore.component';
 import { NotFoundComponent } from './components/notFound/not-found.component';
 import { ToastsContainer } from './components/toastsContainer/toasts-container.component';
+import { AudioPlayerComponent } from './components/audioPlayer/audio-player.component';
 
 import { HttpService } from './shared/services/httpService/http-service.service';
 import { ToastService } from './shared/services/toastService/toast.service';
@@ -48,7 +49,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, FilePreviewComponent, RestoreComponent,
-    NotFoundComponent, ToastsContainer, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrl, SecondsToTimePipe, TermsOfUseModal,
+    NotFoundComponent, ToastsContainer, AudioPlayerComponent, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrl, SecondsToTimePipe, TermsOfUseModal,
     ConfirmModal, AttachFileModal, AttachFileFromWebModal
   ],
   imports: [

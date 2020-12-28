@@ -1,0 +1,137 @@
+span {
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+#audioContainer {
+  height: 40px;
+}
+
+#audioName {
+  font-size: 14px;
+}
+
+.current-time {
+  font-size: 14px;
+}
+
+#audioNameContainer:hover,
+#currentTimeContainer:hover {
+  cursor: default;
+}
+
+#volumeContainer,
+#progressContainer {
+  height: 35%;
+  cursor: pointer;
+}
+
+.toggle-play {
+  font-size: 30px;
+  cursor: pointer;
+}
+
+input[type=range] {
+  height: 10px;
+  -webkit-appearance: none;
+  width: 100%;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+input[type=range]:focus {
+  outline: none;
+}
+
+  /*chrome based*/
+input[type=range]::-webkit-slider-runnable-track {
+  position: relative;
+  height: 2px;
+  bottom: 1px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: lightgrey;
+  border-radius: 3px;
+  -webkit-appearance: none;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  height: 6px;
+  width: 6px;
+  border-radius: 7px;
+  background: lightgrey;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -1px;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+  background: lightgrey;
+}
+
+  /*moz based*/
+input[type=range]::-moz-range-track {
+  position: relative;
+  height: 2px;
+  bottom: 1px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: lightgrey;
+  border-radius: 3px;
+}
+
+input[type=range]::-moz-range-thumb {
+  height: 6px;
+  width: 6px;
+  border-radius: 7px;
+  background: lightgrey;
+  cursor: pointer;
+  margin-top: -1px;
+}
+
+input[type="range"]::-moz-range-progress {
+  background-color: #F6F6F6;
+}
+
+  /*IE based*/
+input[type=range]::-ms-track {
+  position: relative;
+  height: 2px;
+  bottom: 1px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: lightgrey;
+  border-radius: 3px;
+  border-color: transparent;
+  color: transparent;
+}
+
+input[type=range]::-ms-thumb {
+  height: 6px;
+  width: 6px;
+  border-radius: 7px;
+  background: lightgrey;
+  cursor: pointer;
+  margin-top: -1px;
+}
+
+input[type=range]::-ms-fill-lower {
+  background: #ac51b5;
+  border: 0px solid #000101;
+  border-radius: 50px;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+}
+
+input[type=range]::-ms-fill-upper {
+  background: #ac51b5;
+  border: 0px solid #000101;
+  border-radius: 50px;
+  box-shadow: 0px 0px 0px #000000, 0px 0px 0px #0d0d0d;
+}
+
+input[type=range]:focus::-ms-fill-lower {
+  background: #ac51b5;
+}
+
+input[type=range]:focus::-ms-fill-upper {
+  background: #ac51b5;
+}
