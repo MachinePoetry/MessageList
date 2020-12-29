@@ -222,11 +222,13 @@ export class MainComponent implements OnInit, AfterViewInit {
     modalRef.result.then((result) => {
       if (Array.isArray(result) && result.length > 0) {
         for (var file of result) {
-          let reader = new FileReader();
-          reader.onload = function (e) { 
-            file.src = e.target.result;
-          };
-          reader.readAsDataURL(file);
+          //let reader = new FileReader();
+          //reader.onload = function (e) { 
+          //  file.src = e.target.result;
+          //};
+          //reader.readAsDataURL(file);
+          let url = URL.createObjectURL(file);
+          file.src = url;
           this.fileCollection[this._fileService.getFileCollectionType(result)].push(file);
         }
       }
