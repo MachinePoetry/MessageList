@@ -291,6 +291,11 @@ export class MainComponent implements OnInit, AfterViewInit {
   public setChangedFilesCollection(files: any): void {
     this.fileCollection = files;
     this._setMessageBlockHeight();
+    this._scrollToBottom(this.messageBlock);
+  }
+
+  private _scrollToBottom(block: ElementRef): void {
+    block.nativeElement.scrollTop = block.nativeElement.scrollHeight;
   }
 
   public setMessageCreationFormHeight(): void {
@@ -324,7 +329,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     this._setMessageBlockHeight();
     this.messages.changes.subscribe((list: QueryList<ElementRef>) => {
       if (this._isMessagesIterable) {
-        this.messageBlock.nativeElement.scrollTop = this.messageBlock.nativeElement.scrollHeight;
+        this._scrollToBottom(this.messageBlock);
         this._isMessagesIterable = false;
       }
       if (this._freezeScrollBar) {
@@ -334,7 +339,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     });
     this.groupes.changes.subscribe((list: QueryList<ElementRef>) => {
       if (this._isGroupesIterable) {
-        this.groupMessageBlock.nativeElement.scrollTop = this.groupMessageBlock.nativeElement.scrollHeight;
+        this._scrollToBottom(this.groupMessageBlock);
         this._isGroupesIterable = false;
       }
     });
