@@ -239,18 +239,18 @@
   color: #F5F5F4;
   background: linear-gradient(rgb(29,107,173), rgb(13,25,47)) rgb(29,107,173);
   cursor: pointer;
-} 
+}
 
 #attachFileButton span,
 #sendMessageButton span {
-  color: #1E65A1;
+  color: #1e96a1;
   outline: none;
   border: none;
 }
 
 #attachFileButton span:hover {
   cursor: pointer;
-  color: #1e96a1;
+  color: #06bab2;
 }
 
 #attachFileButton span:active {
@@ -266,7 +266,7 @@
 
 #sendMessageButton span:hover {
   cursor: pointer;
-  color: #1e96a1;
+  color: #06bab2;
 }
 
 #sendMessageButton span:active {
