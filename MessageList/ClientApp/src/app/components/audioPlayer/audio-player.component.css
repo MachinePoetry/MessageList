@@ -8,6 +8,7 @@ span {
 
 .current-time {
   font-size: 14px;
+  color: #bdbebd;
 }
 
 #audioNameContainer:hover,
@@ -23,6 +24,7 @@ span {
 
 .toggle-play {
   font-size: 30px;
+  color: #bdbebd;
   cursor: pointer;
 }
 
