@@ -1,28 +1,32 @@
-<div #imageBlockContainer class="d-flex flex-wrap w-100 file-container">
-  <div #imageBlock *ngFor="let imageBlock of fileCollection.images" class="image-block mr-1 mb-1" [style.width.%]="setImageWidth()">
+<div #imageBlockContainer class="d-flex flex-wrap w-100 file-container" id="imageBlockContainer"
+     [ngClass]="{'d-none': !fileCollection.images.length, 'mb-3': fileCollection.images.length}">
+  <div #imageBlock *ngFor="let imageBlock of fileCollection.images" class="image-block mr-1 mb-1" [style.width.%]="setPreviewWidth(fileCollection.images)">
     <img class="img-fluid" [src]="imageBlock.src | safeUrl" alt="{{imageBlock.name}}">
     <div class="close-button" (click)="deleteFile(imageBlock)"><span class="mdi mdi-close-box lh-1 close"></span></div>
-    <div class="enlarge-image-button" (click)="enlargeImage()"><span class="mdi mdi-magnify-plus-outline mdi-36px mdi-rotate-90 lh-1 close"></span></div>
+    <div class="enlarge-image-button" (click)="enlargeImage()"><span class="mdi mdi-magnify-plus-outline mdi-rotate-90 lh-1 close"></span></div>
   </div>
 </div>
-<div #videoBlockContainer class="d-flex flex-wrap w-100 file-container">
-  <div #videoBlock *ngFor="let videoBlock of fileCollection.video" class="image-block embed-responsive mr-1 mb-1" [style.width.%]="setImageWidth()">
+<div #videoBlockContainer class="d-flex flex-wrap w-100 file-container" id="videoBlockContainer"
+     [ngClass]="{'d-none': !fileCollection.video.length, 'mb-3': fileCollection.video.length}">
+  <div #videoBlock *ngFor="let videoBlock of fileCollection.video" class="image-block embed-responsive mr-1 mb-1" [style.width.%]="setPreviewWidth(fileCollection.video)">
     <video [src]="videoBlock.src | safeUrl" class="embed-responsive-item" controls></video>
     <div class="close-button" (click)="deleteFile(videoBlock)"><span class="mdi mdi-close-box lh-1 close"></span></div>
   </div>
 </div>
-<div #audioBlockContainer class="w-100 file-container">
-  <div #audioBlock *ngFor="let audioBlock of fileCollection.audio" class="d-flex w-100">
-    <div class="w-90">
+<div #audioBlockContainer class="w-100 file-container pt-0" id="audioBlockContainer"
+     [ngClass]="{'d-none': !fileCollection.audio.length, 'mb-3': fileCollection.audio.length}">
+  <div #audioBlock *ngFor="let audioBlock of fileCollection.audio" class="d-flex w-100 mb-2">
+    <div class="w-95">
       <app-audio-player [audioFile]="audioBlock"></app-audio-player>
     </div>
-    <div class="d-flex w-10 justify-content-center align-items-center">
-      <span class="mdi mdi-close-thick lh-1 simple-close-button" (click)="deleteFile(audioBlock)"></span>
+    <div class="d-flex w-5 justify-content-center align-items-center">
+      <span class="mdi mdi-close lh-1 simple-close-button close" (click)="deleteFile(audioBlock)"></span>
     </div>
   </div>
 </div>
-<div #fileBlockContainer class="d-flex flex-wrap w-100 file-container mb-2">
-  <div #fileBlock *ngFor="let fileBlock of fileCollection.files" class="d-flex w-49 mr-1 mb-1">
+<div #fileBlockContainer class="d-flex flex-wrap w-100 pt-0 file-container" id="fileBlockContainer"
+     [ngClass]="{'d-none': !fileCollection.files.length, 'mb-3': fileCollection.files.length}">
+  <div #fileBlock *ngFor="let fileBlock of fileCollection.files" class="d-flex w-50" id="fileBlock">
     <div class="d-flex w-15 p-0 justify-content-center align-items-center">
       <img src="./../../assets/img/file.svg" class="img-fluid m-0"/>
     </div>
@@ -35,7 +39,7 @@
       </div>
     </div>
     <div class="d-flex w-10 justify-content-center align-items-center">
-      <span class="mdi mdi-close-thick lh-1 simple-close-button" (click)="deleteFile(fileBlock)"></span>
+      <span class="mdi mdi-close lh-1 simple-close-button close" (click)="deleteFile(fileBlock)"></span>
     </div>
   </div>
 </div>

@@ -24,13 +24,13 @@ export class FilePreviewComponent implements AfterViewInit {
   @ViewChild('fileBlockContainer') fileBlockContainer: ElementRef;
   @ViewChildren('fileBlock') fileBlocks: QueryList<ElementRef>;
 
-  public setImageWidth(): number {
-    if (this.fileCollection.images.length <= 3) {
+  public setPreviewWidth(collection): number {
+    if (collection.length <= 3) {
       return 32;
-    } else if (this.fileCollection.images.length >= 4 && this.fileCollection.images.length <= 5) {
-      return Math.ceil(95 / this.fileCollection.images.length);
-    } else if (this.fileCollection.images.length >= 6 && this.fileCollection.images.length <= 9) {
-      return Math.ceil(90 / this.fileCollection.images.length);
+    } else if (collection.length >= 4 && collection.length <= 5) {
+      return Math.ceil(95 / collection.length);
+    } else if (collection.length >= 6 && collection.length <= 9) {
+      return Math.ceil(90 / collection.length);
     } else {
       return 10;
     }
@@ -54,18 +54,27 @@ export class FilePreviewComponent implements AfterViewInit {
     this.fileCollection[targetCollection] = this.fileCollection[targetCollection].filter(im => im !== file);
   }
 
-  private _showPreview(container: ElementRef, blocks: QueryList<ElementRef>, parentCollection: string, showSize: string, hideSize: string): void {
+  private _showPreview(container: ElementRef, blocks: QueryList<ElementRef>, parentCollection: string, showSize: number, hideSize: string): void {
     blocks.changes.subscribe((list: QueryList<ElementRef>) => {
-      container.nativeElement.style.height = this.fileCollection[parentCollection].length > 0 ? showSize : hideSize;
+      let height: string = showSize + 'vh';
+
+      if (parentCollection === 'images' || parentCollection === 'video') {
+        height = this.fileCollection[parentCollection].length > 0 ? showSize + 'vh' : hideSize;
+      } else if (parentCollection === 'audio') {
+        height = this.fileCollection[parentCollection].length > 0 ? this.fileCollection[parentCollection].length * showSize + 'vh' : hideSize;
+      } else if (parentCollection === 'files') {
+        height = this.fileCollection[parentCollection].length > 0 ? Math.ceil(this.fileCollection[parentCollection].length / 2) * showSize + 'vh' : hideSize;
+      }
+      container.nativeElement.style.height = height;
       this.changeFilesEvent.emit(this.fileCollection);
     });
   }
 
   ngAfterViewInit() {
-    this._showPreview(this.imageBlockContainer, this.imageBlocks, 'images', '10vh', '0px');
-    this._showPreview(this.videoBlockContainer, this.videoBlocks, 'video', '10vh', '0px');
-    this._showPreview(this.audioBlockContainer, this.audioBlocks, 'audio', '5vh', '0px');
-    this._showPreview(this.fileBlockContainer, this.fileBlocks, 'files', '5vh', '0px');
+    this._showPreview(this.imageBlockContainer, this.imageBlocks, 'images', 9, '0px');
+    this._showPreview(this.videoBlockContainer, this.videoBlocks, 'video', 9, '0px');
+    this._showPreview(this.audioBlockContainer, this.audioBlocks, 'audio', 4, '0px');
+    this._showPreview(this.fileBlockContainer, this.fileBlocks, 'files', 4, '0px');
   }
 }
 

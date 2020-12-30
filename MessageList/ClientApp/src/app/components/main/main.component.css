@@ -274,12 +274,6 @@
   transform: scale(0.9);
 }
 
-.hide-preview {
-  height: 0px;
-  border-style: none;
-  border: 0px solid blue;
-}
-
 #groupMessageBlock,
 #messageBlock {
   scrollbar-face-color: #1B5891;

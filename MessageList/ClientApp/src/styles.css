@@ -100,6 +100,10 @@ color: #f5f9f9;
   line-height: 1;
 }
 
+.w-5 {
+  width: 5%;
+}
+
 .w-10 {
   width: 10%;
 }
@@ -122,6 +126,10 @@ color: #f5f9f9;
 
 .w-90 {
   width: 90%;
+}
+
+.w-95 {
+  width: 95%;
 }
 
 .round-borders {

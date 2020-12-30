@@ -201,8 +201,7 @@
                             [(ngModel)]="newMessage" autofocus pattern="^.{1,5001}$" maxlength="5010"> 
                   </textarea>
                 </form>
-                <div class="w-100" [ngClass]="{'hide-preview': !(fileCollection.images.length || fileCollection.video.length ||
-                     fileCollection.audio.length || fileCollection.files.length)}">
+                <div class="w-100">
                   <app-file-preview [fileCollection]="fileCollection" (changeFilesEvent)="setChangedFilesCollection($event)"></app-file-preview>
                 </div>
               </div>

@@ -15,17 +15,16 @@ span {
 #fileName {
   font-size: 12px;
   font-weight: bold;
-  margin-bottom: 3px;
 }
 
 #fileSize {
   font-size: 12px;
   color: #939597;
-  margin-top: 2px;
+  margin-top: 1%;
 }
 
 .simple-close-button {
-  font-size: 18px;
+  font-size: 16px;
   color: #939597;
   cursor: pointer;
 }
@@ -46,4 +45,24 @@ span {
   height: auto;
   width: auto;
   cursor: pointer;
+}
+
+.enlarge-image-button span {
+  font-size: 100%;
+}
+
+#imageBlockContainer::-webkit-scrollbar,
+#videoBlockContainer::-webkit-scrollbar,
+#audioBlockContainer::-webkit-scrollbar,
+#fileBlockContainer::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+#imageBlockContainer,
+#videoBlockContainer,
+#audioBlockContainer,
+#fileBlockContainer {
+  -ms-overflow-style: none; /* IE 10+ */
+  scrollbar-width: none; /* Firefox */
 }
