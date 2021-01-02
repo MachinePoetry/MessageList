@@ -24,20 +24,27 @@ export class FilePreviewComponent implements AfterViewInit {
   @ViewChild('fileBlockContainer') fileBlockContainer: ElementRef;
   @ViewChildren('fileBlock') fileBlocks: QueryList<ElementRef>;
 
+  public isImgModalVisible: boolean = false;
+
   public setPreviewWidth(collection): number {
     if (collection.length <= 3) {
       return 32;
     } else if (collection.length >= 4 && collection.length <= 5) {
       return Math.ceil(95 / collection.length);
     } else if (collection.length >= 6 && collection.length <= 9) {
-      return Math.ceil(90 / collection.length);
+      return Math.ceil(88 / collection.length);
     } else {
       return 10;
     }
   }
 
-  public enlargeImage(): void {
+  public showImageModal(image: any, imgModal: any): void {
+    imgModal.src = image.src;
+    this.isImgModalVisible = true;
+  }
 
+  public hideImageModal(): void {
+    this.isImgModalVisible = false;
   }
 
   public deleteFile(file: File): void {
@@ -71,8 +78,8 @@ export class FilePreviewComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this._showPreview(this.imageBlockContainer, this.imageBlocks, 'images', 9, '0px');
-    this._showPreview(this.videoBlockContainer, this.videoBlocks, 'video', 9, '0px');
+    this._showPreview(this.imageBlockContainer, this.imageBlocks, 'images', 8, '0px');
+    this._showPreview(this.videoBlockContainer, this.videoBlocks, 'video', 8, '0px');
     this._showPreview(this.audioBlockContainer, this.audioBlocks, 'audio', 4, '0px');
     this._showPreview(this.fileBlockContainer, this.fileBlocks, 'files', 4, '0px');
   }
