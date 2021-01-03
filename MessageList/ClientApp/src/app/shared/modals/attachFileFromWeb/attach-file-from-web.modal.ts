@@ -1,6 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { AttachFileModalParams } from './../../models/attachFileModalParams';
 
 @Component({
   selector: 'app-attach-file-from-web',
@@ -11,19 +10,24 @@ import { AttachFileModalParams } from './../../models/attachFileModalParams';
 export class AttachFileFromWebModal {
   constructor(private _activeModal: NgbActiveModal) { }
 
-  @Input() modalWindowParams: AttachFileModalParams;
-
   public fileUrl: string = '';
+  public fileUrlReady: string = '';
   public isBrokenUrl: boolean = false;
   public disabled: boolean = false;
-  private _files: File[] = [];
 
   public getContentFromUrl() {
-    this.fileUrl.startsWith('https://www') || this.fileUrl.startsWith('http://www') ? this.isBrokenUrl = false : this.isBrokenUrl = true;
+    if ((this.fileUrl.startsWith('https://') || this.fileUrl.startsWith('http://'))) {
+      this.isBrokenUrl = false;
+      //clearTimeout(timer);
+      //let timer = setTimeout(() => { this.fileUrlReady = this.fileUrl }, 1000);
+      this.fileUrlReady = this.fileUrl;
+    } else {
+      this.isBrokenUrl = true;
+    }
   }
 
   public ok(closeType: string): void {
-
+    // close modal with video url inside to send it to main.ts
   }
 
   public cancel(closeType: string) {

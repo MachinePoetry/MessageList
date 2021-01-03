@@ -1,13 +1,14 @@
 <div class="modal-header">
-  <h5 class="modal-title"><span> {{modalWindowParams.header}} </span></h5>
+  <h6 class="modal-title"><span> Добавление видео </span></h6>
   <button type="button" class="close" aria-label="Close" (click)="cancel('crossButton')">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="modal-body">
-  <span> Ссылка на {{modalWindowParams.entity}}: </span>
+  <span class="font-weight-light description-text"> Ссылка на видео: </span>
   <input type="text" class="form-control mt-3" [(ngModel)]="fileUrl" (input)="getContentFromUrl()" [disabled]="disabled" placeholder="https://" autofocus>
-  <span class="alert-text" style="font-size: 12px;"> Ссылка должна начинаться с "https://www" или "http://www".</span>
+  <span *ngIf="isBrokenUrl" class="alert-text"><small> Ссылка должна начинаться с "https://" или "http://" </small></span>
+  <video *ngIf="fileUrlReady.length > 0" class="w-80 mx-auto" [src]="fileUrlReady | safeUrl"></video>
 </div>
 <div *ngIf="fileUrl">
   <div class="modal-footer">

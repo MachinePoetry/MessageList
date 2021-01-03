@@ -33,7 +33,6 @@ export class AttachFileModal implements OnInit {
     modalRef.result.then((result) => {
 
     }, (reason) => { });
-    modalRef.componentInstance.modalWindowParams = new AttachFileModalParams(this.modalWindowParams.modalType, this.modalWindowParams.header, 'фото');
   }
 
   public cancel(closeType: string): void {

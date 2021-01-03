@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h5 class="modal-title"><span> {{modalWindowParams.header}} </span></h5>
+  <h6 class="modal-title"><span> {{modalWindowParams.header}} </span></h6>
   <button type="button" class="close" aria-label="Close" (click)="cancel('crossButton')">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -14,10 +14,13 @@
         </span>
       </div>
     </div>
-    <div class="col-12 d-flex justify-content-center">
-      <div class="col-11 d-flex mt-2">
+    <div class="col-12 d-flex px-0 justify-content-center">
+      <div class="w-80 mt-2">
         <ul>
           <li class="font-weight-light description-text"><span> {{modalWindowParams.entity}} </span></li>
+        </ul>
+        <ul>
+          <li class="font-weight-light description-text"><span> Загрузить можно не более 8 файлов каждого из 4х типов (суммарно не более 32 файлов) </span></li>
         </ul>
       </div>
     </div>
@@ -29,12 +32,12 @@
         </label>
       </div>
     </div>
-    <div class="col-12 d-flex justify-content-center">
+    <div *ngIf="modalWindowParams.modalType === 'video'" class="col-12 d-flex justify-content-center">
       <div class="col-6 d-flex justify-content-center">
         <span class="font-weight-light text-center description-text"> или </span>
       </div>
     </div>
-    <div class="col-12 d-flex justify-content-center">
+    <div *ngIf="modalWindowParams.modalType === 'video'" class="col-12 d-flex justify-content-center">
       <div class="col-8 mt-3">
         <div class="d-flex justify-content-center btn btn-secondary attach-file-button" (click)="openFileFromWebModal()">
           <span class="mb-1"> Добавить с другого сайта </span>
