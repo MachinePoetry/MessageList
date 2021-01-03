@@ -4,7 +4,7 @@ import { NgForm } from '@angular/forms';
 import { HttpService } from '../../shared/services/httpService/http.service';
 import { ToastService } from '../../shared/services/toastService/toast.service';
 import { FileService } from '../../shared/services/fileService/file.service';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmModal } from '../../shared/modals/confirm/confirm.modal';
 import { ConfirmModalParams } from '../../shared/models/confirmModalParams';
 import { AttachFileModal } from '../../shared/modals/attachFile/attach-file.modal';
@@ -46,6 +46,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   public searchString: string = '';
   public isCollapsed: boolean = true;
   public showEditMessageForm: boolean = false;
+  public isFileMenuActive: boolean = false;
   private _previousMessageBlockHeight: number | null = null;
   public newMessage: string = '';
   private _messagesToLoadCounter: number = 30;
@@ -298,6 +299,10 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.fileCollection = files;
     this._setMessageBlockHeight();
     this._scrollToBottom(this.messageBlock);
+  }
+
+  public closeFileMenu(tooltip: NgbTooltip): void {
+    setTimeout(() => { !this.isFileMenuActive ? tooltip.close() : null }, 70)
   }
 
   private _scrollToBottom(block: ElementRef): void {
