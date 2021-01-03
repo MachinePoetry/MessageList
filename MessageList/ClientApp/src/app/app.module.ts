@@ -19,7 +19,7 @@ import { NotFoundComponent } from './components/notFound/not-found.component';
 import { ToastsContainer } from './components/toastsContainer/toasts-container.component';
 import { AudioPlayerComponent } from './components/audioPlayer/audio-player.component';
 
-import { HttpService } from './shared/services/httpService/http-service.service';
+import { HttpService } from './shared/services/httpService/http.service';
 import { ToastService } from './shared/services/toastService/toast.service';
 import { FileService } from './shared/services/fileService/file.service';
 import { FocusDirective } from './shared/directives/focus/focus.directive';

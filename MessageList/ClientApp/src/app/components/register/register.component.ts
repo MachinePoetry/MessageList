@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HttpService } from '../../shared/services/httpService/http-service.service';
+import { HttpService } from '../../shared/services/httpService/http.service';
 import { ToastService } from '../../shared/services/toastService/toast.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TermsOfUseModal } from '../../shared/modals/termsOfUse/terms-of-use.modal';

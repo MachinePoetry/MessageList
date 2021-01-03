@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ViewChildren, ElementRef, HostListener, ViewEncapsulation, QueryList } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
-import { HttpService } from '../../shared/services/httpService/http-service.service';
+import { HttpService } from '../../shared/services/httpService/http.service';
 import { ToastService } from '../../shared/services/toastService/toast.service';
 import { FileService } from '../../shared/services/fileService/file.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';

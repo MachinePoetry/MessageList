@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { HttpService } from './../../services/httpService/http-service.service';
+import { HttpService } from './../../services/httpService/http.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { ConfirmModalParams } from './../../models/confirmModalParams';
