@@ -15,7 +15,6 @@ import { RegisterComponent } from './components/register/register.component';
 import { MainComponent } from './components/main/main.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { FilePreviewComponent } from './components/filePreview/file-preview.component';
-import { RestoreComponent } from './components/restore/restore.component';
 import { NotFoundComponent } from './components/notFound/not-found.component';
 import { ToastsContainer } from './components/toastsContainer/toasts-container.component';
 import { AudioPlayerComponent } from './components/audioPlayer/audio-player.component';
@@ -43,14 +42,13 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'main', component: MainComponent, resolve: { user: AuthUserInfoResolver } },
   { path: 'profile', component: ProfileComponent, resolve: { user: AuthUserInfoResolver } },
-  { path: 'restore', component: RestoreComponent, resolve: { user: AuthUserInfoResolver } },
   { path: '**', component: NotFoundComponent}
 ];
 
 @NgModule({
   declarations: [
-    AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, FilePreviewComponent, RestoreComponent,
-    NotFoundComponent, ToastsContainer, AudioPlayerComponent, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrl, SecondsToTimePipe, TermsOfUseModal,
+    AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, FilePreviewComponent, NotFoundComponent,
+    ToastsContainer, AudioPlayerComponent, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrl, SecondsToTimePipe, TermsOfUseModal,
     ConfirmModal, WarningModal, AttachFileModal, AttachFileFromWebModal
   ],
   imports: [
