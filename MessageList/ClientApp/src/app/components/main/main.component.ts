@@ -9,6 +9,8 @@ import { ConfirmModal } from '../../shared/modals/confirm/confirm.modal';
 import { ConfirmModalParams } from '../../shared/models/confirmModalParams';
 import { AttachFileModal } from '../../shared/modals/attachFile/attach-file.modal';
 import { AttachFileModalParams } from '../../shared/models/attachFileModalParams';
+import { WarningModal } from './../../shared/modals/warning/warning.modal';
+import { WarningModalParams } from './../../shared/models/warningModalParams';
 import { User } from '../../shared/models/user';
 import { MessageGroup } from '../../shared/models/messageGroup';
 
@@ -217,19 +219,21 @@ export class MainComponent implements OnInit, AfterViewInit {
     modalRef.hidden.subscribe(() => this.enterMessageField.nativeElement.focus());
   }
 
-  public attachFileModalOpen(modalType: string, header: string, entity: string) {
+  public attachFileModalOpen(modalType: string, header: string, entity: string): void {
     let modalRef = this._modalService.open(AttachFileModal, { centered: true });
     modalRef.result.then((result) => {
       if (Array.isArray(result) && result.length > 0) {
-        for (var file of result) {
-          //let reader = new FileReader();
-          //reader.onload = function (e) { 
-          //  file.src = e.target.result;
-          //};
-          //reader.readAsDataURL(file);
-          let url = URL.createObjectURL(file);
-          file.src = url;
-          this.fileCollection[this._fileService.getFileCollectionType(result)].push(file);
+        if ((result.length + this.fileCollection[this._fileService.getFileCollectionType(result)].length) > 8) {
+          let modalRef = this._modalService.open(WarningModal);
+          modalRef.result.then((result) => { }, (reason) => { });
+          modalRef.componentInstance.modalWindowParams = new WarningModalParams('Не допускается загрузка более 8 файлов одного типа в одно сообщение');
+          return;
+        } else {
+          for (var file of result) {
+            let url = URL.createObjectURL(file);
+            file.src = url;
+            this.fileCollection[this._fileService.getFileCollectionType(result)].push(file);
+          }
         }
       }
     }, (reason) => { });

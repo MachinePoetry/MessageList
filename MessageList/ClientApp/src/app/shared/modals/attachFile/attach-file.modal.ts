@@ -3,6 +3,8 @@ import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FileService } from './../../services/fileService/file.service';
 import { AttachFileFromWebModal } from './../attachFileFromWeb/attach-file-from-web.modal';
 import { AttachFileModalParams } from './../../models/attachFileModalParams';
+import { WarningModal } from './../warning/warning.modal';
+import { WarningModalParams } from './../../models/warningModalParams';
 
 @Component({
   selector: 'app-attach-file',
@@ -19,20 +21,25 @@ export class AttachFileModal implements OnInit {
   private _maxFileSize: number;
   public files: File[] = [];
 
-  public onChange(event) {
-    for (var file of event.target.files) {
-      if (file.size < this._maxFileSize && this._checkFileType(file)) {
-        this.files.push(file);
+  public onChange(event): void {
+    if (event.target.files.length > 8) {
+      let modalRef = this._modalService.open(WarningModal);
+      modalRef.result.then((result) => { }, (reason) => { });
+      modalRef.componentInstance.modalWindowParams = new WarningModalParams('Не допускается загрузка более 8 файлов одного типа в одно сообщение');
+      return;
+    } else {
+      for (var file of event.target.files) {
+        if (file.size < this._maxFileSize && this._checkFileType(file)) {
+          this.files.push(file);
+        }
       }
+      this._activeModal.close(this.files);
     }
-    this._activeModal.close(this.files);
   }
 
   public openFileFromWebModal(): void {
     let modalRef = this._modalService.open(AttachFileFromWebModal, { centered: true });
-    modalRef.result.then((result) => {
-
-    }, (reason) => { });
+    modalRef.result.then((result) => { }, (reason) => { });
   }
 
   public cancel(closeType: string): void {
