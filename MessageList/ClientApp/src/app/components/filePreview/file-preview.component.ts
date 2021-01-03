@@ -1,5 +1,6 @@
 import { Component, AfterViewInit, Input, Output, EventEmitter, ViewChild, ViewChildren, QueryList, ElementRef } from '@angular/core';
-import { FileService } from '../../shared/services/fileService/file.service';
+import { FileService } from './../../shared/services/fileService/file.service';
+import { IFileCollection } from './../../shared/models/interfaces/IFileCollection';
 
 @Component({
   selector: 'app-file-preview',
@@ -10,7 +11,7 @@ import { FileService } from '../../shared/services/fileService/file.service';
 export class FilePreviewComponent implements AfterViewInit {
   constructor(private _fileService: FileService) { }
 
-  @Input() public fileCollection: { images: File[], video: File[], audio: File[], files: File[] } = {
+  @Input() public fileCollection: IFileCollection = {
     images: [], video: [], audio: [], files: []
   };
   @Output() changeFilesEvent = new EventEmitter<any>();

@@ -3,6 +3,7 @@ import { HttpService } from './../../services/httpService/http.service';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Observable } from 'rxjs';
 import { ConfirmModalParams } from './../../models/confirmModalParams';
+import { IIdRequest } from './../../models/interfaces/IIdRequest';
 
 @Component({
   selector: 'app-confirm',
@@ -16,7 +17,7 @@ export class ConfirmModal {
 
   public ok(closeType: string): void {
     let request: (url: string, params: Object) => Observable<Object>;
-    let requestParams: { id: number, authUserId: number | null } = {
+    let requestParams: IIdRequest = {
       id: this.modalWindowParams.entityId,
       authUserId: this.modalWindowParams.authUserInfo.id
     }

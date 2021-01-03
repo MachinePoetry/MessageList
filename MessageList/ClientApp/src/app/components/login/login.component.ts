@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { HttpService } from '../../shared/services/httpService/http.service';
 import { ToastService } from '../../shared/services/toastService/toast.service';
 import { ResultInfo } from '../../shared/models/resultInfo';
+import { ILogin } from './../../shared/models/interfaces/ILogin';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,7 @@ import { ResultInfo } from '../../shared/models/resultInfo';
 export class LoginComponent {
   constructor(private _httpService: HttpService, private _router: Router, private _toastService: ToastService) { }
 
-  public params: { email: string, password: string } = {
+  public params: ILogin = {
     email: '',
     password: ''
   }

@@ -11,8 +11,13 @@ import { AttachFileModal } from '../../shared/modals/attachFile/attach-file.moda
 import { AttachFileModalParams } from '../../shared/models/attachFileModalParams';
 import { WarningModal } from './../../shared/modals/warning/warning.modal';
 import { WarningModalParams } from './../../shared/models/warningModalParams';
-import { User } from '../../shared/models/user';
+import { User } from '../../shared/models/User';
 import { MessageGroup } from '../../shared/models/messageGroup';
+import { IFileCollection } from './../../shared/models/interfaces/IFileCollection';
+import { IMessageGroupCreatable } from './../../shared/models/interfaces/IMessageGroupCreatable';
+import { IMessageGroupUpdatable } from './../../shared/models/interfaces/IMessageGroupUpdatable';
+import { ISearchable } from './../../shared/models/interfaces/ISearchable';
+import { IMessage } from './../../shared/models/interfaces/IMessage';
 
 
 @Component({
@@ -53,7 +58,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   private _freezeScrollBar = false;
   private _isMessagesIterable = true;
   private _isGroupesIterable = true;
-  public fileCollection: { images: File[], video: File[], audio: File[], files: File[] } = {
+  public fileCollection: IFileCollection = {
     images: [], video: [], audio: [], files: []
   };
   private readonly _notOnlySpaceBar = /\S/;
@@ -66,7 +71,7 @@ export class MainComponent implements OnInit, AfterViewInit {
 
   public createNewMessageGroup(form: NgForm): void {
     if (form.valid && this._notOnlySpaceBar.test(form.value.newGroupName)) {
-      let groupParams: { name: string, userId: number | null } = {
+      let groupParams: IMessageGroupCreatable = {
         name: form.value.newGroupName,
         userId: this.authUserInfo.id
       }
@@ -90,7 +95,7 @@ export class MainComponent implements OnInit, AfterViewInit {
 
   public updateMessageGroup(groupId: number, form: NgForm): void {
     if (form.valid && this._notOnlySpaceBar.test(form.value.updateGroupName)) {
-      let groupParams: { userId: number, id: number | null, name: string } = {
+      let groupParams: IMessageGroupUpdatable = {
         userId: this.authUserInfo.id,
         id: groupId,
         name: form.value.updateGroupName
@@ -114,7 +119,7 @@ export class MainComponent implements OnInit, AfterViewInit {
 
   public createAndUpdateMessage(form: NgForm): void {
     if (form.valid && this._notOnlySpaceBar.test(this.newMessage)) {
-      let messageParams: { authUserId: number, messageGroupId: number | null, text: string, id: number | null } = {
+      let messageParams: IMessage = {
         authUserId: this.authUserInfo.id,
         messageGroupId: this.selectedGroupId,
         text: this.newMessage,
@@ -168,7 +173,7 @@ export class MainComponent implements OnInit, AfterViewInit {
 
   public searchMessages(form: NgForm): void {
     if (form.valid && this._notOnlySpaceBar.test(this.searchString)) {
-      let searchParams: { id: number, groupId: number, stringToSearch: string } = {
+      let searchParams: ISearchable = {
         id: this.authUserInfo.id,
         groupId: this.selectedGroupId,
         stringToSearch: this.searchString
@@ -295,7 +300,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.enterMessageField.nativeElement.focus();
   }
 
-  public setChangedFilesCollection(files: any): void {
+  public setChangedFilesCollection(files: IFileCollection): void {
     this.fileCollection = files;
     this._setMessageBlockHeight();
     this._scrollToBottom(this.messageBlock);

@@ -3,6 +3,8 @@ import { NgForm } from '@angular/forms';
 import { HttpService } from '../../shared/services/httpService/http.service';
 import { ToastService } from '../../shared/services/toastService/toast.service';
 import { ResultInfo } from '../../shared/models/resultInfo';
+import { User } from './../../shared/models/User';
+import { IReport } from './../../shared/models/interfaces/IReport';
 
 @Component({
   selector: 'app-front',
@@ -13,7 +15,7 @@ import { ResultInfo } from '../../shared/models/resultInfo';
 export class FrontComponent implements OnInit {
   constructor(private _httpService: HttpService, private _toastService: ToastService) { }
 
-  public params: { reportText: string, reportContacts: string } = {
+  public params: IReport = {
     reportText: '',
     reportContacts: ''
   }
@@ -23,7 +25,7 @@ export class FrontComponent implements OnInit {
   private _report: ResultInfo = new ResultInfo();
   private readonly _notOnlySpaceBar = /\S/;
 
-  public authUserInfo: any;
+  public authUserInfo: User;
 
   public onSubmit(form: NgForm): void {
     if (form.valid && this._notOnlySpaceBar.test(this.params.reportText) && this._notOnlySpaceBar.test(this.params.reportContacts)) {
@@ -42,7 +44,7 @@ export class FrontComponent implements OnInit {
   }
 
   ngOnInit() {
-    this._httpService.get('api/users/getAuthUserInfo').subscribe(data => {
+    this._httpService.get('api/users/getAuthUserInfo').subscribe((data: User) => {
       this.authUserInfo = data;
     });
   }
