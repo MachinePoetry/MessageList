@@ -1,5 +1,6 @@
 #datesBlock {
-  border: 2px solid grey;
+  border: 2px solid #142C40;
+  border-top: none;
 }
 
 #searchInput.ng-invalid.ng-dirty,
@@ -20,9 +21,9 @@
 }
 
 #searchBlock {
-  border-top: 2px solid grey;
-  border-left: 2px solid grey;
-  border-right: 2px solid grey;
+  border-top: none;
+  border-left: 2px solid #142C40;
+  border-right: 2px solid #142C40;
   border-bottom: none;
 }
 
@@ -165,11 +166,11 @@
 
 #messageBlock {
   border-top: none;
-  border-left: 2px solid grey;
-  border-right: 2px solid grey;
-  border-bottom: 2px solid grey;
+  border-left: 2px solid #142C40;
+  border-right: 2px solid #142C40;
+  border-bottom: none;
   height: 100%;
-  display: flex; 
+  display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
   overflow-y: scroll;
