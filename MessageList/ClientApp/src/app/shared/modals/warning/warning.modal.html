@@ -1,0 +1,12 @@
+<div class="modal-header">
+  <h6 class="modal-title"> Предупреждение! </h6>
+  <button type="button" class="close" aria-label="Close" (click)="cancel('crossButton')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <span>{{modalWindowParams.warningText}}</span>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" (click)="cancel('okButton')"> Ok </button>
+</div>

@@ -31,6 +31,7 @@ import { SecondsToTimePipe } from './shared/pipes/secondsToTime/seconds-to-time.
 
 import { TermsOfUseModal } from './shared/modals/termsOfUse/terms-of-use.modal';
 import { ConfirmModal } from './shared/modals/confirm/confirm.modal';
+import { WarningModal } from './shared/modals/warning/warning.modal';
 import { AttachFileModal } from './shared/modals/attachFile/attach-file.modal';
 import { AttachFileFromWebModal } from './shared/modals/attachFileFromWeb/attach-file-from-web.modal';
 
@@ -50,7 +51,7 @@ const routes: Routes = [
   declarations: [
     AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, FilePreviewComponent, RestoreComponent,
     NotFoundComponent, ToastsContainer, AudioPlayerComponent, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrl, SecondsToTimePipe, TermsOfUseModal,
-    ConfirmModal, AttachFileModal, AttachFileFromWebModal
+    ConfirmModal, WarningModal, AttachFileModal, AttachFileFromWebModal
   ],
   imports: [
     BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, CommonModule, BrowserAnimationsModule
