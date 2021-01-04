@@ -13,11 +13,12 @@ import { WarningModal } from './../../shared/modals/warning/warning.modal';
 import { WarningModalParams } from './../../shared/models/warningModalParams';
 import { User } from '../../shared/models/User';
 import { MessageGroup } from '../../shared/models/messageGroup';
+import { IMessage } from './../../shared/models/interfaces/IMessage';
 import { IFileCollection } from './../../shared/models/interfaces/IFileCollection';
 import { IMessageGroupCreatable } from './../../shared/models/interfaces/IMessageGroupCreatable';
 import { IMessageGroupUpdatable } from './../../shared/models/interfaces/IMessageGroupUpdatable';
 import { ISearchable } from './../../shared/models/interfaces/ISearchable';
-import { IMessage } from './../../shared/models/interfaces/IMessage';
+import { IMessageParams } from './../../shared/models/interfaces/IMessageParams';
 
 
 @Component({
@@ -53,14 +54,16 @@ export class MainComponent implements OnInit, AfterViewInit {
   public showEditMessageForm: boolean = false;
   public isFileMenuActive: boolean = false;
   private _previousMessageBlockHeight: number | null = null;
-  public newMessage: string = '';
+  public newMessage: IMessage = {
+    text: '',
+    fileCollection: {
+      images: [], video: [], audio: [], files: []
+    }
+  };
   private _messagesToLoadCounter: number = 30;
   private _freezeScrollBar = false;
   private _isMessagesIterable = true;
   private _isGroupesIterable = true;
-  public fileCollection: IFileCollection = {
-    images: [], video: [], audio: [], files: []
-  };
   private readonly _notOnlySpaceBar = /\S/;
 
   public authUserInfo: User = new User();
@@ -118,14 +121,19 @@ export class MainComponent implements OnInit, AfterViewInit {
     // Create and Update new message
 
   public createAndUpdateMessage(form: NgForm): void {
-    if (form.valid && this._notOnlySpaceBar.test(this.newMessage)) {
-      let messageParams: IMessage = {
+    if (form.valid && this._notOnlySpaceBar.test(this.newMessage.text)) {
+      let messageParams: IMessageParams | FormData = {
         authUserId: this.authUserInfo.id,
         messageGroupId: this.selectedGroupId,
-        text: this.newMessage,
+        text: this.newMessage.text,
         id: this.selectedMessageId
       }
       this.enterMessageField.nativeElement.focus();
+
+      if (this.newMessage.fileCollection.images.length || this.newMessage.fileCollection.video.length || this.newMessage.fileCollection.audio.length ||
+          this.newMessage.fileCollection.files.length) {
+        messageParams = this._fileService.convertParamsToFormData(this.newMessage.fileCollection, messageParams);
+      }
 
       let url: string = this.showEditMessageForm ? '/api/messages/update' : '/api/messages/create';
 
@@ -142,7 +150,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       );
 
       form.resetForm();
-      this.newMessage = '';
+      this.newMessage.text = '';
       this.toggleEditingMessageForm(false, null);
       this.setMessageCreationFormHeight();
       this.selectedMessageId = null;
@@ -165,7 +173,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       this._toggleForm('d-none', 'd-block', messageText);
     } else {
       this._toggleForm('d-block', 'd-none', '');
-      this.newMessage = '';
+      this.newMessage.text = '';
     }
   }
 
@@ -229,7 +237,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     let modalRef = this._modalService.open(AttachFileModal, { centered: true });
     modalRef.result.then((result) => {
       if (Array.isArray(result) && result.length > 0) {
-        if ((result.length + this.fileCollection[this._fileService.getFileCollectionType(result)].length) > 8) {
+        if ((result.length + this.newMessage.fileCollection[this._fileService.getFileCollectionType(result)].length) > 8) {
           let modalRef = this._modalService.open(WarningModal);
           modalRef.result.then((result) => { }, (reason) => { });
           modalRef.componentInstance.modalWindowParams = new WarningModalParams('Не допускается загрузка более 8 файлов одного типа в одно сообщение');
@@ -238,7 +246,7 @@ export class MainComponent implements OnInit, AfterViewInit {
           for (var file of result) {
             let url = URL.createObjectURL(file);
             file.src = url;
-            this.fileCollection[this._fileService.getFileCollectionType(result)].push(file);
+            this.newMessage.fileCollection[this._fileService.getFileCollectionType(result)].push(file);
           }
         }
       }
@@ -301,7 +309,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   }
 
   public setChangedFilesCollection(files: IFileCollection): void {
-    this.fileCollection = files;
+    this.newMessage.fileCollection = files;
     this._setMessageBlockHeight();
     this._scrollToBottom(this.messageBlock);
   }

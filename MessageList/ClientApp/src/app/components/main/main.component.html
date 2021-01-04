@@ -201,11 +201,11 @@
                 <form #createNewMessageForm="ngForm" class="form-group" id="enterMessageForm" name="enterMessageForm" autocomplete="off" (ngSubmit)="createAndUpdateMessage(createNewMessageForm)">
                   <textarea #enterMessageField class="form-control mt-3" [ngClass]="{'submit-error': createNewMessageForm.submitted}"  name="enterMessage" rows="1"
                             id="enterMessageField" placeholder="Введите сообщение" (keydown.enter)="createAndUpdateMessage(createNewMessageForm);false" (ngModelChange)="setMessageCreationFormHeight()"
-                            [(ngModel)]="newMessage" autofocus pattern="^.{1,5001}$" maxlength="5010"> 
+                            [(ngModel)]="newMessage.text" autofocus pattern="^.{1,5001}$" maxlength="5010"> 
                   </textarea>
                 </form>
                 <div class="w-100">
-                  <app-file-preview [fileCollection]="fileCollection" (changeFilesEvent)="setChangedFilesCollection($event)"></app-file-preview>
+                  <app-file-preview [fileCollection]="newMessage.fileCollection" (changeFilesEvent)="setChangedFilesCollection($event)"></app-file-preview>
                 </div>
               </div>
               <button type="submit" form="enterMessageForm" class="col-auto d-flex align-items-start p-0" id="sendMessageButton">

@@ -1,6 +1,6 @@
+import { IFileCollection } from './IFileCollection';
+
 export interface IMessage {
-  authUserId: number,
-  messageGroupId: number | null,
-  text: string,
-  id: number | null
+  text: string;
+  fileCollection: IFileCollection;
 }
