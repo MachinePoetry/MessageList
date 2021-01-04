@@ -209,6 +209,7 @@
 
 #messageText {
   font-family: Tahoma, Arial, sans-serif;
+  color: rgb(93,93,93);
   white-space: pre-wrap;
 }
 
@@ -216,6 +217,11 @@
 .delete-message,
 .close-editing-message {
   cursor: pointer;
+}
+
+.edit-message,
+.delete-message {
+  color: rgb(93,93,93);
 }
 
 #enterMessageBlock {
