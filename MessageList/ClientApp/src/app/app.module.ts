@@ -4,6 +4,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { Routes, RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { CommonModule } from "@angular/common"
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -52,7 +53,7 @@ const routes: Routes = [
     ConfirmModal, WarningModal, AttachFileModal, AttachFileFromWebModal
   ],
   imports: [
-    BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, CommonModule, BrowserAnimationsModule
+    BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, NgSelectModule, CommonModule, BrowserAnimationsModule
   ],
   exports: [FocusDirective, EqualValidatorDirective],
   providers: [HttpService, ToastService, FileService, AuthUserInfoResolver],
