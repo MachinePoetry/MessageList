@@ -227,8 +227,18 @@
       <div class="col-lg-3">
         <div class="row justify-content-end">
           <div class="col-lg-11" id="datesBlock">
-            <div class="mt-lg-4 mb-lg-4 w-100" style="border: 1px solid red;">
-              <h2 class="text-center">In progress</h2>
+            <div class="mt-lg-4 mb-lg-4 w-100">
+              <iframe [src]="(selectedNewsCategory || '//mediarepost.ru/widget-news?cat=1&fon=gray') | safeUrl" class="d-block mx-auto" width="220" height="450" style="border:0;"></iframe>
+              <div class="news-text-container d-block mx-auto mt-3">
+                <span class="font-weight-light" id="newsTextDescription">Возможно, вам захочется сохранить себе что-то из этих новостей.</span>
+              </div>
+              <div class="news-text-container d-block mx-auto mt-3">
+                <small>Выберите категорию:</small>
+              </div>
+              <!--https://github.com/ng-select/ng-select-->
+              <ng-select [(ngModel)]="selectedNewsCategory" class="mx-auto mt-1" id="newsSelect">
+                <ng-option *ngFor="let cat of newsCategories" [value]="cat.url">{{cat.name}}</ng-option>
+              </ng-select>
             </div>
           </div>
         </div>

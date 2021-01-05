@@ -70,6 +70,19 @@ export class MainComponent implements OnInit, AfterViewInit {
   public authUserInfo: User = new User();
   public authUserMessageGroups: MessageGroup[] = [];
 
+  public selectedNewsCategory: string = '//mediarepost.ru/widget-news?cat=1&fon=gray';
+
+  public newsCategories = [
+    { url: '//mediarepost.ru/widget-news?cat=1&fon=gray', name: 'Новости' },
+    { url: '//mediarepost.ru/widget-news?cat=39&fon=gray', name: 'Политика' },
+    { url: '//mediarepost.ru/widget-news?cat=31&fon=gray', name: 'Происшествия' },
+    { url: '//mediarepost.ru/widget-news?cat=30&fon=gray', name: 'Война и конфликты' },
+    { url: '//mediarepost.ru/widget-news?cat=3&fon=gray',  name: 'Наука и технологии' },
+    { url: '//mediarepost.ru/widget-news?cat=32&fon=gray', name: 'Военная территория' },
+    { url: '//mediarepost.ru/widget-news?cat=14&fon=gray', name: 'Блоги' },
+    { url: '//mediarepost.ru/widget-news?cat=34&fon=gray', name: 'Видео' }
+  ];
+
 
   // Create new group
 

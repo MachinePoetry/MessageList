@@ -309,6 +309,23 @@
   scrollbar-width: none; /* Firefox */
 }
 
+.news-text-container {
+  width: 220px;
+}
+
+#newsTextDescription,
+#newsTextSeelect {
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+#newsTextDescription {
+  font-size: 12px;
+}
+
+#newsSelect {
+  width: 220px;
+}
+
 .spinner {
   width: 100%;
   height: 35px;
