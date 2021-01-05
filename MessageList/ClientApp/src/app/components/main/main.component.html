@@ -205,10 +205,18 @@
                   </textarea>
                 </form>
                 <div class="w-100">
-                  <app-file-preview [fileCollection]="newMessage.fileCollection" (changeFilesEvent)="setChangedFilesCollection($event)"></app-file-preview>
+                  <app-file-preview [fileCollection]="newMessage.fileCollection" (changeFilesEvent)="setChangedFilesCollection($event)"
+                                    [style.display]="!isMessageCreationProcess ? 'block' : 'none'"></app-file-preview>
+                  <div class="spinner ml-2" [style.display]="isMessageCreationProcess ? 'block' : 'none'">
+                    <div class="rect1 my-auto"></div>
+                    <div class="rect2 my-auto"></div>
+                    <div class="rect3 my-auto"></div>
+                    <div class="rect4 my-auto"></div>
+                    <div class="rect5 my-auto"></div>
+                  </div>
                 </div>
               </div>
-              <button type="submit" form="enterMessageForm" class="col-auto d-flex align-items-start p-0" id="sendMessageButton">
+              <button type="submit" form="enterMessageForm" class="col-auto d-flex align-items-start p-0" id="sendMessageButton" [disabled]="isMessageCreationProcess">
                 <span class="mdi mdi-send-circle mdi-36px lh-1 mt-3" id="sendMessageButtonIcon"></span>
               </button>
             </div>

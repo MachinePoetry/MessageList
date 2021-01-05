@@ -51,6 +51,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   public editMessageGroupFormId: number | null = null;
   public searchString: string = '';
   public isCollapsed: boolean = true;
+  public isMessageCreationProcess: boolean = false;
   public showEditMessageForm: boolean = false;
   public isFileMenuActive: boolean = false;
   private _previousMessageBlockHeight: number | null = null;
@@ -129,6 +130,9 @@ export class MainComponent implements OnInit, AfterViewInit {
         id: this.selectedMessageId
       }
       this.enterMessageField.nativeElement.focus();
+      this._fileService.cleanFileCollection(this.newMessage.fileCollection);
+      this.isMessageCreationProcess = true;
+      this._setMessageBlockHeight();
 
       if (this.newMessage.fileCollection.images.length || this.newMessage.fileCollection.video.length || this.newMessage.fileCollection.audio.length ||
           this.newMessage.fileCollection.files.length) {
@@ -138,6 +142,8 @@ export class MainComponent implements OnInit, AfterViewInit {
       let url: string = this.showEditMessageForm ? '/api/messages/update' : '/api/messages/create';
 
       this._httpService.post(url, messageParams).subscribe(data => {
+        this.isMessageCreationProcess = false;
+        this._setMessageBlockHeight();
         this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
           () => {
             if (url === '/api/messages/create') {
@@ -312,6 +318,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.newMessage.fileCollection = files;
     this._setMessageBlockHeight();
     this._scrollToBottom(this.messageBlock);
+    this.enterMessageField.nativeElement.focus();
   }
 
   public closeFileMenu(tooltip: NgbTooltip): void {
@@ -324,7 +331,8 @@ export class MainComponent implements OnInit, AfterViewInit {
 
   public setMessageCreationFormHeight(): void {
     this.enterMessageField.nativeElement.style.height = 'auto';
-    this.enterMessageField.nativeElement.style.height = this.enterMessageField.nativeElement.scrollHeight < window.innerHeight / 5 ? this.enterMessageField.nativeElement.scrollHeight + 2 + 'px' : window.innerHeight / 5 + 'px';
+    this.enterMessageField.nativeElement.style.height = this.enterMessageField.nativeElement.scrollHeight < window.innerHeight / 5 ? this.enterMessageField.nativeElement.scrollHeight +
+                                                        2 + 'px' : window.innerHeight / 5 + 'px';
     this._setMessageBlockHeight();
   }
 

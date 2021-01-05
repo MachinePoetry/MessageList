@@ -47,6 +47,12 @@ export class FileService {
     return fd;
   }
 
+  public cleanFileCollection(collection: IFileCollection) {
+    for (let key in collection) {
+      collection[key] = [];
+    }
+  }
+
   public getFileCollectionType(collection: File[]): string {
     let collectionType: string = '';
 
