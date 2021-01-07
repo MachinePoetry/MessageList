@@ -5,6 +5,7 @@ import { HttpService } from '../../shared/services/httpService/http.service';
 import { ToastService } from '../../shared/services/toastService/toast.service';
 import { FileService } from '../../shared/services/fileService/file.service';
 import { NgbModal, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmModal } from '../../shared/modals/confirm/confirm.modal';
 import { ConfirmModalParams } from '../../shared/models/confirmModalParams';
 import { AttachFileModal } from '../../shared/modals/attachFile/attach-file.modal';
@@ -55,6 +56,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   public showEditMessageForm: boolean = false;
   public isFileMenuActive: boolean = false;
   private _previousMessageBlockHeight: number | null = null;
+  public searchDate: NgbDateStruct;
   public newMessage: IMessage = {
     text: '',
     fileCollection: {
@@ -198,22 +200,36 @@ export class MainComponent implements OnInit, AfterViewInit {
 
     // Search
 
-  public searchMessages(form: NgForm): void {
-    if (form.valid && this._notOnlySpaceBar.test(this.searchString)) {
+  private _searchRequest(searchParams: ISearchable): void {
+    this._httpService.post('api/messages/search', searchParams).subscribe((data: MessageGroup[]) => {
+      this.authUserMessageGroups = data;
+      this._scrollToBottom(this.messageBlock);
+      this.searchDate = null;
+    },
+      error => this._toastService.showDanger(error.message)
+    )
+  }
+
+  public searchMessages(form?: NgForm): void {
+    if (form && form.valid && this._notOnlySpaceBar.test(this.searchString) && this.searchString.length > 0) {
       let searchParams: ISearchable = {
         id: this.authUserInfo.id,
         groupId: this.selectedGroupId,
-        stringToSearch: this.searchString
+        stringToSearch: this.searchString,
+        dateToSearch: null
       }
 
-      if (this.searchString.length > 0) {
-        this._httpService.get('api/messages/search', searchParams).subscribe((data: MessageGroup[]) => {
-          this.authUserMessageGroups = data;
-        },
-          error => this._toastService.showDanger(error.message)
-        )
-        form.resetForm({ searchInput: this.searchString});
+      this._searchRequest(searchParams);
+      form.resetForm({ searchInput: this.searchString });
+    } else if (!form && this.searchDate) {
+      let searchParams: ISearchable = {
+        id: this.authUserInfo.id,
+        groupId: this.selectedGroupId,
+        stringToSearch: '',
+        dateToSearch: this.searchDate
       }
+
+      this._searchRequest(searchParams);
     }
   }
 
