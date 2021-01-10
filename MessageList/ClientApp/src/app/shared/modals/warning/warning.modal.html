@@ -1,12 +1,15 @@
 <div class="modal-header">
-  <h6 class="modal-title"> Предупреждение! </h6>
+  <h6 class="modal-title"> {{modalWindowParams.header}} </h6>
   <button type="button" class="close" aria-label="Close" (click)="cancel('crossButton')">
     <span aria-hidden="true">&times;</span>
   </button>
 </div>
 <div class="modal-body">
   <div class="w-90 mx-auto">
-    <span>{{modalWindowParams.warningText}}</span>
+    <span [innerHtml]="modalWindowParams.warningText"></span>
+  </div>
+  <div *ngIf="modalWindowParams.type === 'greeting'" class="w-90 mx-auto mt-2">
+    <input type="checkbox" class="ml-1 my-2" [(ngModel)]="isGreeted"><span class="mb-2"> Больше не показывать </span>
   </div>
 </div>
 <div class="modal-footer">

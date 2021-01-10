@@ -21,6 +21,7 @@ import { ToastsContainer } from './components/toastsContainer/toasts-container.c
 import { AudioPlayerComponent } from './components/audioPlayer/audio-player.component';
 
 import { HttpService } from './shared/services/httpService/http.service';
+import { HtmlService } from './shared/services/htmlService/html.service';
 import { ToastService } from './shared/services/toastService/toast.service';
 import { FileService } from './shared/services/fileService/file.service';
 import { FocusDirective } from './shared/directives/focus/focus.directive';
@@ -56,7 +57,7 @@ const routes: Routes = [
     BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, NgSelectModule, CommonModule, BrowserAnimationsModule
   ],
   exports: [FocusDirective, EqualValidatorDirective],
-  providers: [HttpService, ToastService, FileService, AuthUserInfoResolver],
+  providers: [HttpService, HtmlService, ToastService, FileService, AuthUserInfoResolver],
   bootstrap: [AppComponent]
 })
 

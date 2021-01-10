@@ -25,6 +25,8 @@ namespace MessageList.Models
         [Column("created_at")]
         [Required]
         public DateTime CreatedAt { get; set; }
+        [Column("is_greeted")]
+        public bool IsGreeted { get; set; }
         [Column("is_admin")]
         public bool IsAdmin { get; set; }
         public List<MessageGroup> MessageGroups { get; set; }

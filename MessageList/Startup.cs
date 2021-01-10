@@ -8,7 +8,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using MessageList.Data;
-using MessageList.Models;
 
 namespace MessageList
 {

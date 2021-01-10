@@ -2,6 +2,7 @@ import { Component, OnInit, AfterViewInit, ViewChild, ViewChildren, ElementRef, 
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { HttpService } from '../../shared/services/httpService/http.service';
+import { HtmlService } from '../../shared/services/htmlService/html.service';
 import { ToastService } from '../../shared/services/toastService/toast.service';
 import { FileService } from '../../shared/services/fileService/file.service';
 import { NgbModal, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
@@ -30,7 +31,7 @@ import { IMessageParams } from './../../shared/models/interfaces/IMessageParams'
 })
 
 export class MainComponent implements OnInit, AfterViewInit {
-  constructor(private _httpService: HttpService, private _route: ActivatedRoute, private _toastService: ToastService,
+  constructor(private _httpService: HttpService, private _htmlService: HtmlService, private _route: ActivatedRoute, private _toastService: ToastService,
               private _modalService: NgbModal, private _fileService: FileService) { }
 
   @ViewChild('appHeader', { read: ElementRef }) appHeader: ElementRef;
@@ -275,7 +276,7 @@ export class MainComponent implements OnInit, AfterViewInit {
         if ((result.length + this.newMessage.fileCollection[this._fileService.getFileCollectionType(result)].length) > 8) {
           let modalRef = this._modalService.open(WarningModal);
           modalRef.result.then((result) => { }, (reason) => { });
-          modalRef.componentInstance.modalWindowParams = new WarningModalParams('Не допускается загрузка более 8 файлов одного типа в одно сообщение');
+          modalRef.componentInstance.modalWindowParams = new WarningModalParams('Предупреждение!', 'Не допускается загрузка более 8 файлов одного типа в одно сообщение', 'warning');
           return;
         } else {
           for (var file of result) {
@@ -404,5 +405,10 @@ export class MainComponent implements OnInit, AfterViewInit {
         this._isGroupesIterable = false;
       }
     });
+    if (!this.authUserInfo.isGreeted && sessionStorage.getItem('isGreeted') !== 'true') {
+      let modalRef = this._modalService.open(WarningModal);
+      modalRef.result.then((result) => { }, (reason) => { });
+      modalRef.componentInstance.modalWindowParams = new WarningModalParams('Приветствие', this._htmlService.greetingText, 'greeting', this.authUserInfo.id);
+    }
   }
 }

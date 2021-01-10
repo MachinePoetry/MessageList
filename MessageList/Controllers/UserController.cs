@@ -72,6 +72,21 @@ namespace MessageList.Controllers
 
         }
 
+        [HttpPost("greeting")]
+        public async Task<JsonResult> GreetUserAsync([FromBody] Identificator idContainer)
+        {
+            User user = await _db.Users.FirstOrDefaultAsync(userId => userId.Id == idContainer.Id);
+            int res = 0;
+
+            if (user != null)
+            {
+                user.IsGreeted = true;
+                res = await _db.SaveChangesAsync();
+            }
+            return Json("Приветственное модальное окно отключено");
+
+        }
+
         [HttpPost("delete")]
         public async Task<JsonResult> DeleteUserAsync([FromBody] int id)
         {

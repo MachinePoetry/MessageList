@@ -25,7 +25,7 @@ export class AttachFileModal implements OnInit {
     if (event.target.files.length > 8) {
       let modalRef = this._modalService.open(WarningModal);
       modalRef.result.then((result) => { }, (reason) => { });
-      modalRef.componentInstance.modalWindowParams = new WarningModalParams('Не допускается загрузка более 8 файлов одного типа в одно сообщение');
+      modalRef.componentInstance.modalWindowParams = new WarningModalParams('Предупреждение!', 'Не допускается загрузка более 8 файлов одного типа в одно сообщение', 'warning');
       return;
     } else {
       for (var file of event.target.files) {
