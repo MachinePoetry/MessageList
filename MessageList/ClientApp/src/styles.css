@@ -19,10 +19,10 @@ body {
   background-color: #F6F6F6;
 }
 
-body {
-  scrollbar-face-color: #1B5891;
+html {
+  /*  scrollbar-face-color: #1B5891;*/
   scrollbar-color: rgb(13,25,47) transparent;
-  scrollbar-width: thick;
+  scrollbar-width: thin;
 }
 
 body::-webkit-scrollbar {
