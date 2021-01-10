@@ -138,6 +138,10 @@ export class MainComponent implements OnInit, AfterViewInit {
     // Create and Update new message
 
   public createAndUpdateMessage(form: NgForm): void {
+    if (!this.selectedGroupId) {
+      this._toastService.showDanger('Не выбрана группа сообщений');
+      return;
+    }
     if (form.valid && this._notOnlySpaceBar.test(this.newMessage.text)) {
       let messageParams: IMessageParams | FormData = {
         authUserId: this.authUserInfo.id,
