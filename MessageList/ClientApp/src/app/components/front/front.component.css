@@ -64,3 +64,144 @@ textarea.ng-invalid.ng-touched {
   overflow: auto;
   color: #F6F6F6;
 }
+
+
+
+
+
+
+@media (min-width: 1201px) {
+  #promoText {
+    margin-top: 150px;
+  }
+}
+
+@media (min-width: 993px) and (max-width: 1200px) {
+  #promoText {
+    margin-top: 120px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 992px) {
+  #promoText {
+    margin-top: 50px;
+    font-size: 28px;
+  }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+
+  #promoText {
+    margin-top: 50px;
+  }
+
+  #howItWorks h1
+  #appDescription h1,
+  #promoText h1 {
+    font-size: 27px;
+  }
+
+  #howItWorks p,
+  #wasCreatedFor p,
+  #appDescription p,
+  #promoText p {
+    font-size: 15px;
+  }
+
+  #smartphone {
+    display: none;
+  }
+}
+
+@media (min-width: 471px) and (max-width: 576px) {
+
+  #promoText {
+    margin-top: 50px;
+  }
+
+  #promoText h1 {
+    font-size: 25px;
+  }
+
+  #promoText p {
+    font-size: 15px;
+  }
+
+  #howItWorks h1,
+  #appDescription h1 {
+    font-size: 30px;
+  }
+
+  #howItWorks p,
+  #wasCreatedFor p,
+  #appDescription p {
+    font-size: 15px;
+  }
+
+  #smartphone {
+    display: none;
+  }
+}
+
+@media (min-width: 351px) and (max-width: 470px) {
+  #promoText {
+    margin-top: 50px;
+  }
+
+  #promoText h1 {
+    font-size: 17px;
+  }
+
+  #promoText p {
+    font-size: 8px;
+  }
+
+  #howItWorks h1,
+  #appDescription h1 {
+    font-size: 30px;
+  }
+
+  #howItWorks p,
+  #wasCreatedFor p,
+  #appDescription p {
+    font-size: 15px;
+  }
+
+  #smartphone {
+    display: none;
+  }
+
+  #createGroupNotification {
+    font-size: 25px;
+    margin-bottom: 30vh;
+  }
+}
+
+@media (max-width: 350px) {
+  #promoText {
+    margin-top: 50px;
+  }
+
+  #promoText h1 {
+    font-size: 15px;
+  }
+
+  #promoText p {
+    font-size: 7px;
+  }
+
+  #howItWorks h1,
+  #appDescription h1 {
+    font-size: 30px;
+  }
+
+  #howItWorks p,
+  #wasCreatedFor p,
+  #appDescription p {
+    font-size: 15px;
+  }
+
+  #smartphone {
+    display: none;
+  }
+}

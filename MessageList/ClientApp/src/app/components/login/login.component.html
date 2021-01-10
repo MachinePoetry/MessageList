@@ -26,7 +26,7 @@
           </div>
 
           <div class="form-row justify-content-center mt-3 has-float-label">
-            <span class="col-1 mdi mdi-account mdi-24px mt-4 dark-color-text border-bottom-dark"
+            <span class="col-2 col-sm-1 mdi mdi-account mdi-24px mt-4 dark-color-text border-bottom-dark"
                   [ngClass]="{'submit-error': email.invalid && (email.touched || loginForm.submitted)}"></span>
             <input #email="ngModel" class="col-10 mt-4 border-bottom-dark" [ngClass]="{'submit-error': loginForm.submitted}" type="text" name="email" id="loginEmail"
                    placeholder="Введите email" [(ngModel)]="params.email" required pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$"
@@ -45,7 +45,7 @@
           </div>
 
           <div class="form-row justify-content-center has-float-label">
-            <span class="col-1 mdi mdi-lock mdi-24px mt-4 dark-color-text border-bottom-dark"
+            <span class="col-2 col-sm-1 mdi mdi-lock mdi-24px mt-4 dark-color-text border-bottom-dark"
                   [ngClass]="{'submit-error': password.invalid && (loginForm.submitted || password.dirty || password.touched)}"></span>
             <input #password="ngModel" class="col-10 mt-4 border-bottom-dark" [ngClass]="{'submit-error': loginForm.submitted}" type="password" name="password" id="loginPassword"
                    placeholder="Введите пароль" [(ngModel)]="params.password" required pattern="^.{1,20}$" (keydown.enter)="onSubmit(loginForm)" maxlength="21" />

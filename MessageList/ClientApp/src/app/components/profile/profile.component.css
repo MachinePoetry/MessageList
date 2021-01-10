@@ -12,3 +12,19 @@ p {
 .profile-content {
   background-color: white;
 }
+
+
+
+
+
+
+@media (max-width: 470px) {
+
+  .profile-container h1 {
+    font-size: 35px;
+  }
+
+  .profile-container p {
+    font-size: 15px;
+  }
+}

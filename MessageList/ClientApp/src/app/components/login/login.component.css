@@ -34,9 +34,10 @@ p {
 }
 
 .enter-form-wrapper {
-  background: url(./../../../assets/img/LoginBackground.JPG) no-repeat center top;
-  background-size: contain;
+  background-image: url(./../../../assets/img/LoginBackground.JPG);
+  background-size: auto 100%;
   background-position: left;
+  background-repeat: no-repeat;
   width: 100%;
   height: 100vh;
 }
@@ -47,7 +48,7 @@ p {
   border-left: none;
   border-right: none;
   outline: none;
-  background-color: #F6F6F6;
+  background-color: transparent;
 }
 
 #loginSpinner {
@@ -123,4 +124,36 @@ p {
 
 .has-float-label input:placeholder-shown:not(:focus)::placeholder {
   opacity: 0;
+}
+
+
+
+
+
+@media (max-width: 980px) {
+
+  .enter-form-wrapper {
+    background-image: none;
+  }
+}
+
+@media (min-width: 500px) and (max-width: 576px) {
+
+  .has-float-label label {
+    left: 70px;
+  }
+}
+
+@media (min-width: 450px) and (max-width: 500px) {
+
+  .has-float-label label {
+    left: 60px;
+  }
+}
+
+@media (max-width: 470px) {
+
+  .form-container h1 {
+    font-size: 30px;
+  }
 }
