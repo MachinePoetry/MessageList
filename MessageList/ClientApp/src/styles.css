@@ -164,6 +164,17 @@ color: #f5f9f9;
   left: 80%;
   top: 5%;
   max-height: 70vh;
+  overflow: scroll;
+}
+
+.toasts-container::-webkit-scrollbar { /* chrome based */
+  width: 0px;
+  background: transparent;
+}
+
+.toasts-container {
+  -ms-overflow-style: none; /* IE 10+ */
+  scrollbar-width: none; /* Firefox */
 }
 
 
