@@ -66,7 +66,6 @@ namespace MessageList
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
-            DbCreator.CreateDatabase(app);
         }
     }
 }
