@@ -26,7 +26,7 @@ namespace MessageList
             services.AddControllers(mvcOtions =>
             {
                 mvcOtions.EnableEndpointRouting = false;
-            });
+            }).AddNewtonsoftJson();
             services.AddMvc();
             services.AddSpaStaticFiles(configuration => configuration.RootPath = "ClientApp/dist");
             services.AddDbContext<ApplicationDbContext>(options =>
