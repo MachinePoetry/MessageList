@@ -43,6 +43,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   @ViewChild('enterMessageField') enterMessageField: ElementRef;
   @ViewChildren('message') messages: QueryList<ElementRef>;
   @ViewChild('messageEditingBlock') messageEditingBlock: ElementRef;
+  @ViewChild('spinner') spinner: ElementRef;
 
 
   // Component variables
@@ -53,7 +54,6 @@ export class MainComponent implements OnInit, AfterViewInit {
   public editMessageGroupFormId: number | null = null;
   public searchString: string = '';
   public isCollapsed: boolean = true;
-  public isMessageCreationProcess: boolean = false;
   public showEditMessageForm: boolean = false;
   public isFileMenuActive: boolean = false;
   private _previousMessageBlockHeight: number | null = null;
@@ -69,6 +69,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   private _isMessagesIterable = true;
   private _isGroupesIterable = true;
   private readonly _notOnlySpaceBar = /\S/;
+  public isMessageCreationProcess: boolean = false;
 
   public authUserInfo: User = new User();
   public authUserMessageGroups: MessageGroup[] = [];
@@ -142,28 +143,35 @@ export class MainComponent implements OnInit, AfterViewInit {
       this._toastService.showDanger('Не выбрана группа сообщений');
       return;
     }
-    if (form.valid && this._notOnlySpaceBar.test(this.newMessage.text)) {
+
+    let isFileCollectionValid: boolean = (this.newMessage.fileCollection.images.length > 0 || this.newMessage.fileCollection.video.length > 0 ||
+      this.newMessage.fileCollection.audio.length > 0 || this.newMessage.fileCollection.files.length > 0)
+
+    if ((form.valid && this._notOnlySpaceBar.test(this.newMessage.text)) || isFileCollectionValid ) {
       let messageParams: IMessageParams | FormData = {
         authUserId: this.authUserInfo.id,
         messageGroupId: this.selectedGroupId,
         text: this.newMessage.text,
-        id: this.selectedMessageId
+        selectedMessageId: this.selectedMessageId
       }
-      this.enterMessageField.nativeElement.focus();
-      this._fileService.cleanFileCollection(this.newMessage.fileCollection);
-      this.isMessageCreationProcess = true;
-      this._setMessageBlockHeight();
+      messageParams = this._fileService.convertParamsToFormData(this.newMessage.fileCollection, messageParams);
 
-      if (this.newMessage.fileCollection.images.length || this.newMessage.fileCollection.video.length || this.newMessage.fileCollection.audio.length ||
-          this.newMessage.fileCollection.files.length) {
-        messageParams = this._fileService.convertParamsToFormData(this.newMessage.fileCollection, messageParams);
-      }
+      this.enterMessageField.nativeElement.focus();
+      this.isMessageCreationProcess = true;
+      this._fileService.cleanFileCollection(this.newMessage.fileCollection);
+      this.spinner.nativeElement.classList.remove('d-none');
+      this.spinner.nativeElement.classList.add('d-block');
+      this._setMessageBlockHeight();
 
       let url: string = this.showEditMessageForm ? '/api/messages/update' : '/api/messages/create';
 
       this._httpService.post(url, messageParams).subscribe(data => {
         this.isMessageCreationProcess = false;
-        this._setMessageBlockHeight();
+        setTimeout(() => {
+          this.spinner.nativeElement.classList.remove('d-block'); 
+          this.spinner.nativeElement.classList.add('d-none');
+          this._setMessageBlockHeight();
+        }, 500);
         this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
           () => {
             if (url === '/api/messages/create') {

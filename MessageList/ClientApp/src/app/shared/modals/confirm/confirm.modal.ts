@@ -18,7 +18,7 @@ export class ConfirmModal {
   public ok(closeType: string): void {
     let request: (url: string, params: Object) => Observable<Object>;
     let requestParams: IIdRequest = {
-      id: this.modalWindowParams.entityId,
+      selectedMessageId: this.modalWindowParams.entityId,
       authUserId: this.modalWindowParams.authUserInfo.id
     }
 

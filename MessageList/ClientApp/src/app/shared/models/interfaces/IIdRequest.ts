@@ -1,4 +1,4 @@
 export interface IIdRequest {
-  id: number,
+  selectedMessageId: number,
   authUserId: number | null
 }

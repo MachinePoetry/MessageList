@@ -211,9 +211,8 @@
                   </textarea>
                 </form>
                 <div class="w-100">
-                  <app-file-preview [fileCollection]="newMessage.fileCollection" (changeFilesEvent)="setChangedFilesCollection($event)"
-                                    [style.display]="!isMessageCreationProcess ? 'block' : 'none'"></app-file-preview>
-                  <div class="spinner ml-2" [style.display]="isMessageCreationProcess ? 'block' : 'none'">
+                  <app-file-preview [fileCollection]="newMessage.fileCollection" (changeFilesEvent)="setChangedFilesCollection($event)"></app-file-preview>
+                  <div #spinner class="spinner ml-2 d-none">
                     <div class="rect1 my-auto"></div>
                     <div class="rect2 my-auto"></div>
                     <div class="rect3 my-auto"></div>

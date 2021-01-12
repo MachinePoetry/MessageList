@@ -72,43 +72,63 @@ namespace MessageList.Controllers
         [HttpPost("create")]
         public async Task<JsonResult> CreateMessageAsync([FromForm] QueryMessage mes)
         {
-            Message message = new Message(text: mes.Text, messageGroupId: Int32.Parse(mes.MessageGroupId));
-            await _db.Messages.AddAsync(message);
-            int res = await _db.SaveChangesAsync();
+            int reqAuthUserId, reqMessageGroupId;
+            bool authUserIdResult = Int32.TryParse(mes.AuthUserId, out reqAuthUserId);
+            bool messageGroupIdResult = Int32.TryParse(mes.MessageGroupId, out reqMessageGroupId);
+
+            int res = 0;
+
+            if (authUserIdResult && messageGroupIdResult)
+            {
+                Message message = new Message(text: mes.Text, messageGroupId: reqMessageGroupId);
+                await _db.Messages.AddAsync(message);
+                res = await _db.SaveChangesAsync();
+            }
             ResultInfo result = ResultInfo.CreateResultInfo(res, "MessageCreated", "Сообщение успешно сохранено", "MessageCreationFailed", "Произошла ошибка при создании сообщения");
             return Json(result);
         }
 
-        //[HttpPost("update")]
-        //public async Task<JsonResult> UpdateMessage([FromBody] QueryMessage mes)
-        //{
-        //    int res = 0;
-        //    Message message = await _db.Messages.FirstOrDefaultAsync(m => m.Id == mes.Id);
-        //    if (message != null)
-        //    {
-        //        message.Text = mes.Text;
-        //        res = await _db.SaveChangesAsync();
-        //    }
-        //    ResultInfo result = ResultInfo.CreateResultInfo(res, "MessageUpdates", "Сообщение успешно изменено", "MessageUpdateFailed", "Произошла ошибка при изменении сообщения");
-        //    return Json(result);
-        //}
+        [HttpPost("update")]
+        public async Task<JsonResult> UpdateMessage([FromForm] QueryMessage mes)
+        {
+            int selectedMessageId;
+            bool selectedMessageIdResult = Int32.TryParse(mes.SelectedMessageId, out selectedMessageId);
+            int res = 0;
+            if (selectedMessageIdResult)
+            {
+                Message message = await _db.Messages.FirstOrDefaultAsync(m => m.Id == selectedMessageId);
+                if (message != null)
+                {
+                    message.Text = mes.Text;
+                    res = await _db.SaveChangesAsync();
+                }
+            }
+            ResultInfo result = ResultInfo.CreateResultInfo(res, "MessageUpdates", "Сообщение успешно изменено", "MessageUpdateFailed", "Произошла ошибка при изменении сообщения");
+            return Json(result);
+        }
 
+        [HttpPost("delete")]
+        public async Task<JsonResult> DeleteExistingMessage([FromBody] QueryMessage mes)
+        {
+            int authUserId, selectedMessageId;
+            bool authUserIdResult = Int32.TryParse(mes.AuthUserId, out authUserId);
+            bool selectedMessageIdResult = Int32.TryParse(mes.SelectedMessageId, out selectedMessageId);
 
-        //[HttpPost("delete")]
-        //public async Task<JsonResult> DeleteExistingMessage ([FromBody] QueryMessage mes)
-        //{
-        //    int res = 0;
-        //    Message message = await _db.Messages.FirstOrDefaultAsync(m => m.Id == mes.Id);
-        //    MessageGroup messageGroup = await _db.MessageGroups.FirstOrDefaultAsync(mg => mg.Id == message.MessageGroupId);
-        //    User user = await _db.Users.FirstOrDefaultAsync(u => u.Id == mes.AuthUserId);
+            int res = 0;
 
-        //    if (message != null && user != null && user.Email.Equals(User.Identity.Name))
-        //    {
-        //        _db.Messages.Remove(message);
-        //        res = await _db.SaveChangesAsync();
-        //    }
-        //    ResultInfo result = ResultInfo.CreateResultInfo(res, "MessageDeleted", "Сообщение успешно удалено", "MessageDeletionFailed", "Произошла ошибка при удалении сообщения");
-        //    return Json(result);
-        //}
+            if (authUserIdResult && selectedMessageIdResult)
+            {
+                Message message = await _db.Messages.FirstOrDefaultAsync(m => m.Id == selectedMessageId);
+                User user = await _db.Users.FirstOrDefaultAsync(u => u.Id == authUserId);
+
+                if (message != null && user != null && user.Email.Equals(User.Identity.Name))
+                {
+                    _db.Messages.Remove(message);
+                    res = await _db.SaveChangesAsync();
+                }
+            }
+            ResultInfo result = ResultInfo.CreateResultInfo(res, "MessageDeleted", "Сообщение успешно удалено", "MessageDeletionFailed", "Произошла ошибка при удалении сообщения");
+            return Json(result);
+        }
     }
 }
