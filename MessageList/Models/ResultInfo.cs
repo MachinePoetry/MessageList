@@ -20,6 +20,8 @@ namespace MessageList.Models
             return result;
         }
 
+        public ResultInfo() { }
+
         public ResultInfo(string status, string info)
         {
             Status = status;
