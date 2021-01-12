@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -11,7 +11,6 @@ namespace MessageList.Models
         [Column("id")]
         public int Id { get; set; }
         [Column("text")]
-        [Required]
         [MaxLength(5000)]
         public string Text { get; set; }
         [Column("created_at")]
@@ -19,7 +18,7 @@ namespace MessageList.Models
         public DateTime CreatedAt { get; set; }
         [Column("related_message_group")]
         [Required]
-        public int MessageGroupId {get; set;}
+        public int MessageGroupId { get; set; }
         [JsonIgnore]
         public MessageGroup MessageGroup { get; set; }
 
