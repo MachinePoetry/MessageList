@@ -11,5 +11,10 @@ namespace MessageList.Models
         [MaxLength(20500000)]
         [Required]
         public byte[] Data { get; set; }
+
+        public AudioFile(string contentType, string fileName, long length, int relatedMessageId, byte[] data) : base(contentType, fileName, length, relatedMessageId)
+        {
+            Data = data;
+        }
     }
 }

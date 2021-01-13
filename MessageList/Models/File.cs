@@ -21,5 +21,13 @@ namespace MessageList.Models
         [JsonIgnore]
         [NotMapped]
         public Message Message { get; set; }
+
+        public File(string contentType, string fileName, long length, int relatedMessageId)
+        {
+            ContentType = contentType;
+            FileName = fileName;
+            Length = length;
+            RelatedMessageId = relatedMessageId;
+        }
     }
 }

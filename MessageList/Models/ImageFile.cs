@@ -12,5 +12,10 @@ namespace MessageList.Models
         [MaxLength(1050000)]
         [Required]
         public byte[] Data { get; set; }
+
+        public ImageFile(string contentType, string fileName, long length, int relatedMessageId, byte[] data) : base(contentType, fileName, length, relatedMessageId) 
+        {
+            Data = data;
+        }
     }
 }

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using MessageList.Data;
 using MessageList.Models;
 using MessageList.Models.QueryModels;
+using MessageList.Models.Services;
 
 namespace MessageList.Controllers
 {
@@ -75,16 +76,45 @@ namespace MessageList.Controllers
             int reqAuthUserId, reqMessageGroupId;
             bool authUserIdResult = Int32.TryParse(mes.AuthUserId, out reqAuthUserId);
             bool messageGroupIdResult = Int32.TryParse(mes.MessageGroupId, out reqMessageGroupId);
+            bool isMessageWithFiles = (mes.Images?.Count() > 0 || mes.Video?.Count() > 0 || mes.Audio?.Count() > 0 || mes.Files?.Count() > 0);
 
             int res = 0;
+            ResultInfo result = new ResultInfo();
 
-            if (authUserIdResult && messageGroupIdResult)
+            if (authUserIdResult && messageGroupIdResult && !isMessageWithFiles)
+            {
+                if (!String.IsNullOrEmpty(mes.Text))
+                {
+                    Message message = new Message(text: mes.Text, messageGroupId: reqMessageGroupId);
+                    await _db.Messages.AddAsync(message);
+                    res = await _db.SaveChangesAsync();
+                }
+                else
+                {
+                    result = new ResultInfo(status: "MessageCreationFailed", info: "Отсутствует текст сообщения");
+                }
+
+            }
+            else if (authUserIdResult && messageGroupIdResult && isMessageWithFiles)
             {
                 Message message = new Message(text: mes.Text, messageGroupId: reqMessageGroupId);
                 await _db.Messages.AddAsync(message);
                 res = await _db.SaveChangesAsync();
+                // Save message in database anyway (either it is empty or not), then retrieve it to get it's id and give it to files in database table
+                Message mesForFiles = await _db.Messages.FirstOrDefaultAsync(m => m.Equals(message));
+                if (mesForFiles != null)
+                {
+                    IEnumerable<ImageFile> images = FileService.ConvertFiles(mes.Images, mesForFiles.Id, typeof(ImageFile)).Cast<ImageFile>();
+                    await FileService.SaveFilesToDatabaseAsync<ImageFile>(images, _db, _db.Images);
+                    IEnumerable<VideoFile> video = FileService.ConvertFiles(mes.Video, mesForFiles.Id, typeof(VideoFile)).Cast<VideoFile>();
+                    await FileService.SaveFilesToDatabaseAsync<VideoFile>(video, _db, _db.Video);
+                    IEnumerable<AudioFile> audio = FileService.ConvertFiles(mes.Audio, mesForFiles.Id, typeof(AudioFile)).Cast<AudioFile>();
+                    await FileService.SaveFilesToDatabaseAsync<AudioFile>(audio, _db, _db.Audio);
+                    IEnumerable<OtherFile> files = FileService.ConvertFiles(mes.Files, mesForFiles.Id, typeof(OtherFile)).Cast<OtherFile>();
+                    await FileService.SaveFilesToDatabaseAsync<OtherFile>(files, _db, _db.Files);
+                }
             }
-            ResultInfo result = ResultInfo.CreateResultInfo(res, "MessageCreated", "Сообщение успешно сохранено", "MessageCreationFailed", "Произошла ошибка при создании сообщения");
+            result = ResultInfo.CreateResultInfo(res, "MessageCreated", "Сообщение успешно сохранено", "MessageCreationFailed", "Произошла ошибка при создании сообщения");
             return Json(result);
         }
 
