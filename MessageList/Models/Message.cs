@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -21,13 +22,19 @@ namespace MessageList.Models
         public int MessageGroupId { get; set; }
         [JsonIgnore]
         public MessageGroup MessageGroup { get; set; }
+        [NotMapped]
+        public FileCollection FileCollection { get; set; }
 
-        public Message() { }
+
+        public Message() {
+            FileCollection = new FileCollection();
+        }
         public Message (string text, int messageGroupId)
         {
             Text = text;
             MessageGroupId = messageGroupId;
             CreatedAt = DateTime.Now;
+            FileCollection = new FileCollection();
         }
     }
 }

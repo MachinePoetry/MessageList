@@ -17,17 +17,17 @@ namespace MessageList.Models
         public long Length { get; set; }
         [Column("related_message_id")]
         [Required]
-        public int RelatedMessageId { get; set; }
+        public int MessageId { get; set; }
         [JsonIgnore]
         [NotMapped]
         public Message Message { get; set; }
 
-        public File(string contentType, string fileName, long length, int relatedMessageId)
+        public File(string contentType, string fileName, long length, int messageId)
         {
             ContentType = contentType;
             FileName = fileName;
             Length = length;
-            RelatedMessageId = relatedMessageId;
+            MessageId = messageId;
         }
     }
 }

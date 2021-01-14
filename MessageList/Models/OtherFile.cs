@@ -12,7 +12,7 @@ namespace MessageList.Models
         [Required]
         public byte[] Data { get; set; }
 
-        public OtherFile(string contentType, string fileName, long length, int relatedMessageId, byte[] data) : base(contentType, fileName, length, relatedMessageId)
+        public OtherFile(string contentType, string fileName, long length, int messageId, byte[] data) : base(contentType, fileName, length, messageId)
         {
             Data = data;
         }

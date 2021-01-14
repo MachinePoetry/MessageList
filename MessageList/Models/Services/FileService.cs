@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
@@ -56,6 +57,27 @@ namespace MessageList.Models.Services
             }
             int result = await db.SaveChangesAsync();
             return result;
+        }
+
+        public static async Task<List<Message>> AddFilesToMessageCollection(List<Message> messages, ApplicationDbContext _db)
+        {
+            foreach (var message in messages)
+            {
+                message.FileCollection.Images = await _db.Images.Where(image => image.MessageId == message.Id).ToListAsync();
+                message.FileCollection.Video = await _db.Video.Where(video => video.MessageId == message.Id).ToListAsync();
+                message.FileCollection.Audio = await _db.Audio.Where(audio => audio.MessageId == message.Id).ToListAsync();
+                message.FileCollection.Files = await _db.Files.Where(file => file.MessageId == message.Id).ToListAsync();
+            }
+            return messages;
+        }
+
+        public static async Task<List<MessageGroup>> AddFilesToMessageGroupCollection(List<MessageGroup> messageGroups, ApplicationDbContext _db)
+        {
+            foreach (var mg in messageGroups)
+            {
+                await AddFilesToMessageCollection(mg.Messages, _db);
+            }
+            return messageGroups;
         }
     }
 }

@@ -27,14 +27,17 @@ namespace MessageList.Controllers
         [HttpGet("getGroupesAndMessages")]
         public async Task<JsonResult> GetGroupesAndMessagesAsync([FromQuery] int id, int? counter, int? groupId)
         {
-            // Application returns only 30 messages for every group for the first load. More messages are uploaded only for group from params 
+            // Application returns only 30 messages for every group for the first load. More messages are uploaded only for group from params
+
             List<MessageGroup> messageGroups = await _db.MessageGroups.Where(mg => mg.UserId == id).Include(m => m.Messages).ToListAsync();
+            messageGroups = await FileService.AddFilesToMessageGroupCollection(messageGroups, _db);
             messageGroups.All(mg => { mg.Messages = mg.Messages.AsEnumerable().Reverse().Take(30).Reverse().ToList(); return true; });
 
             if (counter != null && groupId != null)
             {
                 List<Message> messages = await _db.Messages.Where(mes => mes.MessageGroupId == groupId).OrderBy(m => m.CreatedAt)
                                                .Reverse().Take((int)counter).Reverse().ToListAsync();
+                messages = await FileService.AddFilesToMessageCollection(messages, _db);
                 messageGroups.FirstOrDefault(m => m.Id == groupId).Messages = messages;
             }
             return Json(messageGroups);
@@ -97,10 +100,10 @@ namespace MessageList.Controllers
             }
             else if (authUserIdResult && messageGroupIdResult && isMessageWithFiles)
             {
-                Message message = new Message(text: mes.Text, messageGroupId: reqMessageGroupId);
+                Message message = new Message(text: mes.Text ?? String.Empty, messageGroupId: reqMessageGroupId);
                 await _db.Messages.AddAsync(message);
                 res = await _db.SaveChangesAsync();
-                // Save message in database anyway (either it is empty or not), then retrieve it to get it's id and give it to files in database table
+                // Save message in database anyway (either has it text or not), then retrieve it to get it's id and give it to files in database's table
                 Message mesForFiles = await _db.Messages.FirstOrDefaultAsync(m => m.Equals(message));
                 if (mesForFiles != null)
                 {
