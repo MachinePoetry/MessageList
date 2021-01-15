@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace MessageList.Models
 {
@@ -9,6 +10,7 @@ namespace MessageList.Models
     {
         [Column("data")]
         [MaxLength(1050000)]
+        [JsonProperty(PropertyName = "src")]
         [Required]
         public byte[] Data { get; set; }
 

@@ -30,14 +30,14 @@ namespace MessageList.Controllers
             // Application returns only 30 messages for every group for the first load. More messages are uploaded only for group from params
 
             List<MessageGroup> messageGroups = await _db.MessageGroups.Where(mg => mg.UserId == id).Include(m => m.Messages).ToListAsync();
-            messageGroups = await FileService.AddFilesToMessageGroupCollection(messageGroups, _db);
-            messageGroups.All(mg => { mg.Messages = mg.Messages.AsEnumerable().Reverse().Take(30).Reverse().ToList(); return true; });
+            await FileService.AddFilesToMessageGroupCollection(messageGroups, _db);
+            messageGroups.ForEach(mg => mg.Messages = mg.Messages.AsEnumerable().Reverse().Take(30).Reverse().ToList());
 
             if (counter != null && groupId != null)
             {
                 List<Message> messages = await _db.Messages.Where(mes => mes.MessageGroupId == groupId).OrderBy(m => m.CreatedAt)
                                                .Reverse().Take((int)counter).Reverse().ToListAsync();
-                messages = await FileService.AddFilesToMessageCollection(messages, _db);
+                await FileService.AddFilesToMessageCollection(messages, _db);
                 messageGroups.FirstOrDefault(m => m.Id == groupId).Messages = messages;
             }
             return Json(messageGroups);

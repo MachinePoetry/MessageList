@@ -9,7 +9,7 @@ using MessageList.Data;
 
 namespace MessageList.Models.Services
 {
-    public class FileService
+    public static class FileService
     {
         public static List<File> ConvertFiles(IEnumerable<IFormFile> fileList, int relatedMessageId, Type outType)
         {

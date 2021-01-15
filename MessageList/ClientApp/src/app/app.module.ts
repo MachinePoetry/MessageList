@@ -29,6 +29,7 @@ import { EqualValidatorDirective } from './shared/directives/equalValidator/equa
 import { DateToLocalePipe } from './shared/pipes/dateToLocale/date-to-locale.pipe';
 import { SafeUrl } from './shared/pipes/safeUrl/safe-url.pipe';
 import { SecondsToTimePipe } from './shared/pipes/secondsToTime/seconds-to-time.pipe';
+import { BlobToSrcPipe } from './shared/pipes/blobToSrc/blob-to-src.pipe';
 
 import { TermsOfUseModal } from './shared/modals/termsOfUse/terms-of-use.modal';
 import { ConfirmModal } from './shared/modals/confirm/confirm.modal';
@@ -50,7 +51,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, FilePreviewComponent, NotFoundComponent,
-    ToastsContainer, AudioPlayerComponent, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrl, SecondsToTimePipe, TermsOfUseModal,
+    ToastsContainer, AudioPlayerComponent, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrl, SecondsToTimePipe, BlobToSrcPipe, TermsOfUseModal,
     ConfirmModal, WarningModal, AttachFileModal, AttachFileFromWebModal
   ],
   imports: [

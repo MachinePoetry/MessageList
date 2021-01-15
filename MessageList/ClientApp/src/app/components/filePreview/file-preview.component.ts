@@ -14,6 +14,7 @@ export class FilePreviewComponent implements AfterViewInit {
   @Input() public fileCollection: IFileCollection = {
     images: [], video: [], audio: [], files: []
   };
+  @Input() public mode: string;
   @Output() changeFilesEvent = new EventEmitter<any>();
 
   @ViewChild('imageBlockContainer') imageBlockContainer: ElementRef;

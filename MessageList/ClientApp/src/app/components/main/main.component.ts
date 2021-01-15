@@ -315,6 +315,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     }
     this._httpService.get('api/messages/getGroupesAndMessages', userMesagesParams).subscribe((data: MessageGroup[]) => {
       this.authUserMessageGroups = data;
+
       if (addActionsToPromise) {
         addActionsToPromise();
       }

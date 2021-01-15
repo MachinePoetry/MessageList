@@ -1,6 +1,6 @@
 <div class="d-flex h-100 w-100" id="audioContainer">
   <div class="col-1 d-flex justify-content-center align-items-center">
-    <audio #audio [src]="audioFile.src | safeUrl" class="d-none" (timeupdate)="showProgress(audio)" (ended)="resetAudioControls(audio)"></audio>
+    <audio #audio [src]="audioFile.src | blobToSrc: audioFile | safeUrl" class="d-none" (timeupdate)="showProgress(audio)" (ended)="resetAudioControls(audio)"></audio>
     <span *ngIf="isPaused" class="mdi mdi-play-circle toggle-play lh-1" (click)="togglePlay(audio)"></span>
     <span *ngIf="!isPaused" class="mdi mdi-pause-circle toggle-play lh-1" (click)="togglePlay(audio)"></span>
   </div>

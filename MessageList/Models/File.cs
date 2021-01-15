@@ -12,6 +12,7 @@ namespace MessageList.Models
         [Column("content_type")]
         public string ContentType { get; set; }
         [Column("file_name")]
+        [JsonProperty(PropertyName = "name")]
         public string FileName { get; set; }
         [Column("length")]
         public long Length { get; set; }
