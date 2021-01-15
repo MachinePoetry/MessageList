@@ -17,7 +17,7 @@ import { MainComponent } from './components/main/main.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { FilePreviewComponent } from './components/filePreview/file-preview.component';
 import { NotFoundComponent } from './components/notFound/not-found.component';
-import { ToastsContainer } from './components/toastsContainer/toasts-container.component';
+import { ToastsContainerComponent } from './components/toastsContainer/toasts-container.component';
 import { AudioPlayerComponent } from './components/audioPlayer/audio-player.component';
 
 import { HttpService } from './shared/services/httpService/http.service';
@@ -37,6 +37,9 @@ import { WarningModal } from './shared/modals/warning/warning.modal';
 import { AttachFileModal } from './shared/modals/attachFile/attach-file.modal';
 import { AttachFileFromWebModal } from './shared/modals/attachFileFromWeb/attach-file-from-web.modal';
 
+import { CoreSpinner } from './shared/spinners/core/core.spinner';
+import { InlineSpinner } from './shared/spinners/inline/inline.spinner';
+
 import { AuthUserInfoResolver } from './shared/resolvers/auth-user-info.resolver';
 
 const routes: Routes = [
@@ -51,8 +54,8 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, FilePreviewComponent, NotFoundComponent,
-    ToastsContainer, AudioPlayerComponent, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrl, SecondsToTimePipe, BlobToSrcPipe, TermsOfUseModal,
-    ConfirmModal, WarningModal, AttachFileModal, AttachFileFromWebModal
+    ToastsContainerComponent, AudioPlayerComponent, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrl, SecondsToTimePipe, BlobToSrcPipe, TermsOfUseModal,
+    ConfirmModal, WarningModal, AttachFileModal, AttachFileFromWebModal, CoreSpinner, InlineSpinner
   ],
   imports: [
     BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, NgSelectModule, CommonModule, BrowserAnimationsModule
