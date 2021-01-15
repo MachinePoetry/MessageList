@@ -9,6 +9,6 @@ export class BlobToSrcPipe implements PipeTransform {
     if (typeof value !== 'string') {
       throw new Error('BlobToSrcPipe can only be used with strings');
     }
-    return 'data:' + file.contentType + ';base64,' + file.src;
+    return value.startsWith('blob:') ? value : 'data:' + file.contentType + ';base64,' + file.src;
   }
 }
