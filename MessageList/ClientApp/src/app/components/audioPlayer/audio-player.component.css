@@ -8,7 +8,6 @@ span {
 
 .current-time {
   font-size: 14px;
-  color: #bdbebd;
 }
 
 #audioNameContainer:hover,
@@ -22,9 +21,16 @@ span {
   cursor: pointer;
 }
 
+.player-color-light {
+  color: #bdbebd;
+}
+
+.player-color-dark {
+  color: #142C40;
+}
+
 .toggle-play {
   font-size: 30px;
-  color: #bdbebd;
   cursor: pointer;
 }
 
@@ -41,7 +47,7 @@ input[type=range]:focus {
 }
 
   /*chrome based*/
-input[type=range]::-webkit-slider-runnable-track {
+.light-mode::-webkit-slider-runnable-track {
   position: relative;
   height: 2px;
   bottom: 1px;
@@ -52,7 +58,18 @@ input[type=range]::-webkit-slider-runnable-track {
   -webkit-appearance: none;
 }
 
-input[type=range]::-webkit-slider-thumb {
+.dark-mode::-webkit-slider-runnable-track {
+  position: relative;
+  height: 2px;
+  bottom: 1px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: #142C40;
+  border-radius: 3px;
+  -webkit-appearance: none;
+}
+
+.light-mode::-webkit-slider-thumb {
   height: 7px;
   width: 7px;
   border-radius: 7px;
@@ -62,8 +79,22 @@ input[type=range]::-webkit-slider-thumb {
   margin-top: -2px;
 }
 
-input[type=range]:focus::-webkit-slider-runnable-track {
+.dark-mode::-webkit-slider-thumb {
+  height: 7px;
+  width: 7px;
+  border-radius: 7px;
+  background: #142C40;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -2px;
+}
+
+.light-mode:focus::-webkit-slider-runnable-track {
   background: lightgrey;
+}
+
+.dark-mode:focus::-webkit-slider-runnable-track {
+  background: #142C40;
 }
 
   /*moz based*/
