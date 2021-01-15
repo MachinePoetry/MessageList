@@ -15,6 +15,7 @@ namespace MessageList.Models
         [JsonProperty(PropertyName = "name")]
         public string FileName { get; set; }
         [Column("length")]
+        [JsonProperty(PropertyName = "size")]
         public long Length { get; set; }
         [Column("related_message_id")]
         [Required]
