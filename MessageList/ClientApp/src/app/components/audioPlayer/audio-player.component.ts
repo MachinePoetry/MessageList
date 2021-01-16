@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { IFile } from './../../shared/models/interfaces/IFile';
 
 @Component({
   selector: 'app-audio-player',
@@ -8,7 +9,7 @@ import { Component, Input } from '@angular/core';
 
 export class AudioPlayerComponent {
 
-  @Input() public audioFile: any;
+  @Input() public audioFile: IFile;
   @Input() public fileUrl: string;
   @Input() public mode: string;
 
