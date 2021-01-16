@@ -61,7 +61,7 @@ const routes: Routes = [
     BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, NgSelectModule, CommonModule, BrowserAnimationsModule
   ],
   exports: [FocusDirective, EqualValidatorDirective],
-  providers: [HttpService, HtmlService, ToastService, FileService, AuthUserInfoResolver],
+  providers: [HttpService, HtmlService, ToastService, FileService, AuthUserInfoResolver, BlobToSrcPipe],
   bootstrap: [AppComponent]
 })
 

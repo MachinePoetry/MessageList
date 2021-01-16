@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, Input, Output, EventEmitter, ViewChild, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { FileService } from './../../shared/services/fileService/file.service';
 import { IFileCollection } from './../../shared/models/interfaces/IFileCollection';
+import { BlobToSrcPipe } from './../../shared/pipes/blobToSrc/blob-to-src.pipe';
 
 @Component({
   selector: 'app-file-preview',
@@ -9,7 +10,7 @@ import { IFileCollection } from './../../shared/models/interfaces/IFileCollectio
 })
 
 export class FilePreviewComponent implements AfterViewInit {
-  constructor(private _fileService: FileService) { }
+  constructor(private _fileService: FileService, private _blobToSrc: BlobToSrcPipe) { }
 
   @Input() public fileCollection: IFileCollection = {
     images: [], video: [], audio: [], files: []
@@ -41,7 +42,7 @@ export class FilePreviewComponent implements AfterViewInit {
   }
 
   public showImageModal(image: any, imgModal: any): void {
-    imgModal.src = image.src;
+    imgModal.src = this._blobToSrc.transform(image.src, image);
     this.isImgModalVisible = true;
   }
 

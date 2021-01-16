@@ -122,7 +122,7 @@
 
           <!--Block with user messages-->
           <div #messageBlock id="messageBlock" class="col-12" (scroll)="uploadNewMessages()">
-            <h2 *ngIf="authUserMessageGroups.length === 0" class="text-center mx-2" id="createGroupNotification">
+            <h2 *ngIf="authUserMessageGroups.length === 0" class="text-center mx-2 mt-5" id="createGroupNotification">
               Создавайте группы в меню слева для сохранения в них ваших сообщений
             </h2>
             <div *ngIf="authUserMessageGroups.length > 0" style="flex: 1 0 auto;"></div>
@@ -130,9 +130,9 @@
             <div *ngIf="authUserMessageGroups.length > 0" class="w-100">
               <div *ngFor="let group of authUserMessageGroups" class="w-100">
                 <div *ngIf="group.id == selectedGroupId" class="w-100">
-                  <div #message *ngFor="let message of group.messages; trackBy: groupsTrackFn" class="row">
-                    <div class="col-12 message" id="message{{message.id}}">
-                      <div class="row mt-lg-3 align-items-center">
+                  <div #message *ngFor="let message of group.messages; trackBy: groupsTrackFn" class="row" id="messageContainer">
+                    <div class="col-12 message mb-2" id="message{{message.id}}">
+                      <div class="row align-items-center mt-2">
                         <div class="col-8 col-lg-9">
                           <p class="message-created-at text-center ml-lg-5" id="{{message.id}}messageCreatedAt"> {{message.createdAt | dateToLocale: 'ru'}} </p>
                         </div>
@@ -144,8 +144,12 @@
                           <p class="text-center"><span class="mdi mdi-close-outline mdi-dark"></span></p>
                         </button>
                       </div>
-                      <p *ngIf="message.text" class="text-left text-break mx-3 mb-lg-5" id="messageText"> {{message.text}} </p> <br>
-                      <app-file-preview [fileCollection]="message.fileCollection" (changeFilesEvent)="null" [mode]="'message'"></app-file-preview>
+                      <div *ngIf="message.text" class="w-90 mx-auto">
+                        <p class="text-left text-break mb-3" id="messageText"> {{message.text}} </p>
+                      </div>
+                      <div *ngIf="isFileCollectionValid(message.fileCollection)" class="w-90 mx-auto">
+                        <app-file-preview [fileCollection]="message.fileCollection" (changeFilesEvent)="null" [mode]="'message'"></app-file-preview>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -158,8 +162,8 @@
 
             <div #messageEditingBlock class="col-12 d-none">
               <div class="row">
-                <div class="col-11 mb-1"><span class="text-light"> Редактирование сообщения </span></div>
-                <div class="col-1 mb-1 close-editing-message" (click)="toggleEditingMessageForm(false, null)"><span class="mdi mdi-close text-light"></span></div>
+                <div class="col-11 mt-2"><span class="text-light"> Редактирование сообщения </span></div>
+                <div class="col-1 mt-2 close-editing-message" (click)="toggleEditingMessageForm(false, null)"><span class="mdi mdi-close text-light"></span></div>
               </div>
             </div>
 
@@ -213,12 +217,8 @@
                 </form>
                 <div class="w-100">
                   <app-file-preview [fileCollection]="newMessage.fileCollection" (changeFilesEvent)="setChangedFilesCollection($event)" [mode]="'preview'"></app-file-preview>
-                  <div #spinner class="spinner ml-2 d-none">
-                    <div class="rect1 my-auto"></div>
-                    <div class="rect2 my-auto"></div>
-                    <div class="rect3 my-auto"></div>
-                    <div class="rect4 my-auto"></div>
-                    <div class="rect5 my-auto"></div>
+                  <div #spinner class="ml-2 d-none">
+                    <inline-spinner></inline-spinner>
                   </div>
                 </div>
               </div>

@@ -208,13 +208,14 @@
   flex-wrap: wrap;
 }
 
-.message:hover {
+#messageContainer:hover {
   background-color: lightgrey;
 }
 
 #messageText {
   font-family: Tahoma, Arial, sans-serif;
   color: rgb(93,93,93);
+  font-size: 14px;
   white-space: pre-wrap;
 }
 
@@ -333,64 +334,6 @@
 
 #newsSelect {
   width: 220px;
-}
-
-.spinner {
-  width: 100%;
-  height: 35px;
-  font-size: 10px;
-}
-
-.spinner > div {
-  background-color: #1e96a1;
-  height: 15px;
-  width: 7px;
-  display: inline-block;
-  margin-right: 4px;
-  -webkit-animation: sk-stretchdelay 1.2s infinite ease-in-out;
-  animation: sk-stretchdelay 1.2s infinite ease-in-out;
-}
-
-.spinner .rect2 {
-  -webkit-animation-delay: -1.1s;
-  animation-delay: -1.1s;
-}
-
-.spinner .rect3 {
-  -webkit-animation-delay: -1.0s;
-  animation-delay: -1.0s;
-}
-
-.spinner .rect4 {
-  -webkit-animation-delay: -0.9s;
-  animation-delay: -0.9s;
-}
-
-.spinner .rect5 {
-  -webkit-animation-delay: -0.8s;
-  animation-delay: -0.8s;
-}
-
-@-webkit-keyframes sk-stretchdelay {
-  0%, 40%, 100% {
-    -webkit-transform: scaleY(0.4)
-  }
-
-  20% {
-    -webkit-transform: scaleY(0.8)
-  }
-}
-
-@keyframes sk-stretchdelay {
-  0%, 40%, 100% {
-    transform: scaleY(0.4);
-    -webkit-transform: scaleY(0.4);
-  }
-
-  20% {
-    transform: scaleY(1.0);
-    -webkit-transform: scaleY(0.8);
-  }
 }
 
 

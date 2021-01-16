@@ -357,6 +357,10 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.enterMessageField.nativeElement.focus();
   }
 
+  public isFileCollectionValid(collection: IFileCollection): boolean {
+    return (collection.images.length > 0 || collection.video.length > 0 || collection.audio.length > 0 || collection.files.length > 0);
+  }
+
   public setChangedFilesCollection(files: IFileCollection): void {
     this.newMessage.fileCollection = files;
     this._setMessageBlockHeight();

@@ -7,7 +7,7 @@ import { ToastService } from './../../shared/services/toastService/toast.service
   styleUrls: ['./toasts-container.component.css']
 })
 
-export class ToastsContainer {
+export class ToastsContainerComponent {
   constructor(public toastService: ToastService) { }
 
   public isTemplate(toast): boolean { return toast.textOrTpl instanceof TemplateRef; }

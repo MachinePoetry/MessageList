@@ -24,7 +24,7 @@
      [ngClass]="{'d-none': !fileCollection.audio.length, 'mb-2': fileCollection.audio.length}">
   <div #audioBlock *ngFor="let audioBlock of fileCollection.audio" class="d-flex w-100 mb-2">
     <div class="w-95">
-      <app-audio-player [audioFile]="audioBlock"></app-audio-player>
+      <app-audio-player [audioFile]="audioBlock" [mode]="mode"></app-audio-player>
     </div>
     <div *ngIf="mode === 'preview'" class="d-flex w-5 justify-content-center align-items-center">
       <span class="mdi mdi-close lh-1 simple-close-button close" (click)="deleteFile(audioBlock)"></span>
@@ -38,8 +38,8 @@
       <img src="./../../assets/img/file.svg" class="img-fluid m-0" />
     </div>
     <div class="p-0 w-75">
-      <div class="w-100 h-50 d-flex align-items-end p-0 ml-1">
-        <span class="text-light lh-1 mb-0" id="fileName">{{fileBlock.name}}</span><br />
+      <div class="w-100 h-50 d-flex align-items-end overflow-hidden p-0 ml-1">
+        <span class="text-nowrap lh-1 mb-0" id="fileName" [ngClass]="mode === 'preview' ? 'text-light' : 'dark-color-text'">{{fileBlock.name}}</span><br />
       </div>
       <div class="w-100 h-50 d-flex align-items-start p-0 ml-1">
         <span class="lh-1" id="fileSize">{{fileBlock.size}} КБ</span>
