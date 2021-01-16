@@ -1,5 +1,6 @@
 import { Component, AfterViewInit, Input, Output, EventEmitter, ViewChild, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { FileService } from './../../shared/services/fileService/file.service';
+import { IFile } from './../../shared/models/interfaces/IFile';
 import { IFileCollection } from './../../shared/models/interfaces/IFileCollection';
 import { BlobToSrcPipe } from './../../shared/pipes/blobToSrc/blob-to-src.pipe';
 
@@ -27,6 +28,7 @@ export class FilePreviewComponent implements AfterViewInit {
   @ViewChild('fileBlockContainer') fileBlockContainer: ElementRef;
   @ViewChildren('fileBlock') fileBlocks: QueryList<ElementRef>;
 
+  public fileUrl: string = '';
   public isImgModalVisible: boolean = false;
 
   public setPreviewWidth(collection): number {
@@ -41,13 +43,20 @@ export class FilePreviewComponent implements AfterViewInit {
     }
   }
 
-  public showImageModal(image: any, imgModal: any): void {
+  public showImageModal(image: IFile, imgModal: IFile): void {
     imgModal.src = this._blobToSrc.transform(image.src, image);
     this.isImgModalVisible = true;
   }
 
   public hideImageModal(): void {
     this.isImgModalVisible = false;
+  }
+
+  public setFileUrl(fileBlock: IFile): void {
+    let base64string = this._blobToSrc.transform(fileBlock.src, fileBlock);
+    let fileToDownload: File = this._fileService.convertBase64StringToFile(base64string, fileBlock.name);
+    let url = URL.createObjectURL(fileToDownload);
+    this.fileUrl = url;
   }
 
   public deleteFile(file: File): void {

@@ -47,6 +47,20 @@ export class FileService {
     return fd;
   }
 
+  public convertBase64StringToFile(base64: string, fileName: string): File {
+    let arr: string[] = base64.split(',');
+    let mime: string = arr[0].match(/:(.*?);/)[1];
+    let bstr = atob(arr[1])
+    let byteArrLength = bstr.length;
+    let u8arr = new Uint8Array(byteArrLength);
+
+    while (byteArrLength--) {
+      u8arr[byteArrLength] = bstr.charCodeAt(byteArrLength);
+    }
+
+    return new File([u8arr], fileName, { type: mime });
+  }
+
   public cleanFileCollection(collection: IFileCollection) {
     for (let key in collection) {
       collection[key] = [];

@@ -22,9 +22,9 @@
 </div>
 <div #audioBlockContainer class="w-100 file-container pt-0" id="audioBlockContainer"
      [ngClass]="{'d-none': !fileCollection.audio.length, 'mb-2': fileCollection.audio.length}">
-  <div #audioBlock *ngFor="let audioBlock of fileCollection.audio" class="d-flex w-100 mb-2">
+  <div #audioBlock *ngFor="let audioBlock of fileCollection.audio" class="d-flex w-100 mb-2" (mouseenter)="setFileUrl(audioBlock)">
     <div class="w-95">
-      <app-audio-player [audioFile]="audioBlock" [mode]="mode"></app-audio-player>
+      <app-audio-player [audioFile]="audioBlock" [fileUrl]="fileUrl" [mode]="mode"></app-audio-player>
     </div>
     <div *ngIf="mode === 'preview'" class="d-flex w-5 justify-content-center align-items-center">
       <span class="mdi mdi-close lh-1 simple-close-button close" (click)="deleteFile(audioBlock)"></span>
@@ -33,13 +33,17 @@
 </div>
 <div #fileBlockContainer class="d-flex flex-wrap w-100 pt-0 file-container" id="fileBlockContainer"
      [ngClass]="{'d-none': !fileCollection.files.length, 'mb-3': fileCollection.files.length}">
-  <div #fileBlock *ngFor="let fileBlock of fileCollection.files" class="d-flex w-50" id="fileBlock">
+  <div #fileBlock *ngFor="let fileBlock of fileCollection.files" class="d-flex w-50" id="fileBlock" (mouseenter)="setFileUrl(fileBlock)">
     <div class="d-flex w-15 p-0 justify-content-center align-items-center">
       <img src="./../../assets/img/file.svg" class="img-fluid m-0" />
     </div>
     <div class="p-0 w-75">
       <div class="w-100 h-50 d-flex align-items-end overflow-hidden p-0 ml-1">
-        <span class="text-nowrap lh-1 mb-0" id="fileName" [ngClass]="mode === 'preview' ? 'text-light' : 'dark-color-text'">{{fileBlock.name}}</span><br />
+        <a [href]="fileUrl | safeUrl" class="text-decoration-none" download="{{fileBlock.name}}">
+          <span class="text-nowrap lh-1 mb-0" id="fileName" [ngClass]="mode === 'preview' ? 'text-light' : 'dark-color-text'">
+            {{fileBlock.name}}
+          </span><br />
+        </a>
       </div>
       <div class="w-100 h-50 d-flex align-items-start p-0 ml-1">
         <span class="lh-1" id="fileSize">{{fileBlock.size}} КБ</span>

@@ -9,6 +9,7 @@ import { Component, Input } from '@angular/core';
 export class AudioPlayerComponent {
 
   @Input() public audioFile: any;
+  @Input() public fileUrl: string;
   @Input() public mode: string;
 
   public isPaused: boolean = true;
