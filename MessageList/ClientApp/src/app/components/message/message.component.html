@@ -1,0 +1,20 @@
+<div class="w-100 message">
+  <div class="w-100 d-flex align-items-center mt-2">
+    <div class="col-9 col-lg-10">
+      <span class="message-created-at d-block text-center ml-lg-5" id="{{message.id}}messageCreatedAt"> {{message.createdAt | dateToLocale: 'ru'}} </span>
+    </div>
+    <div class="col-1 justify-content-start" (click)="edit(message)">
+      <span class="mdi mdi-pencil mdi-dark text-left edit-message"></span>
+    </div>
+    <div class="col-1 delete-message justify-content-start" (click)="delete(message)">
+      <span class="mdi mdi-close-outline text-left mdi-dark"></span>
+    </div>
+  </div>
+  <div *ngIf="message.text" class="w-90 mx-auto mb-3">
+    <span class="text-left text-break" id="messageText"> {{message.text}} </span>
+  </div>
+  <div *ngIf="fileService.isFileCollectionValid(message.fileCollection)" class="w-90 mt-3 mx-auto">
+    <app-file-preview [fileCollection]="message.fileCollection" (changeFilesEvent)="null" [mode]="'message'"></app-file-preview>
+  </div>
+</div>
+

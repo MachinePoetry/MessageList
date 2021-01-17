@@ -61,7 +61,11 @@ export class FileService {
     return new File([u8arr], fileName, { type: mime });
   }
 
-  public cleanFileCollection(collection: IFileCollection) {
+  public isFileCollectionValid(collection: IFileCollection): boolean {
+    return (collection.images.length > 0 || collection.video.length > 0 || collection.audio.length > 0 || collection.files.length > 0);
+  }
+
+  public cleanFileCollection(collection: IFileCollection): void {
     for (let key in collection) {
       collection[key] = [];
     }

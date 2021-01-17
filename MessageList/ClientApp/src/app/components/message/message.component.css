@@ -1,0 +1,23 @@
+.message-created-at {
+  font-family: Roboto_Slab_reg, Arial, sans-serif;
+  color: darkgrey;
+  font-size: 14px;
+}
+
+.message {
+  flex: 0 0 auto;
+  flex-wrap: wrap;
+}
+
+#messageText {
+  font-family: Tahoma, Arial, sans-serif;
+  color: rgb(93,93,93);
+  font-size: 14px;
+  white-space: pre-wrap;
+}
+
+.edit-message,
+.delete-message {
+  color: rgb(93,93,93);
+  cursor: pointer;
+}

@@ -121,7 +121,7 @@
           </div>
 
           <!--Block with user messages-->
-          <div #messageBlock id="messageBlock" class="col-12" (scroll)="uploadNewMessages()">
+          <div #messageBlock id="messageBlock" class="w-100" (scroll)="uploadNewMessages()">
             <h2 *ngIf="authUserMessageGroups.length === 0" class="text-center mx-2 mt-5" id="createGroupNotification">
               Создавайте группы в меню слева для сохранения в них ваших сообщений
             </h2>
@@ -130,27 +130,9 @@
             <div *ngIf="authUserMessageGroups.length > 0" class="w-100">
               <div *ngFor="let group of authUserMessageGroups" class="w-100">
                 <div *ngIf="group.id == selectedGroupId" class="w-100">
-                  <div #message *ngFor="let message of group.messages; trackBy: groupsTrackFn" class="row" id="messageContainer">
-                    <div class="col-12 message mb-2" id="message{{message.id}}">
-                      <div class="row align-items-center mt-2">
-                        <div class="col-8 col-lg-9">
-                          <p class="message-created-at text-center ml-lg-5" id="{{message.id}}messageCreatedAt"> {{message.createdAt | dateToLocale: 'ru'}} </p>
-                        </div>
-                        <div class="col-1" (click)="toggleEditingMessageForm(true, message.id, message.text)">
-                          <p class="text-center"><span class="mdi mdi-pencil mdi-dark edit-message"></span></p>
-                        </div>
-                        <button type="button" style="outline: none;" class="col-1 delete-message"
-                                (click)="modalOpen('post' ,'Удаление сообщения', 'Вы действительно хотите удалить сообщение?', message.id, 'api/messages/delete')">
-                          <p class="text-center"><span class="mdi mdi-close-outline mdi-dark"></span></p>
-                        </button>
-                      </div>
-                      <div *ngIf="message.text" class="w-90 mx-auto">
-                        <p class="text-left text-break mb-3" id="messageText"> {{message.text}} </p>
-                      </div>
-                      <div *ngIf="isFileCollectionValid(message.fileCollection)" class="w-90 mx-auto">
-                        <app-file-preview [fileCollection]="message.fileCollection" (changeFilesEvent)="null" [mode]="'message'"></app-file-preview>
-                      </div>
-                    </div>
+                  <div #message *ngFor="let message of group.messages; trackBy: groupsTrackFn" class="w-100" id="messageContainer" style="border: 1px solid transparent">
+                    <app-message [message]="message" (editMessage)="this.toggleEditingMessageForm(true, $event.id, $event.text, $event.fileCollection)"
+                                 (deleteMessage)="modalOpen('post' ,'Удаление сообщения', 'Вы действительно хотите удалить сообщение?', $event.id, 'api/messages/delete')"></app-message>
                   </div>
                 </div>
               </div>
@@ -163,7 +145,7 @@
             <div #messageEditingBlock class="col-12 d-none">
               <div class="row">
                 <div class="col-11 mt-2"><span class="text-light"> Редактирование сообщения </span></div>
-                <div class="col-1 mt-2 close-editing-message" (click)="toggleEditingMessageForm(false, null)"><span class="mdi mdi-close text-light"></span></div>
+                <div class="col-1 mt-2 close-editing-message" (click)="toggleEditingMessageForm(false, null, null, filesDefaultState)"><span class="mdi mdi-close text-light"></span></div>
               </div>
             </div>
 
