@@ -1,8 +1,8 @@
 <div class="d-flex h-100 w-100" id="audioContainer">
   <div class="col-1 d-flex justify-content-center align-items-center">
     <audio #audio [src]="audioFile.src | blobToSrc: audioFile | safeUrl" class="d-none" (timeupdate)="showProgress(audio)" (ended)="resetAudioControls(audio)"></audio>
-    <span *ngIf="isPaused" class="mdi mdi-play-circle toggle-play lh-1" (click)="togglePlay(audio)" [ngClass]="mode === 'preview' ? 'player-color-light' : 'player-color-dark'"></span>
-    <span *ngIf="!isPaused" class="mdi mdi-pause-circle toggle-play lh-1" (click)="togglePlay(audio)" [ngClass]="mode === 'preview' ? 'player-color-light' : 'player-color-dark'"></span>
+    <span *ngIf="isPaused" class="mdi mdi-play-circle toggle-play lh-1 my-1" (click)="togglePlay(audio)" [ngClass]="mode === 'preview' ? 'player-color-light' : 'player-color-dark'"></span>
+    <span *ngIf="!isPaused" class="mdi mdi-pause-circle toggle-play lh-1 my-1" (click)="togglePlay(audio)" [ngClass]="mode === 'preview' ? 'player-color-light' : 'player-color-dark'"></span>
   </div>
   <div class="col-8 col-sm-9 d-flex align-items-center pl-1">
     <div class="h-75 w-100">

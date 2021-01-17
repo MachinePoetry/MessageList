@@ -53,10 +53,12 @@ export class FilePreviewComponent implements AfterViewInit {
   }
 
   public setFileUrl(fileBlock: IFile): void {
-    let base64string = this._blobToSrc.transform(fileBlock.src, fileBlock);
-    let fileToDownload: File = this._fileService.convertBase64StringToFile(base64string, fileBlock.name);
-    let url = URL.createObjectURL(fileToDownload);
-    this.fileUrl = url;
+    if (this.mode === 'message' && fileBlock.src.startsWith("data:")) {
+      let base64string = this._blobToSrc.transform(fileBlock.src, fileBlock);
+      let fileToDownload: File = this._fileService.convertBase64StringToFile(base64string, fileBlock.name);
+      let url = URL.createObjectURL(fileToDownload);
+      this.fileUrl = url;
+    }
   }
 
   public deleteFile(file: File): void {
@@ -80,7 +82,7 @@ export class FilePreviewComponent implements AfterViewInit {
       if (parentCollection === 'images' || parentCollection === 'video') {
         height = this.fileCollection[parentCollection].length > 0 ? showSize + 'vh' : hideSize;
       } else if (parentCollection === 'audio') {
-        height = this.fileCollection[parentCollection].length > 0 ? this.fileCollection[parentCollection].length * showSize + 'vh' : hideSize;
+        height = this.fileCollection[parentCollection].length > 0 ? this.fileCollection[parentCollection].length * showSize + 'px' : hideSize;
       } else if (parentCollection === 'files') {
         height = this.fileCollection[parentCollection].length > 0 ? Math.ceil(this.fileCollection[parentCollection].length / 2) * showSize + 'vh' : hideSize;
       }
@@ -92,7 +94,7 @@ export class FilePreviewComponent implements AfterViewInit {
   ngAfterViewInit() {
     this._showPreview(this.imageBlockContainer, this.imageBlocks, 'images', 8, '0px');
     this._showPreview(this.videoBlockContainer, this.videoBlocks, 'video', 8, '0px');
-    this._showPreview(this.audioBlockContainer, this.audioBlocks, 'audio', 4, '0px');
+    this._showPreview(this.audioBlockContainer, this.audioBlocks, 'audio', 42, '0px');
     this._showPreview(this.fileBlockContainer, this.fileBlocks, 'files', 4, '0px');
   }
 }
