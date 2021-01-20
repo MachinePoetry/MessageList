@@ -7,9 +7,8 @@ import { IFile } from './../../models/interfaces/IFile';
 
 export class BlobToSrcPipe implements PipeTransform {
   public transform(value: string, file: IFile, args?: any) {
-    if (typeof value !== 'string') {
-      throw new Error('BlobToSrcPipe can only be used with strings');
+    if (typeof value === 'string') {
+      return value.startsWith('data:') ? value : 'data:' + file.type + ';base64,' + file.src;
     }
-    return value.startsWith('blob:') ? value : 'data:' + file.contentType + ';base64,' + file.src;
   }
 }
