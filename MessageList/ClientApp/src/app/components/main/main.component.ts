@@ -15,7 +15,6 @@ import { WarningModal } from './../../shared/modals/warning/warning.modal';
 import { WarningModalParams } from './../../shared/models/warningModalParams';
 import { User } from '../../shared/models/User';
 import { MessageGroup } from '../../shared/models/messageGroup';
-import { IMessage } from './../../shared/models/interfaces/IMessage';
 import { IFileCollection } from './../../shared/models/interfaces/IFileCollection';
 import { IMessageGroupCreatable } from './../../shared/models/interfaces/IMessageGroupCreatable';
 import { IMessageGroupUpdatable } from './../../shared/models/interfaces/IMessageGroupUpdatable';
@@ -58,12 +57,13 @@ export class MainComponent implements OnInit, AfterViewInit {
   public isFileMenuActive: boolean = false;
   private _previousMessageBlockHeight: number | null = null;
   public searchDate: NgbDateStruct;
-  public newMessage: IMessage = {
+  public newMessage = {
     text: '',
     fileCollection: {
       images: [], video: [], audio: [], files: []
     }
   };
+  public filesDefaultState: IFileCollection = { images: [], video: [], audio: [], files: [] };
   private _messagesToLoadCounter: number = 30;
   private _freezeScrollBar = false;
   private _isMessagesIterable = true;
@@ -143,11 +143,10 @@ export class MainComponent implements OnInit, AfterViewInit {
       this._toastService.showDanger('Не выбрана группа сообщений');
       return;
     }
+    this.isMessageCreationProcess = true;
+    this.newMessage.fileCollection = this._fileService.convertIFileCollectionToFileCollection(this.newMessage.fileCollection);
 
-    let isFileCollectionValid: boolean = (this.newMessage.fileCollection.images.length > 0 || this.newMessage.fileCollection.video.length > 0 ||
-      this.newMessage.fileCollection.audio.length > 0 || this.newMessage.fileCollection.files.length > 0)
-
-    if ((form.valid && this._notOnlySpaceBar.test(this.newMessage.text)) || isFileCollectionValid ) {
+    if ((form.valid && this._notOnlySpaceBar.test(this.newMessage.text)) || this._fileService.isFileCollectionValid(this.newMessage.fileCollection) ) {
       let messageParams: IMessageParams | FormData = {
         authUserId: this.authUserInfo.id,
         messageGroupId: this.selectedGroupId,
@@ -167,16 +166,14 @@ export class MainComponent implements OnInit, AfterViewInit {
 
       this._httpService.post(url, messageParams).subscribe(data => {
         this.isMessageCreationProcess = false;
-        setTimeout(() => {
-          this.spinner.nativeElement.classList.remove('d-block'); 
-          this.spinner.nativeElement.classList.add('d-none');
-          this._setMessageBlockHeight();
-        }, 500);
         this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
           () => {
             if (url === '/api/messages/create') {
               this._isMessagesIterable = true;
             }
+            this.spinner.nativeElement.classList.remove('d-block');
+            this.spinner.nativeElement.classList.add('d-none');
+            this._setMessageBlockHeight();
           }
         );
       },
@@ -185,28 +182,31 @@ export class MainComponent implements OnInit, AfterViewInit {
 
       form.resetForm();
       this.newMessage.text = '';
-      this.toggleEditingMessageForm(false, null);
+      this.toggleEditingMessageForm(false, null, null, this.filesDefaultState);
       this.setMessageCreationFormHeight();
       this.selectedMessageId = null;
     }
   }
 
-  private _toggleForm(css1: string, css2: string, value: string) {
+  private _toggleForm(css1: string, css2: string, value: string, files: IFileCollection) {
     this.messageEditingBlock.nativeElement.classList.remove(css1);
     this.messageEditingBlock.nativeElement.classList.add(css2);
     this.enterMessageField.nativeElement.value = value;
+    if (files) {
+      this.newMessage.fileCollection = files;
+    }
     this.setMessageCreationFormHeight();
     this._setMessageBlockHeight();
     this.enterMessageField.nativeElement.focus();
   }
 
-  public toggleEditingMessageForm(isVisible: boolean, messageId: number, messageText?: string): void {
+  public toggleEditingMessageForm(isVisible: boolean, messageId: number, messageText?: string, files?: IFileCollection): void {
     this.showEditMessageForm = isVisible;
     this.selectedMessageId = messageId;
     if (isVisible) {
-      this._toggleForm('d-none', 'd-block', messageText);
+      this._toggleForm('d-none', 'd-block', messageText, files);
     } else {
-      this._toggleForm('d-block', 'd-none', '');
+      this._toggleForm('d-block', 'd-none', '', this.filesDefaultState);
       this.newMessage.text = '';
     }
   }
@@ -291,9 +291,12 @@ export class MainComponent implements OnInit, AfterViewInit {
           modalRef.componentInstance.modalWindowParams = new WarningModalParams('Предупреждение!', 'Не допускается загрузка более 8 файлов одного типа в одно сообщение', 'warning');
           return;
         } else {
-          for (var file of result) {
-            let url = URL.createObjectURL(file);
-            file.src = url;
+          for (let file of result) {
+            var reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = function (e) {
+              file.src = e.target.result;
+            };
             this.newMessage.fileCollection[this._fileService.getFileCollectionType(result)].push(file);
           }
         }
@@ -357,12 +360,9 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.enterMessageField.nativeElement.focus();
   }
 
-  public isFileCollectionValid(collection: IFileCollection): boolean {
-    return (collection.images.length > 0 || collection.video.length > 0 || collection.audio.length > 0 || collection.files.length > 0);
-  }
-
   public setChangedFilesCollection(files: IFileCollection): void {
-    this.newMessage.fileCollection = files;
+    let fileCollectionClone = this._fileService.getCollectionClone(files);
+    this.newMessage.fileCollection = fileCollectionClone;
     this._setMessageBlockHeight();
     this._scrollToBottom(this.messageBlock);
     this.enterMessageField.nativeElement.focus();

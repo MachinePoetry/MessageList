@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { IFileCollection } from '../../models/interfaces/IFileCollection';
+import { BlobToSrcPipe } from './../../pipes/blobToSrc/blob-to-src.pipe';
+import { IFile } from './../../models/interfaces/IFile';
+import { IFileCollection } from './../../models/interfaces/IFileCollection';
 import { IMessageParams } from './../../models/interfaces/IMessageParams';
 
 @Injectable()
 
 export class FileService {
-  constructor() { }
+  constructor(private _blobToSrc: BlobToSrcPipe) { }
 
   public imageMaxSize: number = 1050000;
   public audioMaxSize: number = 20500000;
@@ -16,7 +18,7 @@ export class FileService {
     let fd: FormData = new FormData();
 
     for (let key in params) {
-      if (params[key] && params[key] !== 'string') {
+      if (params[key] && typeof(params[key]) !== 'string') {
         fd.append(key, params[key].toString());
       } else {
         fd.append(key, params[key]);
@@ -50,19 +52,63 @@ export class FileService {
   public convertBase64StringToFile(base64: string, fileName: string): File {
     let arr: string[] = base64.split(',');
     let mime: string = arr[0].match(/:(.*?);/)[1];
-    let bstr = atob(arr[1])
-    let byteArrLength = bstr.length;
-    let u8arr = new Uint8Array(byteArrLength);
+    let bstr;
+    try {
+      bstr = atob(arr[1]);
+    } catch { };
+    if (bstr) {
+      let byteArrLength = bstr.length;
+      let u8arr = new Uint8Array(byteArrLength);
 
-    while (byteArrLength--) {
-      u8arr[byteArrLength] = bstr.charCodeAt(byteArrLength);
-    }
-
+      while (byteArrLength--) {
+        u8arr[byteArrLength] = bstr.charCodeAt(byteArrLength);
+      }
     return new File([u8arr], fileName, { type: mime });
+    }
   }
+
+  public convertIFileCollectionToFileCollection(collection): IFileCollection {
+    let resultCollection: IFileCollection = {
+      images: [], video: [], audio: [], files: []
+    }
+    for (let arr in collection) {
+      if (collection[arr].length) {
+        let fileArr: File[] = [];
+        collection[arr].forEach(el => {
+          // Preview component gets files from 2 sources: from message (means from server) and from user PC, but they all are sent to server as js File.
+          // If element is not a js File type (if came to preview from server) convert it to js File type. If it is File (came to preview from user PC) take it as is.
+          if (!(el instanceof File)) {
+            let base64: string = this._blobToSrc.transform(el.src, el);
+            if (base64) {
+              let newFile = this.convertBase64StringToFile(base64, el.name);
+              if (newFile) {
+                Object.defineProperty(newFile, 'src', { value: base64, writable: true });
+                fileArr.push(newFile);
+              }
+            }
+          } else {
+            fileArr.push(el);
+          }
+        })
+        resultCollection[arr] = fileArr;
+      }
+    }
+    return resultCollection;
+  } 
 
   public isFileCollectionValid(collection: IFileCollection): boolean {
     return (collection.images.length > 0 || collection.video.length > 0 || collection.audio.length > 0 || collection.files.length > 0);
+  }
+
+  public getCollectionClone(collection: IFileCollection): IFileCollection {
+    let collectionClone: IFileCollection = {
+      images: [], video: [], audio: [], files: []
+    };
+    collectionClone.images = collection.images.slice();
+    collectionClone.video = collection.video.slice();
+    collectionClone.audio = collection.audio.slice();
+    collectionClone.files = collection.files.slice();
+    return collectionClone;
   }
 
   public cleanFileCollection(collection: IFileCollection): void {
