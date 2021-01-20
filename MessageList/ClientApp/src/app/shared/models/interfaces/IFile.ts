@@ -1,6 +1,6 @@
 export interface IFile {
   name: string,
-  contentType: string,
+  type: string,
   size: string,
   src: string
 }
