@@ -51,7 +51,7 @@ namespace MessageList.Controllers
         public async Task<JsonResult> DeleteMessageGroup([FromBody] QueryMessageGroup mg)
         {
             int res = 0;
-            MessageGroup messageGroup = await _db.MessageGroups.FirstOrDefaultAsync(mGroup => mGroup.Id == mg.Id);
+            MessageGroup messageGroup = await _db.MessageGroups.FirstOrDefaultAsync(mGroup => mGroup.Id == mg.SelectedGroupId);
             User user = await _db.Users.FirstOrDefaultAsync(u => u.Id == mg.AuthUserId);
             if (messageGroup != null && user != null && user.Email.Equals(User.Identity.Name))
             {

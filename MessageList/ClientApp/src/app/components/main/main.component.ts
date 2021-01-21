@@ -276,7 +276,13 @@ export class MainComponent implements OnInit, AfterViewInit {
         );
       }
     }, (reason) => { });
-    modalRef.componentInstance.modalWindowParams = new ConfirmModalParams(requesetMethod, header, body, this.authUserInfo, entityId, url);
+    if (url === 'api/messages/delete') {
+      modalRef.componentInstance.modalWindowParams = new ConfirmModalParams(requesetMethod, header, body, this.authUserInfo, entityId, url,
+        { authUserId: this.authUserInfo.id, selectedMessageId: entityId });
+    } else if (url === 'api/messageGroup/delete') {
+      modalRef.componentInstance.modalWindowParams = new ConfirmModalParams(requesetMethod, header, body, this.authUserInfo, entityId, url,
+        { authUserId: this.authUserInfo.id, selectedGroupId: entityId });
+    }
     modalRef.hidden.subscribe(() => this.enterMessageField.nativeElement.focus());
   }
 
@@ -353,7 +359,6 @@ export class MainComponent implements OnInit, AfterViewInit {
     }
     this.isSubmitButtonDisabled = doVisible;
     this._setMessageBlockHeight();
-    this._scrollToBottom(this.messageBlock);
   }
 
   public changeMessageGroup(): void {
