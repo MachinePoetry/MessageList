@@ -69,7 +69,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   private _isMessagesIterable = true;
   private _isGroupesIterable = true;
   private readonly _notOnlySpaceBar = /\S/;
-  public isMessageCreationProcess: boolean = false;
+  public isSubmitButtonDisabled: boolean = false;
 
   public authUserInfo: User = new User();
   public authUserMessageGroups: MessageGroup[] = [];
@@ -96,6 +96,7 @@ export class MainComponent implements OnInit, AfterViewInit {
         name: form.value.newGroupName,
         userId: this.authUserInfo.id
       }
+      this._toggleInlineSpinner(true);
       this.enterMessageField.nativeElement.focus();
 
       this._httpService.post('/api/messageGroup/create', groupParams).subscribe(data => {
@@ -104,6 +105,7 @@ export class MainComponent implements OnInit, AfterViewInit {
           () => {
             this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
             this._isGroupesIterable = true;
+            this._toggleInlineSpinner(false);
           }
         );
       },
@@ -121,12 +123,14 @@ export class MainComponent implements OnInit, AfterViewInit {
         id: groupId,
         name: form.value.updateGroupName
       }
+      this._toggleInlineSpinner(true);
       this.enterMessageField.nativeElement.focus();
 
       this._httpService.post('/api/messageGroup/update', groupParams).subscribe(data => {
         this.showGroupCreationForm = false;
         this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
           () => {
+            this._toggleInlineSpinner(false);
             this.editMessageGroupFormId = null;
           }
         );
@@ -143,7 +147,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       this._toastService.showDanger('Не выбрана группа сообщений');
       return;
     }
-    this.isMessageCreationProcess = true;
+    this._toggleInlineSpinner(true);
     this.newMessage.fileCollection = this._fileService.convertIFileCollectionToFileCollection(this.newMessage.fileCollection);
 
     if ((form.valid && this._notOnlySpaceBar.test(this.newMessage.text)) || this._fileService.isFileCollectionValid(this.newMessage.fileCollection) ) {
@@ -157,12 +161,10 @@ export class MainComponent implements OnInit, AfterViewInit {
 
       this.enterMessageField.nativeElement.focus();
       this._fileService.cleanFileCollection(this.newMessage.fileCollection);
-      this._toggleInlineSpinner(true);
 
       let url: string = this.showEditMessageForm ? '/api/messages/update' : '/api/messages/create';
 
       this._httpService.post(url, messageParams).subscribe(data => {
-        this.isMessageCreationProcess = false;
         this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
           () => {
             if (url === '/api/messages/create') {
@@ -349,7 +351,9 @@ export class MainComponent implements OnInit, AfterViewInit {
       this.spinner.nativeElement.classList.remove('d-block');
       this.spinner.nativeElement.classList.add('d-none');
     }
+    this.isSubmitButtonDisabled = doVisible;
     this._setMessageBlockHeight();
+    this._scrollToBottom(this.messageBlock);
   }
 
   public changeMessageGroup(): void {
