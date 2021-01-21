@@ -156,11 +156,8 @@ export class MainComponent implements OnInit, AfterViewInit {
       messageParams = this._fileService.convertParamsToFormData(this.newMessage.fileCollection, messageParams);
 
       this.enterMessageField.nativeElement.focus();
-      this.isMessageCreationProcess = true;
       this._fileService.cleanFileCollection(this.newMessage.fileCollection);
-      this.spinner.nativeElement.classList.remove('d-none');
-      this.spinner.nativeElement.classList.add('d-block');
-      this._setMessageBlockHeight();
+      this._toggleInlineSpinner(true);
 
       let url: string = this.showEditMessageForm ? '/api/messages/update' : '/api/messages/create';
 
@@ -171,9 +168,7 @@ export class MainComponent implements OnInit, AfterViewInit {
             if (url === '/api/messages/create') {
               this._isMessagesIterable = true;
             }
-            this.spinner.nativeElement.classList.remove('d-block');
-            this.spinner.nativeElement.classList.add('d-none');
-            this._setMessageBlockHeight();
+            this._toggleInlineSpinner(false);
           }
         );
       },
@@ -265,6 +260,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     let modalRef = this._modalService.open(ConfirmModal);
     modalRef.result.then((result) => {
       if (result === 'okButton') {
+        this._toggleInlineSpinner(true);
         this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
           () => {
             if (url === 'api/messageGroup/delete' && this.selectedGroupId === entityId) {
@@ -272,6 +268,7 @@ export class MainComponent implements OnInit, AfterViewInit {
               this._isGroupesIterable = true;
               this._isMessagesIterable = true;
             }
+            this._toggleInlineSpinner(false);
             this.enterMessageField.nativeElement.focus();
           }
         );
@@ -342,6 +339,17 @@ export class MainComponent implements OnInit, AfterViewInit {
 
   public groupsTrackFn(index, group): void {
     return group.name;
+  }
+
+  private _toggleInlineSpinner(doVisible: boolean): void {
+    if (doVisible) {
+      this.spinner.nativeElement.classList.remove('d-none');
+      this.spinner.nativeElement.classList.add('d-block');
+    } else {
+      this.spinner.nativeElement.classList.remove('d-block');
+      this.spinner.nativeElement.classList.add('d-none');
+    }
+    this._setMessageBlockHeight();
   }
 
   public changeMessageGroup(): void {
