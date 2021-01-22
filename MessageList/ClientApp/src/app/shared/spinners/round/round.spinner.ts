@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { SpinnerMode } from './../../models/enums/spinnerMode';
+import { SpinnerMode } from './../../models/classes/spinnerMode';
 
 @Component({
   selector: 'round-spinner',
