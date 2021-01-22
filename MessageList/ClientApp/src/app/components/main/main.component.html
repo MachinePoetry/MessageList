@@ -122,10 +122,18 @@
 
           <!--Block with user messages-->
           <div #messageBlock id="messageBlock" class="w-100" (scroll)="uploadNewMessages()">
-            <h2 *ngIf="authUserMessageGroups.length === 0" class="text-center mx-2 mt-5" id="createGroupNotification">
+            <h2 *ngIf="authUserMessageGroups.length === 0 && !isFirstLoad" class="text-center mx-2 mt-5" id="createGroupNotification">
+              &lt;----------------- <br>
               Создавайте группы в меню слева для сохранения в них ваших сообщений
             </h2>
+            <div *ngIf="isFirstLoad" id="firstLoadSpinner" class="d-flex justify-content-center align-items-center">
+              <round-spinner class="mt-1" [mode]="spinnerMode.load"></round-spinner>
+            </div>
             <div *ngIf="authUserMessageGroups.length > 0" style="flex: 1 0 auto;"></div>
+
+            <div *ngIf="isNewMessagesUploading" id="uploadingNewMessagesSpinner" class="d-flex justify-content-center">
+              <round-spinner class="mt-1" [mode]="spinnerMode.upLoad"></round-spinner>
+            </div>
 
             <div *ngIf="authUserMessageGroups.length > 0" class="w-100">
               <div *ngFor="let group of authUserMessageGroups" class="w-100">

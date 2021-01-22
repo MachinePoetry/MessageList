@@ -1,20 +1,21 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ViewChildren, ElementRef, HostListener, ViewEncapsulation, QueryList } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
-import { HttpService } from '../../shared/services/httpService/http.service';
-import { HtmlService } from '../../shared/services/htmlService/html.service';
-import { ToastService } from '../../shared/services/toastService/toast.service';
-import { FileService } from '../../shared/services/fileService/file.service';
+import { HttpService } from './../../shared/services/httpService/http.service';
+import { HtmlService } from './../../shared/services/htmlService/html.service';
+import { ToastService } from './../../shared/services/toastService/toast.service';
+import { FileService } from './../../shared/services/fileService/file.service';
 import { NgbModal, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
-import { ConfirmModal } from '../../shared/modals/confirm/confirm.modal';
-import { ConfirmModalParams } from '../../shared/models/confirmModalParams';
-import { AttachFileModal } from '../../shared/modals/attachFile/attach-file.modal';
-import { AttachFileModalParams } from '../../shared/models/attachFileModalParams';
+import { ConfirmModal } from './../../shared/modals/confirm/confirm.modal';
+import { ConfirmModalParams } from './../../shared/models/confirmModalParams';
+import { AttachFileModal } from './../../shared/modals/attachFile/attach-file.modal';
+import { AttachFileModalParams } from './../../shared/models/attachFileModalParams';
 import { WarningModal } from './../../shared/modals/warning/warning.modal';
 import { WarningModalParams } from './../../shared/models/warningModalParams';
-import { User } from '../../shared/models/User';
-import { MessageGroup } from '../../shared/models/messageGroup';
+import { User } from './../../shared/models/User';
+import { MessageGroup } from './../../shared/models/messageGroup';
+import { SpinnerMode } from './../../shared/models/enums/spinnerMode';
 import { IFileCollection } from './../../shared/models/interfaces/IFileCollection';
 import { IMessageGroupCreatable } from './../../shared/models/interfaces/IMessageGroupCreatable';
 import { IMessageGroupUpdatable } from './../../shared/models/interfaces/IMessageGroupUpdatable';
@@ -70,6 +71,9 @@ export class MainComponent implements OnInit, AfterViewInit {
   private _isGroupesIterable = true;
   private readonly _notOnlySpaceBar = /\S/;
   public isSubmitButtonDisabled: boolean = false;
+  public isNewMessagesUploading: boolean = false;
+  public isFirstLoad: boolean = true;
+  public spinnerMode = SpinnerMode;
 
   public authUserInfo: User = new User();
   public authUserMessageGroups: MessageGroup[] = [];
@@ -323,6 +327,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     }
     this._httpService.get('api/messages/getGroupesAndMessages', userMesagesParams).subscribe((data: MessageGroup[]) => {
       this.authUserMessageGroups = data;
+      this.isFirstLoad = false;
 
       if (addActionsToPromise) {
         addActionsToPromise();
@@ -338,9 +343,10 @@ export class MainComponent implements OnInit, AfterViewInit {
       let messagesInBlockAmount = this.authUserMessageGroups.filter(group => group.id === this.selectedGroupId)[0].messages.length;
       this._isMessagesIterable = false;
       if (messagesInBlockAmount === this._messagesToLoadCounter) {
+        this.isNewMessagesUploading = true;
         this._messagesToLoadCounter += 30;
         this._freezeScrollBar = true;
-        this._refreshGroupsAndMessages({ id: this.authUserInfo.id, counter: this._messagesToLoadCounter, groupId: this.selectedGroupId });
+        this._refreshGroupsAndMessages({ id: this.authUserInfo.id, counter: this._messagesToLoadCounter, groupId: this.selectedGroupId }, () => { this.isNewMessagesUploading = false });
       }
     }
   }

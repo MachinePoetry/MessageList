@@ -196,6 +196,16 @@
   margin-bottom: 40vh;
 }
 
+#firstLoadSpinner {
+  width: 100%;
+  height: 100%;
+}
+
+#uploadingNewMessagesSpinner {
+  width: 100%;
+  height: 35px;
+}
+
 #messageContainer:hover {
   background-color: lightgrey;
 }
