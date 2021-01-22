@@ -6,6 +6,7 @@ import { HtmlService } from './../../shared/services/htmlService/html.service';
 import { ToastService } from './../../shared/services/toastService/toast.service';
 import { FileService } from './../../shared/services/fileService/file.service';
 import { NgbModal, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
+import { Observable } from "rxjs";
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { ConfirmModal } from './../../shared/modals/confirm/confirm.modal';
 import { ConfirmModalParams } from './../../shared/models/confirmModalParams';
@@ -267,19 +268,21 @@ export class MainComponent implements OnInit, AfterViewInit {
   public modalOpen(requesetMethod: string, header: string, body: string, entityId: number, url: string): void {
     let modalRef = this._modalService.open(ConfirmModal);
     modalRef.result.then((result) => {
-      if (result === 'okButton') {
-        this._toggleInlineSpinner(true);
-        this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
-          () => {
-            if (url === 'api/messageGroup/delete' && this.selectedGroupId === entityId) {
-              this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
-              this._isGroupesIterable = true;
-              this._isMessagesIterable = true;
+      if (result instanceof Observable) {
+        result.subscribe(data => {
+          this._toggleInlineSpinner(true);
+          this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
+            () => {
+              if (url === 'api/messageGroup/delete' && this.selectedGroupId === entityId) {
+                this.selectedGroupId = this.authUserMessageGroups[this.authUserMessageGroups.length - 1]?.id;
+                this._isGroupesIterable = true;
+                this._isMessagesIterable = true;
+              }
+              this._toggleInlineSpinner(false);
+              this.enterMessageField.nativeElement.focus();
             }
-            this._toggleInlineSpinner(false);
-            this.enterMessageField.nativeElement.focus();
-          }
-        );
+          );
+        }, error => { this._toastService.showDanger(error.message) })
       }
     }, (reason) => { });
     if (url === 'api/messages/delete') {

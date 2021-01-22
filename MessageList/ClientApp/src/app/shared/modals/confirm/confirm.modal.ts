@@ -30,8 +30,7 @@ export class ConfirmModal {
     }
 
     let url: string = this.modalWindowParams.url;
-    this.activeModal.close(closeType);
-    request(url, requestParams).subscribe(data => { }, error => { });
+    this.activeModal.close(request(url, requestParams));
   }
 
   public cancel(closeType: string) {
