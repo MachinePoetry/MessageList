@@ -38,7 +38,7 @@ import { WarningModal } from './shared/modals/warning/warning.modal';
 import { AttachFileModal } from './shared/modals/attachFile/attach-file.modal';
 import { AttachFileFromWebModal } from './shared/modals/attachFileFromWeb/attach-file-from-web.modal';
 
-import { CoreSpinner } from './shared/spinners/core/core.spinner';
+import { RoundSpinner } from './shared/spinners/round/round.spinner';
 import { InlineSpinner } from './shared/spinners/inline/inline.spinner';
 
 import { AuthUserInfoResolver } from './shared/resolvers/auth-user-info.resolver';
@@ -56,7 +56,7 @@ const routes: Routes = [
   declarations: [
     AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, FilePreviewComponent, NotFoundComponent, MessageComponent,
     ToastsContainerComponent, AudioPlayerComponent, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrl, SecondsToTimePipe, BlobToSrcPipe, TermsOfUseModal,
-    ConfirmModal, WarningModal, AttachFileModal, AttachFileFromWebModal, CoreSpinner, InlineSpinner
+    ConfirmModal, WarningModal, AttachFileModal, AttachFileFromWebModal, RoundSpinner, InlineSpinner
   ],
   imports: [
     BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, NgSelectModule, CommonModule, BrowserAnimationsModule
