@@ -206,7 +206,9 @@
                   </textarea>
                 </form>
                 <div class="w-100">
-                  <app-file-preview [fileCollection]="newMessage.fileCollection" (changeFilesEvent)="setChangedFilesCollection($event)" [mode]="'preview'"></app-file-preview>
+                  <app-file-preview [fileCollection]="newMessage.fileCollection" (changeFilesEvent)="setChangedFilesCollection($event)"
+                                    [mode]="filePreviewMode.preview">
+                  </app-file-preview>
                   <div #spinner class="ml-2 d-none">
                     <inline-spinner></inline-spinner>
                   </div>

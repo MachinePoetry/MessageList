@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { FileService } from '../../shared/services/fileService/file.service';
+import { FilePreviewMode } from './../../shared/models/classes/filePreviewMode';
 import { IMessage } from './../../shared/models/interfaces/IMessage';
 
 @Component({
@@ -14,6 +15,7 @@ export class MessageComponent {
   @Input() message: IMessage;
   @Output() editMessage = new EventEmitter<IMessage>();
   @Output() deleteMessage = new EventEmitter<IMessage>();
+  public filePreviewMode = FilePreviewMode;
 
   public edit(message) {
     this.editMessage.emit(message);

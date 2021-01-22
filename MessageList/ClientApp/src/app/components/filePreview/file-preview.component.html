@@ -2,7 +2,7 @@
      [ngClass]="{'d-none': !fileCollection.images?.length, 'mb-3': fileCollection.images?.length}">
   <div #imageBlock *ngFor="let imageBlock of fileCollection.images" class="image-block round-borders mr-1" [style.width.%]="setPreviewWidth(fileCollection.images)">
     <img class="img-fluid round-borders" id="imgPreview" [src]="imageBlock.src | blobToSrc: imageBlock | safeUrl" alt="{{imageBlock.name}}" (click)="showImageModal(imageBlock, imgModalContent)">
-    <div *ngIf="mode === 'preview'" class="close-button" (click)="deleteFile(imageBlock)"><span class="mdi mdi-close-box lh-1 close"></span></div>
+    <div *ngIf="mode === filePreviewMode.preview" class="close-button" (click)="deleteFile(imageBlock)"><span class="mdi mdi-close-box lh-1 close"></span></div>
   </div>
 </div>
 <!-- Img Modal -->
@@ -17,7 +17,7 @@
      [ngClass]="{'d-none': !fileCollection.video?.length, 'mb-3': fileCollection.video?.length}">
   <div #videoBlock *ngFor="let videoBlock of fileCollection.video" class="image-block embed-responsive mr-1 mb-1" [style.width.%]="setPreviewWidth(fileCollection.video)">
     <video [src]="videoBlock.src | blobToSrc: videoBlock | safeUrl" class="embed-responsive-item" controls></video>
-    <div *ngIf="mode === 'preview'" class="close-button" (click)="deleteFile(videoBlock)"><span class="mdi mdi-close-box lh-1 close"></span></div>
+    <div *ngIf="mode === filePreviewMode.preview" class="close-button" (click)="deleteFile(videoBlock)"><span class="mdi mdi-close-box lh-1 close"></span></div>
   </div>
 </div>
 
@@ -27,7 +27,7 @@
     <div class="w-95">
       <app-audio-player [audioFile]="audioBlock" [fileUrl]="fileUrl" [mode]="mode"></app-audio-player>
     </div>
-    <div *ngIf="mode === 'preview'" class="d-flex w-5 justify-content-center align-items-center">
+    <div *ngIf="mode === filePreviewMode.preview" class="d-flex w-5 justify-content-center align-items-center">
       <span class="mdi mdi-close lh-1 simple-close-button close" (click)="deleteFile(audioBlock)"></span>
     </div>
   </div>
@@ -51,7 +51,7 @@
         <span class="lh-1" id="fileSize">{{fileBlock.size}} КБ</span>
       </div>
     </div>
-    <div *ngIf="mode === 'preview'" class="d-flex w-10 justify-content-center align-items-center">
+    <div *ngIf="mode === filePreviewMode.preview" class="d-flex w-10 justify-content-center align-items-center">
       <span class="mdi mdi-close lh-1 simple-close-button close" (click)="deleteFile(fileBlock)"></span>
     </div>
   </div>

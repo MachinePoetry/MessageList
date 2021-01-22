@@ -1,5 +1,6 @@
 import { Component, AfterViewInit, Input, Output, EventEmitter, ViewChild, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { FileService } from './../../shared/services/fileService/file.service';
+import { FilePreviewMode } from './../../shared/models/classes/filePreviewMode';
 import { IFile } from './../../shared/models/interfaces/IFile';
 import { IFileCollection } from './../../shared/models/interfaces/IFileCollection';
 import { BlobToSrcPipe } from './../../shared/pipes/blobToSrc/blob-to-src.pipe';
@@ -30,6 +31,7 @@ export class FilePreviewComponent implements AfterViewInit {
 
   public fileUrl: string = '';
   public isImgModalVisible: boolean = false;
+  public filePreviewMode = FilePreviewMode;
 
   public setPreviewWidth(collection): number {
     if (collection.length <= 3) {
@@ -53,7 +55,7 @@ export class FilePreviewComponent implements AfterViewInit {
   }
 
   public setFileUrl(fileBlock: IFile): void {
-    if (this.mode === 'message' && fileBlock.src.startsWith("data:")) {
+    if (this.mode === this.filePreviewMode.message && fileBlock.src.startsWith("data:")) {
       let base64string = this._blobToSrc.transform(fileBlock.src, fileBlock);
       let fileToDownload: File = this._fileService.convertBase64StringToFile(base64string, fileBlock.name);
       let url = URL.createObjectURL(fileToDownload);

@@ -14,7 +14,7 @@
     <span class="text-left text-break" id="messageText"> {{message.text}} </span>
   </div>
   <div *ngIf="fileService.isFileCollectionValid(message.fileCollection)" class="w-90 mt-3 mx-auto">
-    <app-file-preview [fileCollection]="message.fileCollection" (changeFilesEvent)="null" [mode]="'message'"></app-file-preview>
+    <app-file-preview [fileCollection]="message.fileCollection" (changeFilesEvent)="null" [mode]="filePreviewMode.message"></app-file-preview>
   </div>
 </div>
 

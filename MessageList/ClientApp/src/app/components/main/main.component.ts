@@ -15,7 +15,8 @@ import { WarningModal } from './../../shared/modals/warning/warning.modal';
 import { WarningModalParams } from './../../shared/models/warningModalParams';
 import { User } from './../../shared/models/User';
 import { MessageGroup } from './../../shared/models/messageGroup';
-import { SpinnerMode } from './../../shared/models/enums/spinnerMode';
+import { SpinnerMode } from './../../shared/models/classes/spinnerMode';
+import { FilePreviewMode } from './../../shared/models/classes/filePreviewMode';
 import { IFileCollection } from './../../shared/models/interfaces/IFileCollection';
 import { IMessageGroupCreatable } from './../../shared/models/interfaces/IMessageGroupCreatable';
 import { IMessageGroupUpdatable } from './../../shared/models/interfaces/IMessageGroupUpdatable';
@@ -74,6 +75,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   public isNewMessagesUploading: boolean = false;
   public isFirstLoad: boolean = true;
   public spinnerMode = SpinnerMode;
+  public filePreviewMode = FilePreviewMode;
 
   public authUserInfo: User = new User();
   public authUserMessageGroups: MessageGroup[] = [];
