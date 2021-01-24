@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { HttpService } from '../../shared/services/httpService/http.service';
 import { ToastService } from '../../shared/services/toastService/toast.service';
 import { ResultInfo } from '../../shared/models/resultInfo';
-import { ILogin } from './../../shared/models/interfaces/ILogin';
+import { LoginParams } from './../../shared/models/params/LoginParams';
 
 @Component({
   selector: 'app-login',
@@ -15,10 +15,7 @@ import { ILogin } from './../../shared/models/interfaces/ILogin';
 export class LoginComponent {
   constructor(private _httpService: HttpService, private _router: Router, private _toastService: ToastService) { }
 
-  public params: ILogin = {
-    email: '',
-    password: ''
-  }
+  public params: LoginParams = new LoginParams();
 
   public isDisabled: boolean = false;
   public isSpinnerShow: boolean = false;

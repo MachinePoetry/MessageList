@@ -26,7 +26,7 @@ export class HttpService {
     return query;
   }
 
-  public post = (url: string, params: Object) => {
+  public post = (url: string, params: object) => {
     return this._http.post(url, params);
   }
 }

@@ -1,8 +1,8 @@
-import { IMessage } from './interfaces/IMessage';
+import { Message } from './Message';
 
 export class MessageGroup {
   public id: number;
   public name: string;
-  public messages: IMessage[];
+  public messages: Message[];
   public userId: number;
 }

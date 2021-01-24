@@ -16,13 +16,13 @@ import { WarningModal } from './../../shared/modals/warning/warning.modal';
 import { WarningModalParams } from './../../shared/models/warningModalParams';
 import { User } from './../../shared/models/User';
 import { MessageGroup } from './../../shared/models/messageGroup';
-import { SpinnerMode } from './../../shared/models/classes/spinnerMode';
-import { FilePreviewMode } from './../../shared/models/classes/filePreviewMode';
+import { SpinnerMode } from './../../shared/models/componentModes/spinnerMode';
+import { FilePreviewMode } from './../../shared/models/componentModes/filePreviewMode';
 import { IFileCollection } from './../../shared/models/interfaces/IFileCollection';
-import { IMessageGroupCreatable } from './../../shared/models/interfaces/IMessageGroupCreatable';
-import { IMessageGroupUpdatable } from './../../shared/models/interfaces/IMessageGroupUpdatable';
-import { ISearchable } from './../../shared/models/interfaces/ISearchable';
-import { IMessageParams } from './../../shared/models/interfaces/IMessageParams';
+import { SearchParams } from './../../shared/models/params/searchParams';
+import { MessageGroupCreateParams } from './../../shared/models/params/messageGroupCreateParams';
+import { MessageGroupUpdateParams } from './../../shared/models/params/messageGroupUpdateParams';
+import { MessageParams } from './../../shared/models/params/messageParams';
 
 
 @Component({
@@ -99,10 +99,7 @@ export class MainComponent implements OnInit, AfterViewInit {
 
   public createNewMessageGroup(form: NgForm): void {
     if (form.valid && this._notOnlySpaceBar.test(form.value.newGroupName)) {
-      let groupParams: IMessageGroupCreatable = {
-        name: form.value.newGroupName,
-        userId: this.authUserInfo.id
-      }
+      let groupParams: MessageGroupCreateParams = new MessageGroupCreateParams(form.value.newGroupName, this.authUserInfo.id);
       this._toggleInlineSpinner(true);
       this.enterMessageField.nativeElement.focus();
 
@@ -125,11 +122,7 @@ export class MainComponent implements OnInit, AfterViewInit {
 
   public updateMessageGroup(groupId: number, form: NgForm): void {
     if (form.valid && this._notOnlySpaceBar.test(form.value.updateGroupName)) {
-      let groupParams: IMessageGroupUpdatable = {
-        userId: this.authUserInfo.id,
-        id: groupId,
-        name: form.value.updateGroupName
-      }
+      let groupParams: MessageGroupUpdateParams = new MessageGroupUpdateParams(form.value.updateGroupName, this.authUserInfo.id, groupId);
       this._toggleInlineSpinner(true);
       this.enterMessageField.nativeElement.focus();
 
@@ -158,13 +151,8 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.newMessage.fileCollection = this._fileService.convertIFileCollectionToFileCollection(this.newMessage.fileCollection);
 
     if ((form.valid && this._notOnlySpaceBar.test(this.newMessage.text)) || this._fileService.isFileCollectionValid(this.newMessage.fileCollection) ) {
-      let messageParams: IMessageParams | FormData = {
-        authUserId: this.authUserInfo.id,
-        messageGroupId: this.selectedGroupId,
-        text: this.newMessage.text,
-        selectedMessageId: this.selectedMessageId
-      }
-      messageParams = this._fileService.convertParamsToFormData(this.newMessage.fileCollection, messageParams);
+      let params: MessageParams = new MessageParams(this.authUserInfo.id, this.selectedGroupId, this.newMessage.text, this.selectedMessageId);
+      let messageParams: FormData = this._fileService.convertParamsToFormData(this.newMessage.fileCollection, params);
 
       this.enterMessageField.nativeElement.focus();
       this._fileService.cleanFileCollection(this.newMessage.fileCollection);
@@ -217,7 +205,7 @@ export class MainComponent implements OnInit, AfterViewInit {
 
     // Search
 
-  private _searchRequest(searchParams: ISearchable): void {
+  private _searchRequest(searchParams: SearchParams): void {
     this._httpService.post('api/messages/search', searchParams).subscribe((data: MessageGroup[]) => {
       this.authUserMessageGroups = data;
       this._scrollToBottom(this.messageBlock);
@@ -229,23 +217,11 @@ export class MainComponent implements OnInit, AfterViewInit {
 
   public searchMessages(form?: NgForm): void {
     if (form && form.valid && this._notOnlySpaceBar.test(this.searchString) && this.searchString.length > 0) {
-      let searchParams: ISearchable = {
-        id: this.authUserInfo.id,
-        groupId: this.selectedGroupId,
-        stringToSearch: this.searchString,
-        dateToSearch: null
-      }
-
+      let searchParams: SearchParams = new SearchParams(this.authUserInfo.id, this.selectedGroupId, this.searchString, null);
       this._searchRequest(searchParams);
       form.resetForm({ searchInput: this.searchString });
     } else if (!form && this.searchDate) {
-      let searchParams: ISearchable = {
-        id: this.authUserInfo.id,
-        groupId: this.selectedGroupId,
-        stringToSearch: '',
-        dateToSearch: this.searchDate
-      }
-
+      let searchParams: SearchParams = new SearchParams(this.authUserInfo.id, this.selectedGroupId, '', this.searchDate);
       this._searchRequest(searchParams);
     }
   }

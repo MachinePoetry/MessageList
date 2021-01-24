@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BlobToSrcPipe } from './../../pipes/blobToSrc/blob-to-src.pipe';
-import { IFile } from './../../models/interfaces/IFile';
 import { IFileCollection } from './../../models/interfaces/IFileCollection';
-import { IMessageParams } from './../../models/interfaces/IMessageParams';
+import { MessageParams } from './../../models/params/messageParams';
 
 @Injectable()
 
@@ -14,16 +13,13 @@ export class FileService {
   public videoMaxSize: number = 105000000;
   public fileMaxSize: number = 10500000;
 
-  public convertParamsToFormData(collection: IFileCollection, params: IMessageParams): FormData {
+  public convertParamsToFormData(collection: IFileCollection, params: MessageParams): FormData {
     let fd: FormData = new FormData();
 
-    for (let key in params) {
-      if (params[key] && typeof(params[key]) !== 'string') {
-        fd.append(key, params[key].toString());
-      } else {
-        fd.append(key, params[key]);
-      }
-    }
+    fd.append('authUserId', params.authUserId.toString());
+    fd.append('messageGroupId', params.messageGroupId.toString());
+    fd.append('text', params.text);
+    params.selectedMessageId ? fd.append('selectedMessageId', params.selectedMessageId.toString()) : fd.append('selectedMessageId', null);
 
     if (collection.images.length) {
       collection.images.forEach((value) => {

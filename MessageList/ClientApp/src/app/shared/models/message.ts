@@ -1,6 +1,6 @@
-import { IFileCollection } from './IFileCollection';
+import { IFileCollection } from './interfaces/IFileCollection';
 
-export interface IMessage {
+export class Message {
   id: number | null;
   text: string;
   createdAt: string;

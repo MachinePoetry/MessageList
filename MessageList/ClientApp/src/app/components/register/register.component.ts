@@ -6,7 +6,7 @@ import { ToastService } from '../../shared/services/toastService/toast.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TermsOfUseModal } from '../../shared/modals/termsOfUse/terms-of-use.modal';
 import { ResultInfo } from '../../shared/models/resultInfo';
-import { IRegister } from './../../shared/models/interfaces/IRegister';
+import { RegisterParams } from './../../shared/models/params/RegisterParams';
 
 @Component({
   selector: 'app-register',
@@ -17,11 +17,7 @@ import { IRegister } from './../../shared/models/interfaces/IRegister';
 export class RegisterComponent {
   constructor(private _httpService: HttpService, private _router: Router, private _toastService: ToastService, private _modalService: NgbModal) { }
 
-  public params: IRegister = {
-    email: '',
-    password: '',
-    confirmPassword: ''
-  }
+  public params: RegisterParams = new RegisterParams();
 
   public isDisabled: boolean = false;
   public isSpinnerShow: boolean = false;

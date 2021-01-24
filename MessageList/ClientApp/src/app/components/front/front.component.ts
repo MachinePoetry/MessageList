@@ -4,7 +4,7 @@ import { HttpService } from '../../shared/services/httpService/http.service';
 import { ToastService } from '../../shared/services/toastService/toast.service';
 import { ResultInfo } from '../../shared/models/resultInfo';
 import { User } from './../../shared/models/User';
-import { IReport } from './../../shared/models/interfaces/IReport';
+import { ReportParams } from './../../shared/models/params/reportParams';
 
 @Component({
   selector: 'app-front',
@@ -15,10 +15,7 @@ import { IReport } from './../../shared/models/interfaces/IReport';
 export class FrontComponent implements OnInit {
   constructor(private _httpService: HttpService, private _toastService: ToastService) { }
 
-  public params: IReport = {
-    reportText: '',
-    reportContacts: ''
-  }
+  public params: ReportParams = new ReportParams();
 
   public isDisabled: boolean = false;
   public isSpinnerShow: boolean = false;
