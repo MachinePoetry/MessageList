@@ -1,8 +1,8 @@
 import { Component, AfterViewInit, Input, Output, EventEmitter, ViewChild, ViewChildren, QueryList, ElementRef } from '@angular/core';
 import { FileService } from './../../shared/services/fileService/file.service';
 import { FilePreviewMode } from './../../shared/models/componentModes/filePreviewMode';
-import { IFile } from './../../shared/models/interfaces/IFile';
-import { IFileCollection } from './../../shared/models/interfaces/IFileCollection';
+import { AppFile } from './../../shared/models/AppFile';
+import { FileCollection } from './../../shared/models/FileCollection';
 import { BlobToSrcPipe } from './../../shared/pipes/blobToSrc/blob-to-src.pipe';
 
 @Component({
@@ -14,11 +14,11 @@ import { BlobToSrcPipe } from './../../shared/pipes/blobToSrc/blob-to-src.pipe';
 export class FilePreviewComponent implements AfterViewInit {
   constructor(private _fileService: FileService, private _blobToSrc: BlobToSrcPipe) { }
 
-  @Input() public fileCollection: IFileCollection = {
+  @Input() public fileCollection: FileCollection = {
     images: [], video: [], audio: [], files: []
   };
   @Input() public mode: string;
-  @Output() changeFilesEvent = new EventEmitter<IFileCollection>();
+  @Output() changeFilesEvent = new EventEmitter<FileCollection>();
 
   @ViewChild('imageBlockContainer') imageBlockContainer: ElementRef;
   @ViewChildren('imageBlock') imageBlocks: QueryList<ElementRef>;
@@ -45,7 +45,7 @@ export class FilePreviewComponent implements AfterViewInit {
     }
   }
 
-  public showImageModal(image: IFile, imgModal: IFile): void {
+  public showImageModal(image: AppFile, imgModal: AppFile): void {
     imgModal.src = this._blobToSrc.transform(image.src, image);
     this.isImgModalVisible = true;
   }
@@ -54,7 +54,7 @@ export class FilePreviewComponent implements AfterViewInit {
     this.isImgModalVisible = false;
   }
 
-  public setFileUrl(fileBlock: IFile): void {
+  public setFileUrl(fileBlock: AppFile): void {
     if (this.mode === this.filePreviewMode.message && fileBlock.src.startsWith("data:")) {
       let base64string = this._blobToSrc.transform(fileBlock.src, fileBlock);
       let fileToDownload: File = this._fileService.convertBase64StringToFile(base64string, fileBlock.name);

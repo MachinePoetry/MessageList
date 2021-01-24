@@ -18,7 +18,7 @@ import { User } from './../../shared/models/User';
 import { MessageGroup } from './../../shared/models/messageGroup';
 import { SpinnerMode } from './../../shared/models/componentModes/spinnerMode';
 import { FilePreviewMode } from './../../shared/models/componentModes/filePreviewMode';
-import { IFileCollection } from './../../shared/models/interfaces/IFileCollection';
+import { FileCollection } from './../../shared/models/FileCollection';
 import { SearchParams } from './../../shared/models/params/searchParams';
 import { MessageGroupCreateParams } from './../../shared/models/params/messageGroupCreateParams';
 import { MessageGroupUpdateParams } from './../../shared/models/params/messageGroupUpdateParams';
@@ -66,7 +66,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       images: [], video: [], audio: [], files: []
     }
   };
-  public filesDefaultState: IFileCollection = { images: [], video: [], audio: [], files: [] };
+  public filesDefaultState: FileCollection = { images: [], video: [], audio: [], files: [] };
   private _messagesToLoadCounter: number = 30;
   private _freezeScrollBar = false;
   private _isMessagesIterable = true;
@@ -148,7 +148,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       return;
     }
     this._toggleInlineSpinner(true);
-    this.newMessage.fileCollection = this._fileService.convertIFileCollectionToFileCollection(this.newMessage.fileCollection);
+    this.newMessage.fileCollection = this._fileService.convertAppFileCollectionToFileCollection(this.newMessage.fileCollection);
 
     if ((form.valid && this._notOnlySpaceBar.test(this.newMessage.text)) || this._fileService.isFileCollectionValid(this.newMessage.fileCollection) ) {
       let params: MessageParams = new MessageParams(this.authUserInfo.id, this.selectedGroupId, this.newMessage.text, this.selectedMessageId);
@@ -180,7 +180,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private _toggleForm(css1: string, css2: string, value: string, files: IFileCollection) {
+  private _toggleForm(css1: string, css2: string, value: string, files: FileCollection) {
     this.messageEditingBlock.nativeElement.classList.remove(css1);
     this.messageEditingBlock.nativeElement.classList.add(css2);
     this.enterMessageField.nativeElement.value = value;
@@ -192,7 +192,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.enterMessageField.nativeElement.focus();
   }
 
-  public toggleEditingMessageForm(isVisible: boolean, messageId: number, messageText?: string, files?: IFileCollection): void {
+  public toggleEditingMessageForm(isVisible: boolean, messageId: number, messageText?: string, files?: FileCollection): void {
     this.showEditMessageForm = isVisible;
     this.selectedMessageId = messageId;
     if (isVisible) {
@@ -364,7 +364,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.enterMessageField.nativeElement.focus();
   }
 
-  public setChangedFilesCollection(files: IFileCollection): void {
+  public setChangedFilesCollection(files: FileCollection): void {
     let fileCollectionClone = this._fileService.getCollectionClone(files);
     this.newMessage.fileCollection = fileCollectionClone;
     this._setMessageBlockHeight();

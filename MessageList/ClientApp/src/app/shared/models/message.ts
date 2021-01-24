@@ -1,9 +1,9 @@
-import { IFileCollection } from './interfaces/IFileCollection';
+import { FileCollection } from './FileCollection';
 
 export class Message {
   id: number | null;
   text: string;
   createdAt: string;
   related_message_group: number;
-  fileCollection: IFileCollection;
+  fileCollection: FileCollection;
 }

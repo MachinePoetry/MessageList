@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BlobToSrcPipe } from './../../pipes/blobToSrc/blob-to-src.pipe';
-import { IFileCollection } from './../../models/interfaces/IFileCollection';
+import { FileCollection } from './../../models/FileCollection';
 import { MessageParams } from './../../models/params/messageParams';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class FileService {
   public videoMaxSize: number = 105000000;
   public fileMaxSize: number = 10500000;
 
-  public convertParamsToFormData(collection: IFileCollection, params: MessageParams): FormData {
+  public convertParamsToFormData(collection: FileCollection, params: MessageParams): FormData {
     let fd: FormData = new FormData();
 
     fd.append('authUserId', params.authUserId.toString());
@@ -63,8 +63,8 @@ export class FileService {
     }
   }
 
-  public convertIFileCollectionToFileCollection(collection): IFileCollection {
-    let resultCollection: IFileCollection = {
+  public convertAppFileCollectionToFileCollection(collection): FileCollection {
+    let resultCollection: FileCollection = {
       images: [], video: [], audio: [], files: []
     }
     for (let arr in collection) {
@@ -92,12 +92,12 @@ export class FileService {
     return resultCollection;
   } 
 
-  public isFileCollectionValid(collection: IFileCollection): boolean {
+  public isFileCollectionValid(collection: FileCollection): boolean {
     return (collection.images.length > 0 || collection.video.length > 0 || collection.audio.length > 0 || collection.files.length > 0);
   }
 
-  public getCollectionClone(collection: IFileCollection): IFileCollection {
-    let collectionClone: IFileCollection = {
+  public getCollectionClone(collection: FileCollection): FileCollection {
+    let collectionClone: FileCollection = {
       images: [], video: [], audio: [], files: []
     };
     collectionClone.images = collection.images.slice();
@@ -107,7 +107,7 @@ export class FileService {
     return collectionClone;
   }
 
-  public cleanFileCollection(collection: IFileCollection): void {
+  public cleanFileCollection(collection: FileCollection): void {
     for (let key in collection) {
       collection[key] = [];
     }

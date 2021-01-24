@@ -1,12 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { IFile } from './../../models/interfaces/IFile';
+import { AppFile } from './../../models/AppFile';
 
 @Pipe({
   name: 'blobToSrc'
 })
 
 export class BlobToSrcPipe implements PipeTransform {
-  public transform(value: string, file: IFile, args?: any) {
+  public transform(value: string, file: AppFile, args?: any) {
     if (typeof value === 'string') {
       return value.startsWith('data:') ? value : 'data:' + file.type + ';base64,' + file.src;
     }
