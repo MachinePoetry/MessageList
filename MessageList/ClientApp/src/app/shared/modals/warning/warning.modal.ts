@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { HttpService } from '../../services/httpService/http.service';
-import { WarningModalParams } from './../../models/warningModalParams';
+import { WarningModalParams } from './../../models/params/warningModalParams';
 
 @Component({
   selector: 'app-warning',

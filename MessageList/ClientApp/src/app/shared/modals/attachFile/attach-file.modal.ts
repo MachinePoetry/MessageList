@@ -2,9 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FileService } from './../../services/fileService/file.service';
 import { AttachFileFromWebModal } from './../attachFileFromWeb/attach-file-from-web.modal';
-import { AttachFileModalParams } from './../../models/attachFileModalParams';
+import { AttachFileModalParams } from './../../models/params/attachFileModalParams';
 import { WarningModal } from './../warning/warning.modal';
-import { WarningModalParams } from './../../models/warningModalParams';
+import { WarningModalParams } from './../../models/params/warningModalParams';
 
 @Component({
   selector: 'app-attach-file',
