@@ -60,12 +60,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   public isFileMenuActive: boolean = false;
   private _previousMessageBlockHeight: number | null = null;
   public searchDate: NgbDateStruct;
-  public newMessage = {
-    text: '',
-    fileCollection: {
-      images: [], video: [], audio: [], files: []
-    }
-  };
+  public newMessage = { text: '', fileCollection: { images: [], video: [], audio: [], files: [] } };
   public filesDefaultState: FileCollection = { images: [], video: [], audio: [], files: [] };
   private _messagesToLoadCounter: number = 30;
   private _freezeScrollBar = false;

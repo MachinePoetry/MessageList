@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BlobToSrcPipe } from './../../pipes/blobToSrc/blob-to-src.pipe';
 import { FileCollection } from './../../models/FileCollection';
+import { AppFileCollection } from './../../models/AppFileCollection';
 import { MessageParams } from './../../models/params/messageParams';
 
 @Injectable()
@@ -63,7 +64,7 @@ export class FileService {
     }
   }
 
-  public convertAppFileCollectionToFileCollection(collection): FileCollection {
+  public convertAppFileCollectionToFileCollection(collection: AppFileCollection): FileCollection {
     let resultCollection: FileCollection = {
       images: [], video: [], audio: [], files: []
     }
@@ -92,7 +93,7 @@ export class FileService {
     return resultCollection;
   } 
 
-  public isFileCollectionValid(collection: FileCollection): boolean {
+  public isFileCollectionValid(collection: FileCollection | AppFileCollection): boolean {
     return (collection.images.length > 0 || collection.video.length > 0 || collection.audio.length > 0 || collection.files.length > 0);
   }
 

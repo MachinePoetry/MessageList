@@ -14,9 +14,7 @@ import { BlobToSrcPipe } from './../../shared/pipes/blobToSrc/blob-to-src.pipe';
 export class FilePreviewComponent implements AfterViewInit {
   constructor(private _fileService: FileService, private _blobToSrc: BlobToSrcPipe) { }
 
-  @Input() public fileCollection: FileCollection = {
-    images: [], video: [], audio: [], files: []
-  };
+  @Input() public fileCollection: FileCollection = new FileCollection();
   @Input() public mode: string;
   @Output() changeFilesEvent = new EventEmitter<FileCollection>();
 
@@ -33,7 +31,7 @@ export class FilePreviewComponent implements AfterViewInit {
   public isImgModalVisible: boolean = false;
   public filePreviewMode = FilePreviewMode;
 
-  public setPreviewWidth(collection): number {
+  public setPreviewWidth(collection: File[] | AppFile[]): number {
     if (collection.length <= 3) {
       return 32;
     } else if (collection.length >= 4 && collection.length <= 5) {
