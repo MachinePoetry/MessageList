@@ -22,7 +22,7 @@ import { ToastsContainerComponent } from './components/toastsContainer/toasts-co
 import { AudioPlayerComponent } from './components/audioPlayer/audio-player.component';
 
 import { HttpService } from './shared/services/httpService/http.service';
-import { HtmlService } from './shared/services/htmlService/html.service';
+import { TextService } from './shared/services/textService/text.service';
 import { ToastService } from './shared/services/toastService/toast.service';
 import { FileService } from './shared/services/fileService/file.service';
 import { FocusDirective } from './shared/directives/focus/focus.directive';
@@ -42,6 +42,7 @@ import { RoundSpinner } from './shared/spinners/round/round.spinner';
 import { InlineSpinner } from './shared/spinners/inline/inline.spinner';
 
 import { AuthUserInfoResolver } from './shared/resolvers/auth-user-info.resolver';
+import { LinkPreviewComponent } from './components/link-preview/link-preview.component';
 
 const routes: Routes = [
   { path: '', component: FrontComponent },
@@ -56,13 +57,13 @@ const routes: Routes = [
   declarations: [
     AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, FilePreviewComponent, NotFoundComponent, MessageComponent,
     ToastsContainerComponent, AudioPlayerComponent, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrl, SecondsToTimePipe, BlobToSrcPipe, TermsOfUseModal,
-    ConfirmModal, WarningModal, AttachFileModal, AttachFileFromWebModal, RoundSpinner, InlineSpinner
+    ConfirmModal, WarningModal, AttachFileModal, AttachFileFromWebModal, RoundSpinner, InlineSpinner, LinkPreviewComponent
   ],
   imports: [
     BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, NgSelectModule, CommonModule, BrowserAnimationsModule
   ],
   exports: [FocusDirective, EqualValidatorDirective],
-  providers: [HttpService, HtmlService, ToastService, FileService, AuthUserInfoResolver, BlobToSrcPipe],
+  providers: [HttpService, TextService, ToastService, FileService, AuthUserInfoResolver, BlobToSrcPipe],
   bootstrap: [AppComponent]
 })
 

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 
-export class HtmlService {
+export class TextService {
   public greetingText = '<h3 class="text-center mt-2"> Добро пожаловать! </h3><br>' +
                         '<span class="mt-2"> Небольшая инструкция по работе с приложением: </span><br>' +
 

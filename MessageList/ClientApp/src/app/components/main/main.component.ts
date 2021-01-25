@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit, ViewChild, ViewChildren, ElementRef, 
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { HttpService } from './../../shared/services/httpService/http.service';
-import { HtmlService } from './../../shared/services/htmlService/html.service';
+import { TextService } from './../../shared/services/textService/text.service';
 import { ToastService } from './../../shared/services/toastService/toast.service';
 import { FileService } from './../../shared/services/fileService/file.service';
 import { NgbModal, NgbTooltip } from '@ng-bootstrap/ng-bootstrap';
@@ -33,7 +33,7 @@ import { MessageParams } from './../../shared/models/params/messageParams';
 })
 
 export class MainComponent implements OnInit, AfterViewInit {
-  constructor(private _httpService: HttpService, private _htmlService: HtmlService, private _route: ActivatedRoute, private _toastService: ToastService,
+  constructor(private _httpService: HttpService, private _textService: TextService, private _route: ActivatedRoute, private _toastService: ToastService,
               private _modalService: NgbModal, private _fileService: FileService) { }
 
   @ViewChild('appHeader', { read: ElementRef }) appHeader: ElementRef;
@@ -424,7 +424,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     if (!this.authUserInfo.isGreeted && sessionStorage.getItem('isGreeted') !== 'true') {
       let modalRef = this._modalService.open(WarningModal);
       modalRef.result.then((result) => { }, (reason) => { });
-      modalRef.componentInstance.modalWindowParams = new WarningModalParams('Приветствие', this._htmlService.greetingText, 'greeting', this.authUserInfo.id);
+      modalRef.componentInstance.modalWindowParams = new WarningModalParams('Приветствие', this._textService.greetingText, 'greeting', this.authUserInfo.id);
     }
   }
 }
