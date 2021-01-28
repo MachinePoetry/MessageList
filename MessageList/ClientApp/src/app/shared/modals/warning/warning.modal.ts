@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { HttpService } from '../../services/httpService/http.service';
+import { HttpService } from '../../services/http-service/http.service';
 import { WarningModalParams } from './../../models/params/warningModalParams';
 
 @Component({

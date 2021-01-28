@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BlobToSrcPipe } from './../../pipes/blobToSrc/blob-to-src.pipe';
+import { BlobToSrcPipe } from './../../pipes/blob-to-src/blob-to-src.pipe';
 import { LinkPreviewResponse } from './../../models/linkPreviewResponse';
 import { FileCollection } from './../../models/fileCollection';
 import { AppFileCollection } from './../../models/appFileCollection';

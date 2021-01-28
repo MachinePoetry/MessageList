@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { LinkPreviewResponse } from './../../models/linkPreviewResponse';
-import { HttpService } from './../../services/httpService/http.service';
+import { HttpService } from './../../services/http-service/http.service';
 
 @Injectable()
 

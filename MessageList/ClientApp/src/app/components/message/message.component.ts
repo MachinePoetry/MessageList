@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { FileService } from '../../shared/services/fileService/file.service';
+import { FileService } from '../../shared/services/file-service/file.service';
 import { FilePreviewMode } from './../../shared/models/componentModes/filePreviewMode';
 import { Message } from './../../shared/models/Message';
 

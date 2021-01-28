@@ -1,9 +1,9 @@
 import { Component, AfterViewInit, Input, Output, EventEmitter, ViewChild, ViewChildren, QueryList, ElementRef } from '@angular/core';
-import { FileService } from './../../shared/services/fileService/file.service';
+import { FileService } from './../../shared/services/file-service/file.service';
 import { FilePreviewMode } from './../../shared/models/componentModes/filePreviewMode';
 import { AppFile } from './../../shared/models/appFile';
 import { FileCollection } from './../../shared/models/fileCollection';
-import { BlobToSrcPipe } from './../../shared/pipes/blobToSrc/blob-to-src.pipe';
+import { BlobToSrcPipe } from './../../shared/pipes/blob-to-src/blob-to-src.pipe';
 
 @Component({
   selector: 'app-file-preview',

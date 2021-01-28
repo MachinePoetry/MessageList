@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { HttpService } from '../../shared/services/httpService/http.service';
-import { ToastService } from '../../shared/services/toastService/toast.service';
+import { HttpService } from '../../shared/services/http-service/http.service';
+import { ToastService } from '../../shared/services/toast-service/toast.service';
 import { ResultInfo } from '../../shared/models/resultInfo';
 import { User } from './../../shared/models/User';
 import { ReportParams } from './../../shared/models/params/reportParams';

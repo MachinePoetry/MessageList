@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { HttpService } from '../../shared/services/httpService/http.service'
+import { HttpService } from '../../shared/services/http-service/http.service'
 import { User } from './../../shared/models/User';
 
 @Component({
