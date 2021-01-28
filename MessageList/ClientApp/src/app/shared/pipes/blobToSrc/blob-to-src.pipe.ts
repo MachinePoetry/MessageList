@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { AppFile } from './../../models/AppFile';
+import { AppFile } from './../../models/appFile';
 
 @Pipe({
   name: 'blobToSrc'

@@ -1,4 +1,4 @@
-import { AppFile } from './AppFile';
+import { AppFile } from './appFile';
 
 export class AppFileCollection {
   public images: AppFile[];

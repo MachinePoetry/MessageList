@@ -1,4 +1,4 @@
-import { FileCollection } from './FileCollection';
+import { FileCollection } from './fileCollection';
 
 export class Message {
   id: number | null;

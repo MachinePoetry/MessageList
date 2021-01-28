@@ -20,7 +20,7 @@ import { SpinnerMode } from './../../shared/models/componentModes/spinnerMode';
 import { FilePreviewMode } from './../../shared/models/componentModes/filePreviewMode';
 import { LinkPreviewResponse } from './../../shared/models/linkPreviewResponse';
 import { LinkPreviewMode } from './../../shared/models/componentModes/linkPreviewMode';
-import { FileCollection } from './../../shared/models/FileCollection';
+import { FileCollection } from './../../shared/models/fileCollection';
 import { SearchParams } from './../../shared/models/params/searchParams';
 import { MessageGroupCreateParams } from './../../shared/models/params/messageGroupCreateParams';
 import { MessageGroupUpdateParams } from './../../shared/models/params/messageGroupUpdateParams';
