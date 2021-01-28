@@ -1,4 +1,4 @@
 export class ResultInfo {
-  public status: string;
-  public info: string;
+  public status: string = '';
+  public info: string = '';
 }
