@@ -6,6 +6,22 @@ span, p {
   overflow-y: scroll;
 }
 
+#linkPreviewContainer {
+  /*  scrollbar-face-color: #1B5891;*/
+  scrollbar-color: #1e96a1 transparent;
+  scrollbar-width: thin;
+}
+
+#linkPreviewContainer::-webkit-scrollbar {
+  width: 10px;
+  border-radius: 0;
+}
+
+#linkPreviewContainer::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background: #1e96a1;
+}
+
 #linkPreviewUrl {
   text-decoration: none;
 }

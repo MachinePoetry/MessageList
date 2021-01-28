@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BlobToSrcPipe } from './../../pipes/blobToSrc/blob-to-src.pipe';
+import { LinkPreviewResponse } from './../../models/linkPreviewResponse';
 import { FileCollection } from './../../models/FileCollection';
 import { AppFileCollection } from './../../models/AppFileCollection';
 import { MessageParams } from './../../models/params/messageParams';
@@ -14,7 +15,7 @@ export class FileService {
   public videoMaxSize: number = 105000000;
   public fileMaxSize: number = 10500000;
 
-  public convertParamsToFormData(collection: FileCollection, params: MessageParams): FormData {
+  public convertParamsToFormData(previews: LinkPreviewResponse[], fileCollection: FileCollection, params: MessageParams): FormData {
     let fd: FormData = new FormData();
 
     fd.append('authUserId', params.authUserId.toString());
@@ -22,23 +23,27 @@ export class FileService {
     fd.append('text', params.text);
     params.selectedMessageId ? fd.append('selectedMessageId', params.selectedMessageId.toString()) : fd.append('selectedMessageId', null);
 
-    if (collection.images.length) {
-      collection.images.forEach((value) => {
+    previews.forEach((value) => {
+      fd.append('previews', JSON.stringify(value));
+    });
+
+    if (fileCollection.images.length) {
+      fileCollection.images.forEach((value) => {
         fd.append('images', value);
       });
     }
-    if (collection.video.length) {
-      collection.video.forEach((value) => {
+    if (fileCollection.video.length) {
+      fileCollection.video.forEach((value) => {
         fd.append('video', value);
       });
     }
-    if (collection.audio.length) {
-      collection.audio.forEach((value) => {
+    if (fileCollection.audio.length) {
+      fileCollection.audio.forEach((value) => {
         fd.append('audio', value);
       });
     }
-    if (collection.files.length) {
-      collection.files.forEach((value) => {
+    if (fileCollection.files.length) {
+      fileCollection.files.forEach((value) => {
         fd.append('files', value);
       });
     }

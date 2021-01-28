@@ -18,6 +18,8 @@ import { User } from './../../shared/models/User';
 import { MessageGroup } from './../../shared/models/messageGroup';
 import { SpinnerMode } from './../../shared/models/componentModes/spinnerMode';
 import { FilePreviewMode } from './../../shared/models/componentModes/filePreviewMode';
+import { LinkPreviewResponse } from './../../shared/models/linkPreviewResponse';
+import { LinkPreviewMode } from './../../shared/models/componentModes/linkPreviewMode';
 import { FileCollection } from './../../shared/models/FileCollection';
 import { SearchParams } from './../../shared/models/params/searchParams';
 import { MessageGroupCreateParams } from './../../shared/models/params/messageGroupCreateParams';
@@ -60,8 +62,9 @@ export class MainComponent implements OnInit, AfterViewInit {
   public isFileMenuActive: boolean = false;
   private _previousMessageBlockHeight: number | null = null;
   public searchDate: NgbDateStruct;
-  public newMessage = { text: '', fileCollection: { images: [], video: [], audio: [], files: [] } };
-  public filesDefaultState: FileCollection = { images: [], video: [], audio: [], files: [] };
+  public newMessage = { text: '', messagePreviews: [], fileCollection: { images: [], video: [], audio: [], files: [] } };
+  public noPreviewUrls: string[] = [];
+  public filesDefaultState: FileCollection = new FileCollection();
   private _messagesToLoadCounter: number = 30;
   private _freezeScrollBar = false;
   private _isMessagesIterable = true;
@@ -72,6 +75,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   public isFirstLoad: boolean = true;
   public spinnerMode = SpinnerMode;
   public filePreviewMode = FilePreviewMode;
+  public linkPreviewMode = LinkPreviewMode;
 
   public authUserInfo: User = new User();
   public authUserMessageGroups: MessageGroup[] = [];
@@ -142,15 +146,23 @@ export class MainComponent implements OnInit, AfterViewInit {
       this._toastService.showDanger('Не выбрана группа сообщений');
       return;
     }
-    this._toggleInlineSpinner(true);
-    this.newMessage.fileCollection = this._fileService.convertAppFileCollectionToFileCollection(this.newMessage.fileCollection);
 
-    if ((form.valid && this._notOnlySpaceBar.test(this.newMessage.text)) || this._fileService.isFileCollectionValid(this.newMessage.fileCollection) ) {
-      let params: MessageParams = new MessageParams(this.authUserInfo.id, this.selectedGroupId, this.newMessage.text, this.selectedMessageId);
-      let messageParams: FormData = this._fileService.convertParamsToFormData(this.newMessage.fileCollection, params);
+    if ((form.valid && this._notOnlySpaceBar.test(this.newMessage.text)) || this._fileService.isFileCollectionValid(this.newMessage.fileCollection) ||
+         this.newMessage.messagePreviews.length) {
+
+      let tempMessageText = this.newMessage.text; // clear preview related code immideatly to prevent url previews creating again while they are being sent to server already
+      form.resetForm();
+      this.newMessage.text = '';
+      this.noPreviewUrls = [];
+
+      this._toggleInlineSpinner(true);
+      this.newMessage.fileCollection = this._fileService.convertAppFileCollectionToFileCollection(this.newMessage.fileCollection);
+
+      let params: MessageParams = new MessageParams(this.authUserInfo.id, this.selectedGroupId, tempMessageText, this.selectedMessageId);
+      let messageParams: FormData = this._fileService.convertParamsToFormData(this.newMessage.messagePreviews, this.newMessage.fileCollection, params);
 
       this.enterMessageField.nativeElement.focus();
-      this._fileService.cleanFileCollection(this.newMessage.fileCollection);
+      this.newMessage = { text: '', messagePreviews: [], fileCollection: { images: [], video: [], audio: [], files: [] } };
 
       let url: string = this.showEditMessageForm ? '/api/messages/update' : '/api/messages/create';
 
@@ -167,8 +179,6 @@ export class MainComponent implements OnInit, AfterViewInit {
         error => this._toastService.showDanger(error.message)
       );
 
-      form.resetForm();
-      this.newMessage.text = '';
       this.toggleEditingMessageForm(false, null, null, this.filesDefaultState);
       this.setMessageCreationFormHeight();
       this.selectedMessageId = null;
@@ -367,6 +377,12 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.enterMessageField.nativeElement.focus();
   }
 
+  public changePreviews(previews: LinkPreviewResponse[]): void {
+    this.newMessage.messagePreviews = previews;
+    this._setMessageBlockHeight();
+    this.enterMessageField.nativeElement.focus();
+  }
+
   public closeFileMenu(tooltip: NgbTooltip): void {
     setTimeout(() => { !this.isFileMenuActive ? tooltip.close() : null }, 70)
   }
@@ -426,5 +442,12 @@ export class MainComponent implements OnInit, AfterViewInit {
       modalRef.result.then((result) => { }, (reason) => { });
       modalRef.componentInstance.modalWindowParams = new WarningModalParams('Приветствие', this._textService.greetingText, 'greeting', this.authUserInfo.id);
     }
+
+    let urls: string[] = [];
+
+    let timer = setInterval(() => {
+      urls = this._textService.getUrlsFromText(this.newMessage.text).filter((value, index, thisArr) => thisArr.indexOf(value) === index);
+      this.newMessage.messagePreviews = this._textService.getPreviewsForUrls(urls, this.newMessage.messagePreviews, this.noPreviewUrls);
+    }, 2500);
   }
 }
