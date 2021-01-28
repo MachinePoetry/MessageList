@@ -1,0 +1,16 @@
+<div #linkPreviewContainer class="w-100 my-0" id="linkPreviewContainer" [ngClass]="{'d-none': !previews.length, 'mb-3': previews.length}">
+  <div #linkPreviewBlock *ngFor="let linkPreviewResponse of previews" class="w-100 round-borders mt-2">
+    <div class="w-100 d-flex justify-content-between" id="deleteLinkPreviewBlock">
+      <a [href]="linkPreviewResponse.url | safeUrl" id="linkPreviewUrl"><span class="ml-2 mb-2" [ngClass]="mode === 'preview' ? 'text-light' : 'dark-color-text'"> Ссылка </span></a>
+      <span class="mdi mdi-close-outline mr-2 mb-2" id="closeButton" [ngClass]="mode === 'preview' ? 'text-light' : 'dark-color-text'"
+            (click)="banUrlForPreview(linkPreviewResponse.url)"></span>
+    </div>
+    <div class="w-100" id="imageLinkPreviewBlock" (click)="redirectByLink(linkPreviewResponse.url)">
+      <img class="img-fluid" id="imgLinkPreview" [src]="linkPreviewResponse.image | safeUrl" alt="{{linkPreviewResponse.title}}" />
+    </div>
+    <div class="w-100 py-2 px-2" id="descriptionLinkPreviewBlock">
+      <span class="dark-color-text" id="title">{{linkPreviewResponse.title}}</span> <br>
+      <span id="descriptionUrl">{{linkPreviewResponse.url}}</span>
+    </div>
+  </div>
+</div>

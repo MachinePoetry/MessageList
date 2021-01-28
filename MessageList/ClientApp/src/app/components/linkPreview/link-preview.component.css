@@ -1,0 +1,42 @@
+span, p {
+  font-family: Tahoma, Arial, sans-serif;
+}
+
+#linkPreviewContainer {
+  overflow-y: scroll;
+}
+
+#linkPreviewUrl {
+  text-decoration: none;
+}
+
+#linkPreviewUrl:hover {
+  cursor: pointer;
+}
+
+#closeButton {
+  color: rgb(93,93,93);
+}
+
+#imageLinkPreviewBlock {
+  overflow-x: hidden;
+  overflow-y: hidden;
+}
+
+#closeButton:hover,
+#imageLinkPreviewBlock:hover {
+  cursor: pointer;
+}
+
+#descriptionLinkPreviewBlock {
+  background-color: grey;
+}
+
+#descriptionUrl {
+  color: lightgrey;
+}
+
+#title,
+#descriptionUrl {
+  font-size: 14px;
+}

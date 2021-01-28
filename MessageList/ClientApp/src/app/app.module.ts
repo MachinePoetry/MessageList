@@ -16,6 +16,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { MainComponent } from './components/main/main.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { FilePreviewComponent } from './components/filePreview/file-preview.component';
+import { LinkPreviewComponent } from './components/linkPreview/link-preview.component';
 import { NotFoundComponent } from './components/notFound/not-found.component';
 import { MessageComponent } from './components/message/message.component';
 import { ToastsContainerComponent } from './components/toastsContainer/toasts-container.component';
@@ -42,7 +43,6 @@ import { RoundSpinner } from './shared/spinners/round/round.spinner';
 import { InlineSpinner } from './shared/spinners/inline/inline.spinner';
 
 import { AuthUserInfoResolver } from './shared/resolvers/auth-user-info.resolver';
-import { LinkPreviewComponent } from './components/link-preview/link-preview.component';
 
 const routes: Routes = [
   { path: '', component: FrontComponent },
@@ -55,9 +55,9 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, FilePreviewComponent, NotFoundComponent, MessageComponent,
-    ToastsContainerComponent, AudioPlayerComponent, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrl, SecondsToTimePipe, BlobToSrcPipe, TermsOfUseModal,
-    ConfirmModal, WarningModal, AttachFileModal, AttachFileFromWebModal, RoundSpinner, InlineSpinner, LinkPreviewComponent
+    AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, FilePreviewComponent, LinkPreviewComponent, NotFoundComponent,
+    MessageComponent, ToastsContainerComponent, AudioPlayerComponent, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrl, SecondsToTimePipe, BlobToSrcPipe,
+    TermsOfUseModal, ConfirmModal, WarningModal, AttachFileModal, AttachFileFromWebModal, RoundSpinner, InlineSpinner, LinkPreviewComponent
   ],
   imports: [
     BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, NgSelectModule, CommonModule, BrowserAnimationsModule
