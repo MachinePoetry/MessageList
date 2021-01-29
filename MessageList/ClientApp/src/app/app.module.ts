@@ -29,7 +29,7 @@ import { FileService } from './shared/services/file-service/file.service';
 import { FocusDirective } from './shared/directives/focus/focus.directive';
 import { EqualValidatorDirective } from './shared/directives/equal-validator/equal-validator.directive';
 import { DateToLocalePipe } from './shared/pipes/date-to-locale/date-to-locale.pipe';
-import { SafeUrl } from './shared/pipes/safe-url/safe-url.pipe';
+import { SafeUrlPipe } from './shared/pipes/safe-url/safe-url.pipe';
 import { SecondsToTimePipe } from './shared/pipes/seconds-to-time/seconds-to-time.pipe';
 import { BlobToSrcPipe } from './shared/pipes/blob-to-src/blob-to-src.pipe';
 
@@ -56,7 +56,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, FilePreviewComponent, LinkPreviewComponent, NotFoundComponent,
-    MessageComponent, ToastsContainerComponent, AudioPlayerComponent, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrl, SecondsToTimePipe, BlobToSrcPipe,
+    MessageComponent, ToastsContainerComponent, AudioPlayerComponent, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrlPipe, SecondsToTimePipe, BlobToSrcPipe,
     TermsOfUseModal, ConfirmModal, WarningModal, AttachFileModal, AttachFileFromWebModal, RoundSpinner, InlineSpinner, LinkPreviewComponent
   ],
   imports: [

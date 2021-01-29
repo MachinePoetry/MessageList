@@ -12,7 +12,7 @@ export class SecondsToTimePipe implements PipeTransform {
     let result: string = '';
     let secondsAmount = Math.trunc(value);
     let currentHour = Math.trunc(secondsAmount / 3600);
-    let currentMinute = Math.trunc(secondsAmount / 60);
+    let currentMinute = Math.trunc(secondsAmount / 60) < 60 ? Math.trunc(secondsAmount / 60) : Math.trunc(secondsAmount / 60) - 60;
     let currentSecond = secondsAmount < 60 ? secondsAmount : secondsAmount % 60;
 
     if (currentHour > 0) {
