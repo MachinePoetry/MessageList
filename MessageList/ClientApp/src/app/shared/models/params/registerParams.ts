@@ -1,4 +1,4 @@
-import { LoginParams } from './LoginParams';
+import { LoginParams } from './loginParams';
 
 export class RegisterParams extends LoginParams {
   public confirmPassword: string = '';

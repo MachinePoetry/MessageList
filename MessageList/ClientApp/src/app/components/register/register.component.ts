@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpService } from '../../shared/services/http-service/http.service';
@@ -6,7 +6,7 @@ import { ToastService } from '../../shared/services/toast-service/toast.service'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TermsOfUseModal } from '../../shared/modals/terms-of-use/terms-of-use.modal';
 import { ResultInfo } from '../../shared/models/resultInfo';
-import { RegisterParams } from './../../shared/models/params/RegisterParams';
+import { RegisterParams } from './../../shared/models/params/registerParams';
 
 @Component({
   selector: 'app-register',
@@ -16,6 +16,8 @@ import { RegisterParams } from './../../shared/models/params/RegisterParams';
 
 export class RegisterComponent {
   constructor(private _httpService: HttpService, private _router: Router, private _toastService: ToastService, private _modalService: NgbModal) { }
+
+  @ViewChild('registerForm') registerForm: NgForm;
 
   public params: RegisterParams = new RegisterParams();
 
