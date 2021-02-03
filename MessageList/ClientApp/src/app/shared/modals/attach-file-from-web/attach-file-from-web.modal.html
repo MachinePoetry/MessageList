@@ -6,7 +6,7 @@
 </div>
 <div class="modal-body">
   <span class="font-weight-light description-text"> Ссылка на видео: </span>
-  <input type="text" class="form-control mt-3" [(ngModel)]="fileUrl" (input)="getContentFromUrl()" [disabled]="disabled" placeholder="https://" autofocus>
+  <!--<input type="text" class="form-control mt-3" [(ngModel)]="fileUrl" (input)="getContentFromUrl()" [disabled]="disabled" placeholder="https://" autofocus>-->
   <span *ngIf="isBrokenUrl" class="alert-text"><small> Ссылка должна начинаться с "https://" или "http://" </small></span>
   <video *ngIf="fileUrlReady.length > 0" class="w-80 mx-auto" [src]="fileUrlReady | safeUrl"></video>
 </div>

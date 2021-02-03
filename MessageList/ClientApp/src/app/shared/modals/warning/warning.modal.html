@@ -6,7 +6,7 @@
 </div>
 <div class="modal-body">
   <div class="w-90 mx-auto">
-    <span [innerHtml]="modalWindowParams.warningText"></span>
+    <span id="modalText" [innerHtml]="modalWindowParams.warningText"></span>
   </div>
   <div *ngIf="modalWindowParams.type === 'greeting'" class="w-90 mx-auto mt-2">
     <input type="checkbox" class="ml-1 my-2" [(ngModel)]="isGreeted"><span class="mb-2"> Больше не показывать </span>
