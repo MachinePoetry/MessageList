@@ -17,7 +17,7 @@ describe('LinkPreviewComponent', () => {
     testPreview = { title: 'title', description: 'some descripyion', image: '', url: 'https://someurl.ru', bannedForPreview: false }
   });
 
-  it('should create', () => {
+  it('should create Link preview component', () => {
     expect(component).toBeTruthy();
   });
 

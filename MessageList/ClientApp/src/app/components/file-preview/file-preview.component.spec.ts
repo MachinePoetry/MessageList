@@ -37,7 +37,7 @@ describe('FilePreviewComponent', () => {
     file = new File([arrayBuffer], "picture.jpeg", { type: 'image/jpeg' });
   });
 
-  it('should create component', () => {
+  it('should create the File preview component', () => {
     expect(component).toBeTruthy();
   })
 

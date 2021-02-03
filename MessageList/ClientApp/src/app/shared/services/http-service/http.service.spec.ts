@@ -21,7 +21,7 @@ describe('HttpService', () => {
     backend = TestBed.get(HttpTestingController);
   });
 
-  it('should create the Toast service', () => {
+  it('should create the Http service', () => {
     expect(service).toBeTruthy();
   });
 
