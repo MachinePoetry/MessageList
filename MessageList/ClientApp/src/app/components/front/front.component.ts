@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 import { HttpService } from '../../shared/services/http-service/http.service';
 import { ToastService } from '../../shared/services/toast-service/toast.service';
 import { ResultInfo } from '../../shared/models/resultInfo';
-import { User } from './../../shared/models/User';
+import { User } from './../../shared/models/user';
 import { ReportParams } from './../../shared/models/params/reportParams';
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { User } from '../../shared/models/User';
+import { User } from '../../shared/models/user';
 
 @Component({
   selector: 'app-profile',

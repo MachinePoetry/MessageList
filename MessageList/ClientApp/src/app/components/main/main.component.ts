@@ -14,7 +14,7 @@ import { AttachFileModal } from './../../shared/modals/attach-file/attach-file.m
 import { AttachFileModalParams } from './../../shared/models/params/attachFileModalParams';
 import { WarningModal } from './../../shared/modals/warning/warning.modal';
 import { WarningModalParams } from './../../shared/models/params/warningModalParams';
-import { User } from './../../shared/models/User';
+import { User } from './../../shared/models/user';
 import { MessageGroup } from './../../shared/models/messageGroup';
 import { SpinnerMode } from './../../shared/models/componentModes/spinnerMode';
 import { FilePreviewMode } from './../../shared/models/componentModes/filePreviewMode';

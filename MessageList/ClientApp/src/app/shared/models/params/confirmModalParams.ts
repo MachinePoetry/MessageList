@@ -1,4 +1,4 @@
-import { User } from '../../../shared/models/User';
+import { User } from '../../../shared/models/user';
 
 export class ConfirmModalParams {
   constructor(public requestMethod: string, public header: string, public body: string,
