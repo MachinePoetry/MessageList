@@ -3,15 +3,17 @@ import { FilePreviewComponent } from './../file-preview/file-preview.component';
 import { FileService } from '../../shared/services/file-service/file.service';
 import { DateToLocalePipe } from './../../shared/pipes/date-to-locale/date-to-locale.pipe';
 import { BlobToSrcPipe } from '../../shared/pipes/blob-to-src/blob-to-src.pipe';
+import { SafeUrlPipe } from '../../shared/pipes/safe-url/safe-url.pipe';
 import { Message } from './../../shared/models/Message';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FileCollection } from '../../shared/models/fileCollection';
 
 describe('MessageComponent', () => {
   let component: MessageComponent, fixture: ComponentFixture<MessageComponent>, file: File;
-  let mockFileService = { isFileCollectionValid: jasmine.createSpy('isCollectionValid').and.returnValue(true) };
+  let mockFileService = { isFileCollectionValid: jasmine.createSpy('isFileCollectionValid').and.returnValue(true) };
   let mockBlobToSrcPipe = { transform: jasmine.createSpy('transform').and.returnValue(true) };
   let mockDateToLocalePipe = { transform: jasmine.createSpy('transform').and.returnValue('01.01.1970') };
+  let mockSafeUrlPipe = { transform: jasmine.createSpy('transform').and.returnValue(true) };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -19,7 +21,8 @@ describe('MessageComponent', () => {
       providers: [
         { provide: FileService, useValue: mockFileService },
         { provide: BlobToSrcPipe, useValue: mockBlobToSrcPipe },
-        { provide: DateToLocalePipe, useValue: mockDateToLocalePipe }
+        { provide: DateToLocalePipe, useValue: mockDateToLocalePipe },
+        { provide: SafeUrlPipe, useValue: mockSafeUrlPipe }
       ]
     })
       .compileComponents();
@@ -75,13 +78,15 @@ describe('MessageComponent', () => {
   })
 
   it('should render file collection if it is in message', () => {
-    component.message.fileCollection.images.push(file);
+    mockFileService.isFileCollectionValid.and.returnValue(true);
     fixture.detectChanges();
     let filePreviewComponent: HTMLElement = fixture.nativeElement.querySelector('app-file-preview');
     expect(filePreviewComponent).toBeTruthy();
   })
 
   it('should not render file collection if it is empty in message', () => {
+    mockFileService.isFileCollectionValid.and.returnValue(false);
+    fixture.detectChanges();
     let filePreviewComponent: HTMLElement = fixture.nativeElement.querySelector('app-file-preview');
     expect(filePreviewComponent).toBeFalsy();
   })
