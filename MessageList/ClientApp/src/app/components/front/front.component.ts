@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { HttpService } from '../../shared/services/http-service/http.service';
 import { ToastService } from '../../shared/services/toast-service/toast.service';
@@ -14,6 +14,8 @@ import { ReportParams } from './../../shared/models/params/reportParams';
 
 export class FrontComponent implements OnInit {
   constructor(private _httpService: HttpService, private _toastService: ToastService) { }
+
+  @ViewChild('bugReportForm') bugReportForm: NgForm;
 
   public params: ReportParams = new ReportParams();
 

@@ -2,12 +2,12 @@
   <div class="container">
     <div class="row header justify-content-sm-between align-items-center" id="header">
       <div class="col-12 col-sm-auto my-sm-3 d-flex justify-content-center align-items-center">
-        <a routerLink="/" class="ml-lg-2 header-title text-decoration-none"> Your notepad online </a>
+        <a routerLink="/" class="ml-lg-2 header-title text-decoration-none" id="headerTitle"> Your notepad online </a>
       </div>
 
       <div *ngIf="!authUserInfo?.email" class="col-12 col-sm-auto my-sm-3 mb-3 mb-sm-0 d-flex justify-content-center align-items-center">
-        <a routerLink="/register" class="mr-2 text-decoration-none">Создайте аккаунт</a> <span class="text-light">или</span>
-        <a routerLink="/login" class="btn login-button ml-2"> Войти </a>
+        <a routerLink="/register" class="mr-2 text-decoration-none" id="register">Создайте аккаунт</a> <span class="text-light">или</span>
+        <a routerLink="/login" class="btn login-button ml-2" id="login"> Войти </a>
       </div>
 
       <div *ngIf="authUserInfo?.email" class="col-12 col-sm-auto my-sm-3 mb-3 mb-sm-0 d-flex justify-content-end align-items-center">

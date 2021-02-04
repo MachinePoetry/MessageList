@@ -4,12 +4,11 @@ import { Router } from '@angular/router';
 import { NgForm, FormsModule, AbstractControl } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { of } from 'rxjs';
-import { TestBed } from '@angular/core/testing';
 import { HttpService } from './../../shared/services/http-service/http.service';
 import { ToastService } from './../../shared/services/toast-service/toast.service';
 import { LoginParams } from './../../shared/models/params/loginParams';
 import { ResultInfo } from '../../shared/models/resultInfo';
-import { ComponentFixture } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 
 
 describe('LoginComponent', () => {
@@ -136,7 +135,7 @@ describe('LoginComponent', () => {
     expect(passwordControl.hasError('required')).toBe(true);
   })
 
-  it('should set pattern error at passwird model if input was touched and password in wrong format was set', () => {
+  it('should set pattern error at password model if input was touched and password in wrong format was set', () => {
     passwordControl.setValue('paaaaaassssssswwwwwwooooorrrrrrdddd');
     passwordControl.markAsTouched();
     expect(passwordControl.hasError('pattern')).toBe(true);
