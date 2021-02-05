@@ -27,6 +27,7 @@ describe('FocusDirective', () => {
   it('should give focus to parent component after component was created', () => {
     let input = fixture.nativeElement.querySelector('input');
     let focusedInput = fixture.nativeElement.querySelector(':focus');
+    fixture.detectChanges();
     expect(focusedInput).toBe(input);
   });
 });
