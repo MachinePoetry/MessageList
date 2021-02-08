@@ -27,17 +27,21 @@ namespace MessageList.Controllers
         [HttpGet("getGroupesAndMessages")]
         public async Task<JsonResult> GetGroupesAndMessagesAsync([FromQuery] int id, int? counter, int? groupId)
         {
-            // Application returns only 30 messages for every group for the first load. More messages are uploaded only for group from params
+            // Application returns only 30 messages for every group for the first load. More messages are uploaded manualy by 'counter' and 'group' params
 
-            List<MessageGroup> messageGroups = await _db.MessageGroups.Where(mg => mg.UserId == id).Include(m => m.Messages).ToListAsync();
-            await FileService.AddFilesToMessageGroupCollection(messageGroups, _db);
+            List<MessageGroup> messageGroups = await _db.MessageGroups.Where(mg => mg.UserId == id).Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Images)
+                                                                                                    .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Video)
+                                                                                                    .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Audio)
+                                                                                                    .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Files).ToListAsync();
             messageGroups.ForEach(mg => mg.Messages = mg.Messages.AsEnumerable().Reverse().Take(30).Reverse().ToList());
 
             if (counter != null && groupId != null)
             {
-                List<Message> messages = await _db.Messages.Where(mes => mes.MessageGroupId == groupId).OrderBy(m => m.CreatedAt)
-                                               .Reverse().Take((int)counter).Reverse().ToListAsync();
-                await FileService.AddFilesToMessageCollection(messages, _db);
+                List<Message> messages = await _db.Messages.Where(mes => mes.MessageGroupId == groupId).Include(m => m.FileCollection.Images)
+                                                                                                        .Include(m => m.FileCollection.Video)
+                                                                                                        .Include(m => m.FileCollection.Audio)
+                                                                                                        .Include(m => m.FileCollection.Files)
+                                                                                                        .OrderBy(m => m.CreatedAt).Reverse().Take((int)counter).Reverse().ToListAsync();
                 messageGroups.FirstOrDefault(m => m.Id == groupId).Messages = messages;
             }
             return Json(messageGroups);
