@@ -10,6 +10,7 @@ namespace MessageList.Data
         public DbSet<Message> Messages { get; set; } 
         public DbSet<MessageGroup> MessageGroups { get; set; }
         public DbSet<BugReport> BugReports { get; set; }
+        public DbSet<FileCollection> FileCollections { get; set; }
         public DbSet<ImageFile> Images { get; set; }
         public DbSet<VideoFile> Video { get; set; }
         public DbSet<AudioFile> Audio { get; set; }

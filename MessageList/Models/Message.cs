@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -17,13 +16,12 @@ namespace MessageList.Models
         [Column("created_at")]
         [Required]
         public DateTime CreatedAt { get; set; }
+        public FileCollection FileCollection { get; set; }
         [Column("related_message_group")]
         [Required]
         public int MessageGroupId { get; set; }
         [JsonIgnore]
         public MessageGroup MessageGroup { get; set; }
-        [NotMapped]
-        public FileCollection FileCollection { get; set; }
 
 
         public Message() {

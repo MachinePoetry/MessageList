@@ -18,19 +18,18 @@ namespace MessageList.Models
         [Column("length")]
         [JsonProperty(PropertyName = "size")]
         public long Length { get; set; }
-        [Column("related_message_id")]
+        [Column("related_file_collection_id")]
         [Required]
-        public int MessageId { get; set; }
+        public int FileCollectionId { get; set; }
         [JsonIgnore]
-        [NotMapped]
-        public Message Message { get; set; }
+        public FileCollection FileCollection { get; set; }
 
-        public File(string contentType, string fileName, long length, int messageId)
+        public File(string contentType, string fileName, long length, int fileCollectionId)
         {
             ContentType = contentType;
             FileName = fileName;
             Length = length;
-            MessageId = messageId;
+            FileCollectionId = fileCollectionId;
         }
     }
 }
