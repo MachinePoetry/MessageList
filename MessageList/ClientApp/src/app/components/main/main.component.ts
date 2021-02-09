@@ -216,6 +216,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       this.authUserMessageGroups = data;
       this._scrollToBottom(this.messageBlock);
       this.searchDate = null;
+      this._toggleInlineSpinner(false);
     },
       error => this._toastService.showDanger(error.message)
     )
@@ -224,10 +225,12 @@ export class MainComponent implements OnInit, AfterViewInit {
   public searchMessages(form?: NgForm): void {
     if (form && form.valid && this._notOnlySpaceBar.test(this.searchString) && this.searchString.length > 0) {
       let searchParams: SearchParams = new SearchParams(this.authUserInfo.id, this.selectedGroupId, this.searchString, null);
+      this._toggleInlineSpinner(true);
       this._searchRequest(searchParams);
       form.resetForm({ searchInput: this.searchString });
     } else if (!form && this.searchDate) {
       let searchParams: SearchParams = new SearchParams(this.authUserInfo.id, this.selectedGroupId, '', this.searchDate);
+      this._toggleInlineSpinner(true);
       this._searchRequest(searchParams);
     }
   }
@@ -241,7 +244,8 @@ export class MainComponent implements OnInit, AfterViewInit {
       this.isCollapsed = true;
       this.searchString = '';
       this._isMessagesIterable = true;
-      this._refreshGroupsAndMessages({ id: this.authUserInfo.id });
+      this._toggleInlineSpinner(true);
+      this._refreshGroupsAndMessages({ id: this.authUserInfo.id }, () => this._toggleInlineSpinner(false));
     }
   }
 

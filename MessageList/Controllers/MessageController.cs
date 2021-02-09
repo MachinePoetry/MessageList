@@ -50,15 +50,18 @@ namespace MessageList.Controllers
         [HttpPost("search")]
         public async Task<JsonResult> GetSearchedMessagesAsync(SearchParams sp)
         {
-            //TODO: Rewrite for Linq subcycle
-            List<MessageGroup> messageGroups = await _db.MessageGroups.Where(mg => mg.UserId == sp.Id).Include(u => u.Messages).ToListAsync();
+            List<MessageGroup> messageGroups = await _db.MessageGroups.Where(mg => mg.UserId == sp.AuthUserId)
+                                                                                            .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Images)
+                                                                                            .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Video)
+                                                                                            .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Audio)
+                                                                                            .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Files).ToListAsync();
             if (!String.IsNullOrEmpty(sp.StringToSearch) && sp.DateToSearch == null)
             {
                 foreach (var mg in messageGroups)
                 {
                     if (mg.Id == sp.GroupId)
                     {
-                        mg.Messages = mg.Messages.Where(m => m.Text.Contains(sp.StringToSearch)).ToList();
+                        mg.Messages = mg.Messages.Where(m => m.Text != null ? m.Text.Contains(sp.StringToSearch) : false).ToList();
                     }
                 }
             }
