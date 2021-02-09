@@ -6,47 +6,21 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 using System.IO;
 using MessageList.Data;
+using MessageList.Models.QueryModels;
 
 namespace MessageList.Models.Services
 {
     public static class FileService
     {
-        public static List<File> ConvertFiles(IEnumerable<IFormFile> fileList, int relatedMessageId, Type outType)
+        public static byte[] getFileData(IFormFile file)
         {
-            List<File> files = new List<File>();
-            if (fileList != null)
+            byte[] fileData;
+            using (var ms = new MemoryStream())
             {
-                foreach (var file in fileList)
-                {
-                    byte[] fileData;
-                    using (var ms = new MemoryStream())
-                    {
-                        file.CopyTo(ms);
-                        fileData = ms.ToArray();
-                    }
-
-                    switch (outType.Name)
-                    {
-                        case "ImageFile":
-                            File imageFile = new ImageFile(file.ContentType, file.FileName, file.Length, relatedMessageId, fileData);
-                            files.Add(imageFile);
-                            break;
-                        case "VideoFile":
-                            File videoFile = new VideoFile(file.ContentType, file.FileName, file.Length, relatedMessageId, fileData);
-                            files.Add(videoFile);
-                            break;
-                        case "AudioFile":
-                            File audioFile = new AudioFile(file.ContentType, file.FileName, file.Length, relatedMessageId, fileData);
-                            files.Add(audioFile);
-                            break;
-                        case "OtherFile":
-                            File otherFile = new OtherFile(file.ContentType, file.FileName, file.Length, relatedMessageId, fileData);
-                            files.Add(otherFile);
-                            break;
-                    }
-                }
+                file.CopyTo(ms);
+                fileData = ms.ToArray();
             }
-            return files;
+            return fileData;
         }
 
         public static async Task<int> SaveFilesToDatabaseAsync<T>(IEnumerable<T> files, ApplicationDbContext db, DbSet<T> targetCollection) where T : class
@@ -57,6 +31,11 @@ namespace MessageList.Models.Services
             }
             int result = await db.SaveChangesAsync();
             return result;
+        }
+
+        public static bool isMessageWithFiles(QueryMessage mes)
+        {
+            return (mes.Images?.Count() > 0 || mes.Video?.Count() > 0 || mes.Audio?.Count() > 0 || mes.Files?.Count() > 0);
         }
     }
 }

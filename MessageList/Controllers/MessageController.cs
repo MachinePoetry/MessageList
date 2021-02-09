@@ -83,7 +83,7 @@ namespace MessageList.Controllers
             int reqAuthUserId, reqMessageGroupId;
             bool authUserIdResult = Int32.TryParse(mes.AuthUserId, out reqAuthUserId);
             bool messageGroupIdResult = Int32.TryParse(mes.MessageGroupId, out reqMessageGroupId);
-            bool isMessageWithFiles = (mes.Images?.Count() > 0 || mes.Video?.Count() > 0 || mes.Audio?.Count() > 0 || mes.Files?.Count() > 0);
+            bool isMessageWithFiles = FileService.isMessageWithFiles(mes);
 
             int res = 0;
             ResultInfo result = new ResultInfo();
@@ -105,21 +105,13 @@ namespace MessageList.Controllers
             else if (authUserIdResult && messageGroupIdResult && isMessageWithFiles)
             {
                 Message message = new Message(text: mes.Text ?? String.Empty, messageGroupId: reqMessageGroupId);
+                List<ImageFile> images = mes.Images?.Select(i => new ImageFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
+                List<VideoFile> video = mes.Video?.Select(i => new VideoFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
+                List<AudioFile> audio = mes.Audio?.Select(i => new AudioFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
+                List<OtherFile> files = mes.Files?.Select(i => new OtherFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
+                message.FileCollection = new FileCollection(images, video, audio, files);
                 await _db.Messages.AddAsync(message);
                 res = await _db.SaveChangesAsync();
-                // Save message in database anyway (either has it text or not), then retrieve it to get it's id and give it to files in database's table
-                Message mesForFiles = await _db.Messages.FirstOrDefaultAsync(m => m.Equals(message));
-                if (mesForFiles != null)
-                {
-                    IEnumerable<ImageFile> images = FileService.ConvertFiles(mes.Images, mesForFiles.Id, typeof(ImageFile)).Cast<ImageFile>();
-                    await FileService.SaveFilesToDatabaseAsync<ImageFile>(images, _db, _db.Images);
-                    IEnumerable<VideoFile> video = FileService.ConvertFiles(mes.Video, mesForFiles.Id, typeof(VideoFile)).Cast<VideoFile>();
-                    await FileService.SaveFilesToDatabaseAsync<VideoFile>(video, _db, _db.Video);
-                    IEnumerable<AudioFile> audio = FileService.ConvertFiles(mes.Audio, mesForFiles.Id, typeof(AudioFile)).Cast<AudioFile>();
-                    await FileService.SaveFilesToDatabaseAsync<AudioFile>(audio, _db, _db.Audio);
-                    IEnumerable<OtherFile> files = FileService.ConvertFiles(mes.Files, mesForFiles.Id, typeof(OtherFile)).Cast<OtherFile>();
-                    await FileService.SaveFilesToDatabaseAsync<OtherFile>(files, _db, _db.Files);
-                }
             }
             result = ResultInfo.CreateResultInfo(res, "MessageCreated", "Сообщение успешно сохранено", "MessageCreationFailed", "Произошла ошибка при создании сообщения");
             return Json(result);
@@ -133,10 +125,18 @@ namespace MessageList.Controllers
             int res = 0;
             if (selectedMessageIdResult)
             {
-                Message message = await _db.Messages.FirstOrDefaultAsync(m => m.Id == selectedMessageId);
+                Message message = await _db.Messages.Where(m => m.Id == selectedMessageId).Include(m => m.FileCollection.Images)
+                                                                                          .Include(m => m.FileCollection.Video)
+                                                                                          .Include(m => m.FileCollection.Audio)
+                                                                                          .Include(m => m.FileCollection.Files).FirstOrDefaultAsync();
                 if (message != null)
                 {
                     message.Text = mes.Text;
+                    message.FileCollection.Images = mes.Images?.Select(i => new ImageFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
+                    message.FileCollection.Video = mes.Video?.Select(i => new VideoFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
+                    message.FileCollection.Audio = mes.Audio?.Select(i => new AudioFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
+                    message.FileCollection.Files = mes.Files?.Select(i => new OtherFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
+                    _db.Messages.Update(message);
                     res = await _db.SaveChangesAsync();
                 }
             }

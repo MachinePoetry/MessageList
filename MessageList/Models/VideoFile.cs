@@ -14,6 +14,11 @@ namespace MessageList.Models {
         [Required]
         public byte[] Data { get; set; }
 
+        public VideoFile(string contentType, string fileName, long length, byte[] data) : base(contentType, fileName, length)
+        {
+            Data = data;
+        }
+
         public VideoFile(string contentType, string fileName, long length, int fileCollectionId, byte[] data) : base(contentType, fileName, length, fileCollectionId)
         {
             Data = data;

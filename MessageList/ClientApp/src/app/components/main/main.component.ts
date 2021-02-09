@@ -189,6 +189,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.messageEditingBlock.nativeElement.classList.remove(css1);
     this.messageEditingBlock.nativeElement.classList.add(css2);
     this.enterMessageField.nativeElement.value = value;
+    this.newMessage.text = value;
     if (files) {
       this.newMessage.fileCollection = files;
     }

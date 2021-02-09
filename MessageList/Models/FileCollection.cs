@@ -28,5 +28,13 @@ namespace MessageList.Models
             Audio = new List<AudioFile>();
             Files = new List<OtherFile>();
         }
+
+        public FileCollection(List<ImageFile> images, List<VideoFile> video, List<AudioFile> audio, List<OtherFile> files)
+        {
+            Images = images;
+            Video = video;
+            Audio = audio;
+            Files = files;
+        }
     }
 }
