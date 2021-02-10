@@ -62,7 +62,11 @@ namespace MessageList.Controllers
             else
             {
                 //TODO: Нужна валидация email перед редактированием и созданием пользователя
-                await _db.Users.AddAsync(new User(email: acc.Email, password: acc.Password.GetCustomAlgoHashCode(SHA256.Create())));
+                MessageGroup mg = new MessageGroup();
+                mg.Name = "Default group";
+                User newUser = new User(email: acc.Email, password: acc.Password.GetCustomAlgoHashCode(SHA256.Create()));
+                newUser.MessageGroups.Add(mg);
+                await _db.Users.AddAsync(newUser);
                 int res = await _db.SaveChangesAsync();
                 await HttpContext.SignOutAsync();
                 await Authenticate(acc.Email);

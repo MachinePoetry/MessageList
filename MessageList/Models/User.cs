@@ -40,6 +40,7 @@ namespace MessageList.Models
             IsEmailConfirmed = false;
             CreatedAt = DateTime.Now;
             IsAdmin = false;
+            MessageGroups = new List<MessageGroup>();
         }
     }
 }
