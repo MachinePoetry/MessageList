@@ -31,8 +31,9 @@ export class EqualValidatorDirective implements Validator {
       return { validateNotEqual: true }
     }
     if (value === targetControl?.value && this._isReverse) {
-      delete targetControl?.errors['validateNotEqual'];
-      if (!Object.keys(targetControl.errors).length) targetControl.setErrors(null);
+      //delete targetControl?.errors['validateNotEqual'];
+      //if (!Object.keys(targetControl.errors).length) targetControl.setErrors(null);
+      targetControl.setErrors(null);
     }
     if (value !== targetControl?.value && this._isReverse) {
       targetControl?.setErrors({ validateNotEqual: true })
