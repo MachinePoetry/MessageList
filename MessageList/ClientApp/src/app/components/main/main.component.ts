@@ -162,7 +162,9 @@ export class MainComponent implements OnInit, AfterViewInit {
       let messageParams: FormData = this._fileService.convertParamsToFormData(this.newMessage.messagePreviews, this.newMessage.fileCollection, params);
 
       this.enterMessageField.nativeElement.focus();
-      this.newMessage = { text: '', messagePreviews: [], fileCollection: { images: [], video: [], audio: [], files: [] } };
+      this.newMessage.text = '';
+      this.newMessage.messagePreviews = [];
+      this.newMessage.fileCollection = new FileCollection();
 
       let url: string = this.showEditMessageForm ? '/api/messages/update' : '/api/messages/create';
 
