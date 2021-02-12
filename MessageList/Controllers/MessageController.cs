@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json.Linq;
 using MessageList.Data;
 using MessageList.Models;
 using MessageList.Models.QueryModels;
@@ -29,10 +30,11 @@ namespace MessageList.Controllers
         {
             // Application returns only 30 messages for every group for the first load. More messages are uploaded manualy by 'counter' and 'group' params
 
-            List<MessageGroup> messageGroups = await _db.MessageGroups.Where(mg => mg.UserId == id).Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Images)
+            List<MessageGroup> messageGroups = await _db.MessageGroups.Where(mg => mg.UserId == id).AsNoTracking().AsSplitQuery().Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Images)
                                                                                                     .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Video)
                                                                                                     .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Audio)
-                                                                                                    .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Files).ToListAsync();
+                                                                                                    .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Files)
+                                                                                                    .Include(m => m.Messages).ThenInclude(mes => mes.UrlPreviews).ToListAsync();
             messageGroups.ForEach(mg => mg.Messages = mg.Messages.AsEnumerable().Reverse().Take(30).Reverse().ToList());
 
             if (counter != null && groupId != null)
@@ -41,6 +43,7 @@ namespace MessageList.Controllers
                                                                                                         .Include(m => m.FileCollection.Video)
                                                                                                         .Include(m => m.FileCollection.Audio)
                                                                                                         .Include(m => m.FileCollection.Files)
+                                                                                                        .Include(m => m.UrlPreviews)
                                                                                                         .OrderBy(m => m.CreatedAt).Reverse().Take((int)counter).Reverse().ToListAsync();
                 messageGroups.FirstOrDefault(m => m.Id == groupId).Messages = messages;
             }
@@ -54,7 +57,8 @@ namespace MessageList.Controllers
                                                                                             .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Images)
                                                                                             .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Video)
                                                                                             .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Audio)
-                                                                                            .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Files).ToListAsync();
+                                                                                            .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Files)
+                                                                                            .Include(m => m.Messages).ThenInclude(mes => mes.UrlPreviews).ToListAsync();
             if (!String.IsNullOrEmpty(sp.StringToSearch) && sp.DateToSearch == null)
             {
                 foreach (var mg in messageGroups)
@@ -87,36 +91,51 @@ namespace MessageList.Controllers
             bool authUserIdResult = Int32.TryParse(mes.AuthUserId, out reqAuthUserId);
             bool messageGroupIdResult = Int32.TryParse(mes.MessageGroupId, out reqMessageGroupId);
             bool isMessageWithFiles = FileService.isMessageWithFiles(mes);
+            bool isMessageWithUrlPreviews = FileService.isMessageWithUrlPreviews(mes);
 
             int res = 0;
             ResultInfo result = new ResultInfo();
+            Message message = new Message();
+            message.MessageGroupId = reqMessageGroupId;
 
-            if (authUserIdResult && messageGroupIdResult && !isMessageWithFiles)
+            if (String.IsNullOrEmpty(mes.Text) && !isMessageWithFiles && !isMessageWithUrlPreviews)
             {
-                if (!String.IsNullOrEmpty(mes.Text))
-                {
-                    Message message = new Message(text: mes.Text, messageGroupId: reqMessageGroupId);
-                    await _db.Messages.AddAsync(message);
-                    res = await _db.SaveChangesAsync();
-                }
-                else
-                {
-                    result = new ResultInfo(status: "MessageCreationFailed", info: "Отсутствует текст сообщения");
-                }
-
+                result = new ResultInfo(status: "MessageCreationFailed", info: "Отсутствуют данные для создания сообщения");
             }
-            else if (authUserIdResult && messageGroupIdResult && isMessageWithFiles)
+            else 
             {
-                Message message = new Message(text: mes.Text ?? String.Empty, messageGroupId: reqMessageGroupId);
-                List<ImageFile> images = mes.Images?.Select(i => new ImageFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
-                List<VideoFile> video = mes.Video?.Select(i => new VideoFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
-                List<AudioFile> audio = mes.Audio?.Select(i => new AudioFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
-                List<OtherFile> files = mes.Files?.Select(i => new OtherFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
-                message.FileCollection = new FileCollection(images, video, audio, files);
+                if (authUserIdResult && messageGroupIdResult && !String.IsNullOrEmpty(mes.Text))
+                {
+                    message.Text = mes.Text;
+                }
+                if (authUserIdResult && messageGroupIdResult && isMessageWithFiles)
+                {
+                    List<ImageFile> images = mes.Images?.Select(i => new ImageFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
+                    List<VideoFile> video = mes.Video?.Select(i => new VideoFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
+                    List<AudioFile> audio = mes.Audio?.Select(i => new AudioFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
+                    List<OtherFile> files = mes.Files?.Select(i => new OtherFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
+                    message.FileCollection = new FileCollection(images, video, audio, files);
+                }
+                if (authUserIdResult && messageGroupIdResult && isMessageWithUrlPreviews)
+                {
+                    foreach (var jStr in mes.UrlPreviews)
+                    {
+                        JObject jObj = JObject.Parse(jStr);
+                        if (jObj != null && jObj.HasValues)
+                        {
+                            string title = jObj.Property("title").Value.ToString();
+                            string description = jObj.Property("description").Value.ToString();
+                            string image = jObj.Property("image").Value.ToString();
+                            string url = jObj.Property("url").Value.ToString();
+                            UrlPreview preview = new UrlPreview(title, description, image, url);
+                            message.UrlPreviews.Add(preview);
+                        }
+                    }
+                }
                 await _db.Messages.AddAsync(message);
                 res = await _db.SaveChangesAsync();
             }
-            result = ResultInfo.CreateResultInfo(res, "MessageCreated", "Сообщение успешно сохранено", "MessageCreationFailed", "Произошла ошибка при создании сообщения");
+                            result = ResultInfo.CreateResultInfo(res, "MessageCreated", "Сообщение успешно сохранено", "MessageCreationFailed", "Произошла ошибка при создании сообщения");
             return Json(result);
         }
 

@@ -24,7 +24,7 @@ export class FileService {
     params.selectedMessageId ? fd.append('selectedMessageId', params.selectedMessageId.toString()) : fd.append('selectedMessageId', null);
 
     previews.forEach((value) => {
-      fd.append('previews', JSON.stringify(value));
+      fd.append('urlPreviews', JSON.stringify(value));
     });
 
     if (fileCollection.images.length) {

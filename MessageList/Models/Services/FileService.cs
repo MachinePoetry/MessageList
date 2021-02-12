@@ -37,5 +37,10 @@ namespace MessageList.Models.Services
         {
             return (mes.Images?.Count() > 0 || mes.Video?.Count() > 0 || mes.Audio?.Count() > 0 || mes.Files?.Count() > 0);
         }
+
+        public static bool isMessageWithUrlPreviews(QueryMessage mes)
+        {
+            return mes.UrlPreviews.Count > 0;
+        }
     }
 }

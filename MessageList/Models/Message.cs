@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -17,6 +18,7 @@ namespace MessageList.Models
         [Required]
         public DateTime CreatedAt { get; set; }
         public FileCollection FileCollection { get; set; }
+        public List<UrlPreview> UrlPreviews { get; set; }
         [Column("related_message_group")]
         [Required]
         public int MessageGroupId { get; set; }
@@ -25,7 +27,9 @@ namespace MessageList.Models
 
 
         public Message() {
+            Text = String.Empty;
             FileCollection = new FileCollection();
+            UrlPreviews = new List<UrlPreview>();
         }
         public Message (string text, int messageGroupId)
         {
@@ -33,6 +37,7 @@ namespace MessageList.Models
             MessageGroupId = messageGroupId;
             CreatedAt = DateTime.Now;
             FileCollection = new FileCollection();
+            UrlPreviews = new List<UrlPreview>();
         }
     }
 }
