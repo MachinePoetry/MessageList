@@ -245,6 +245,12 @@
   border: none;
 }
 
+#attachFileButton {
+  outline: none;
+  border: none;
+  background-color: transparent;
+}
+
 #attachFileButton span:hover {
   cursor: pointer;
   color: #06bab2;

@@ -194,11 +194,13 @@
                   </div>
                 </div>
               </ng-template>
-              <div class="col-auto d-flex align-items-start p-0" id="attachFileButton" [ngbTooltip]="attachFiles" tooltipClass="attach-files" [autoClose]="false"
-                   triggers="manual" #t="ngbTooltip" (mouseenter)="t.open()" (mouseleave)="closeFileMenu(t)">
-                <span class="mdi mdi-paperclip mdi-36px mdi-rotate-45 lh-1 mt-3"></span>
+              <div class="col-1 d-flex justify-content-center align-items-start p-0 m-0">
+                <button id="attachFileButton" class="mt-3 ml-sm-2" [ngbTooltip]="attachFiles" tooltipClass="attach-files" [autoClose]="false" triggers="manual" #t="ngbTooltip"
+                        (mouseenter)="t.open()" (mouseleave)="closeFileMenu(t)">
+                  <span class="mdi mdi-paperclip mdi-36px mdi-rotate-45 lh-1 mt-3" id="attachFileButtonIcon"></span>
+                </button>
               </div>
-              <div class="col-8 col-sm-10 px-1 px-sm-2" id="enterMessageContainer">
+              <div class="col-9 col-sm-10 px-1 px-sm-2" id="enterMessageContainer">
                 <form #createNewMessageForm="ngForm" class="form-group" id="enterMessageForm" name="enterMessageForm" autocomplete="off" (ngSubmit)="createAndUpdateMessage(createNewMessageForm)">
                   <textarea #enterMessageField class="form-control mt-3" [ngClass]="{'submit-error': createNewMessageForm.submitted}"  name="enterMessage" rows="1"
                             id="enterMessageField" placeholder="Введите сообщение" (keydown.enter)="createAndUpdateMessage(createNewMessageForm);false" (ngModelChange)="setMessageCreationFormHeight()"
@@ -216,9 +218,11 @@
                   </div>
                 </div>
               </div>
-              <button type="submit" form="enterMessageForm" class="col-auto d-flex align-items-start p-0" id="sendMessageButton" [disabled]="isSubmitButtonDisabled">
-                <span class="mdi mdi-send-circle mdi-36px lh-1 mt-3" id="sendMessageButtonIcon"></span>
-              </button>
+              <div class="col-1 d-flex justify-content-center align-items-start p-0 m-0">
+                <button type="submit" form="enterMessageForm" class="mt-3 mr-sm-2" id="sendMessageButton" [disabled]="isSubmitButtonDisabled">
+                  <span class="mdi mdi-send-circle mdi-36px lh-1 mt-3" id="sendMessageButtonIcon"></span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
