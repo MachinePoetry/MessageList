@@ -1,5 +1,5 @@
-<div #linkPreviewContainer class="w-100 my-0" id="linkPreviewContainer" [style.display]="previews.length ? 'flex' : 'none'" [ngClass]="{'flex-wrap': mode === 'preview', 'mb-3': previews.length}">
-  <div #linkPreviewBlock *ngFor="let linkPreviewResponse of previews" class="round-borders mt-2 mr-2" [ngClass]="mode === 'preview' ? 'w-100' : 'w-49'">
+<div #linkPreviewContainer class="w-100 my-0" id="linkPreviewContainer" [style.display]="previews.length ? 'flex' : 'none'" [ngClass]="{'flex-wrap mb-3': previews.length}">
+  <div #linkPreviewBlock *ngFor="let linkPreviewResponse of previews" class="round-borders mt-0 mr-2" [ngClass]="mode === 'preview' ? 'w-100' : 'w-45'">
     <div class="w-100 d-flex justify-content-between" id="deleteLinkPreviewBlock">
       <a [href]="linkPreviewResponse.url | safeUrl" id="linkPreviewUrl"><span class="ml-2 mb-2" [ngClass]="mode === 'preview' ? 'text-light' : 'dark-color-text'"> Ссылка </span></a>
       <span *ngIf="mode === 'preview'" class="mdi mdi-close-outline text-light mr-2 mb-2" id="closeButton" (click)="banUrlForPreview(linkPreviewResponse.url)"></span>
