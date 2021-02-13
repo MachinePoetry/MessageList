@@ -28,6 +28,9 @@ export class TextService {
   }
 
   private _cleanUrl(url: string): string {
+    if (!url.endsWith('/')) {
+      url += '/';
+    }
     return url.replace(/https?\:(\\\\|\/\/)(www.)?/i, '');
   }
 
@@ -35,8 +38,11 @@ export class TextService {
     for (let response of responces) {
       let moddedUrl = this._cleanUrl(url);
       let moddedResponseUrl = this._cleanUrl(response.url);
-      if (url.indexOf(response.url) !== -1 || response.url.indexOf(url) !== -1 || url === response.url || moddedUrl === moddedResponseUrl ||
-        moddedUrl.indexOf(moddedResponseUrl) !== -1 || moddedResponseUrl.indexOf(moddedUrl) !== -1) {
+      let responseUrlObj = new URL(response.url);
+      if (responseUrlObj.pathname.length > 1 && (url.indexOf(response.url) !== -1 || response.url.indexOf(url) !== -1 || url === response.url || moddedUrl === moddedResponseUrl ||
+        moddedUrl.indexOf(moddedResponseUrl) !== -1 || moddedResponseUrl.indexOf(moddedUrl) !== -1)) {
+        return true;
+      } else if (responseUrlObj.pathname === '/' && moddedUrl === moddedResponseUrl) {
         return true;
       }
     }
