@@ -70,7 +70,7 @@ export class TextService {
         },
         error => {
           let errorResponse: LinkPreviewResponse = new LinkPreviewResponse();
-          errorResponse.title = 'Произошла ошибка при получении данных от сервиса превью'; errorResponse.image = ''; errorResponse.url = url;
+          errorResponse.title = 'Произошла ошибка при получении данных от сервиса превью'; errorResponse.image = './../../../assets/img/error.jpg'; errorResponse.url = url;
           linkPreviewResponses.push(errorResponse);
         });
       }
