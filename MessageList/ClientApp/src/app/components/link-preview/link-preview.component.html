@@ -8,8 +8,8 @@
       <img class="img-fluid" id="imgLinkPreview" [src]="linkPreviewResponse.image | safeUrl" alt="{{linkPreviewResponse.title}}" />
     </div>
     <div class="w-100 py-2 px-2" id="descriptionLinkPreviewBlock">
-      <span class="dark-color-text" id="title">{{linkPreviewResponse.title}}</span> <br>
-      <span id="descriptionUrl">{{linkPreviewResponse.url}}</span>
+      <span class="dark-color-text text-wrap text-break" id="title">{{linkPreviewResponse.title}}</span> <br>
+      <span class="text-wrap text-break" id="descriptionUrl">{{linkPreviewResponse.url | cutLongString: 80:'  [ ... ]'}}</span>
     </div>
   </div>
 </div>
