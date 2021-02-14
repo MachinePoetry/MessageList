@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
+import { AppUrl } from './../../models/appUrl';
 import { TextService } from './text.service';
 import { HttpService } from './../http-service/http.service';
 import { LinkPreviewResponse } from './../../models/linkPreviewResponse';
@@ -16,7 +17,6 @@ describe('TextService', () => {
   receivedPreviewResponse.description = 'first link preview response of two';
   receivedPreviewResponse.image = 'some image url';
   receivedPreviewResponse.url = 'https://www.anotheresponseurl.com';
-  const noPreviewUrls: string[] = ['https://www.receivedPreviewResponse.com', 'https://www.anotherbannedurl.com'];
   // simple creation of Observable object https://angular.io/guide/observables
   const fakeHttpService = { get: () => of(returnedPreviewResponse) };
 
@@ -25,7 +25,6 @@ describe('TextService', () => {
       providers: [TextService, { provide: HttpService, useValue: fakeHttpService}]
     });
     service = TestBed.get(TextService);
-
   });
 
   it('should create the Text service', () => {
@@ -47,15 +46,18 @@ describe('TextService', () => {
     expect(service.getUrlsFromText(text).length).toBe(0);
   });
 
-  it('should return correct array of preview responses if no one of urls have preview already and no urls are banned to make their preview', () => {
-    expect(service.getPreviewsForUrls(['https://www.testUrl.ru'], [], noPreviewUrls)[0]).toEqual(returnedPreviewResponse);
+  it('should return correct array of preview responses if no one of urls have preview already', () => {
+    let appUrl: AppUrl = new AppUrl('https://someurl.com');
+    let appUrls: AppUrl[] = [appUrl];
+    let responses: LinkPreviewResponse[] = [];
+    expect(service.getPreviewsForUrls(appUrls, responses).length).toBe(1);
   });
 
   it('should return correct array of preview responses if one of urls have preview already', () => {
-    expect(service.getPreviewsForUrls(['https://www.anotheresponseurl.com'], [receivedPreviewResponse], noPreviewUrls).length).toBe(1); // returns given responses without new
-  });
-
-  it('should return correct array of preview responses if one of urls should not have preview (exist in noPreviewUrls array)', () => {
-    expect(service.getPreviewsForUrls(['https://www.anotherbannedurl.com'], [], noPreviewUrls).length).toBe(0);
+    let appUrl: AppUrl = new AppUrl('https://www.someresponseurl.com');
+    appUrl.hasPreview = true;
+    let appUrls: AppUrl[] = [appUrl];
+    let responses: LinkPreviewResponse[] = [returnedPreviewResponse];
+    expect(service.getPreviewsForUrls(appUrls, responses).length).toBe(1);
   });
 })

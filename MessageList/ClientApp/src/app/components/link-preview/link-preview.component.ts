@@ -12,23 +12,17 @@ export class LinkPreviewComponent implements AfterViewInit {
   @Input() public previews: LinkPreviewResponse[] = [];
   @Input() public mode: string;
   @Output() public changePreviewsEvent = new EventEmitter<LinkPreviewResponse[]>();
-  @Output() public setNoPreviewUrlsEvent = new EventEmitter<string[]>();
 
   @ViewChild('linkPreviewContainer') linkPreviewContainer: ElementRef;
   @ViewChildren('linkPreviewBlock') linkPreviewBlocks: QueryList<ElementRef>;
-
-  private _noPreviewUrls: string[] = []
 
   public redirectByLink(url: string): void {
     window.open(url, "_blank");
   }
 
   public banUrlForPreview(url: string) {
-    this._noPreviewUrls.push(url);
-    this.setNoPreviewUrlsEvent.emit(this._noPreviewUrls);
     for (let response of this.previews) {
       if (url === response.url) {
-        response.bannedForPreview = true;
         this.previews.splice(this.previews.indexOf(response), 1);
       }
     }

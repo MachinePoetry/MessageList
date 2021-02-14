@@ -20,6 +20,7 @@ import { SpinnerMode } from './../../shared/models/componentModes/spinnerMode';
 import { FilePreviewMode } from './../../shared/models/componentModes/filePreviewMode';
 import { LinkPreviewResponse } from './../../shared/models/linkPreviewResponse';
 import { LinkPreviewMode } from './../../shared/models/componentModes/linkPreviewMode';
+import { AppUrl } from './../../shared/models/appUrl';
 import { FileCollection } from './../../shared/models/fileCollection';
 import { SearchParams } from './../../shared/models/params/searchParams';
 import { MessageGroupCreateParams } from './../../shared/models/params/messageGroupCreateParams';
@@ -63,7 +64,6 @@ export class MainComponent implements OnInit, AfterViewInit {
   private _previousMessageBlockHeight: number | null = null;
   public searchDate: NgbDateStruct;
   public newMessage = { text: '', messagePreviews: [], fileCollection: { images: [], video: [], audio: [], files: [] } };
-  public noPreviewUrls: string[] = [];
   public filesDefaultState: FileCollection = new FileCollection();
   private _messagesToLoadCounter: number = 30;
   private _freezeScrollBar = false;
@@ -153,7 +153,6 @@ export class MainComponent implements OnInit, AfterViewInit {
       let tempMessageText = this.newMessage.text; // clear preview related code immideatly to prevent url previews creating again while they are being sent to server already
       form.resetForm();
       this.newMessage.text = '';
-      this.noPreviewUrls = [];
 
       this._toggleInlineSpinner(true);
       this.newMessage.fileCollection = this._fileService.convertAppFileCollectionToFileCollection(this.newMessage.fileCollection);
@@ -451,10 +450,12 @@ export class MainComponent implements OnInit, AfterViewInit {
     }
 
     let urls: string[] = [];
+    let appUrls: AppUrl[] = [];
 
     let timer = setInterval(() => {
       urls = this._textService.getUrlsFromText(this.newMessage.text).filter((value, index, thisArr) => thisArr.indexOf(value) === index);
-      this.newMessage.messagePreviews = this._textService.getPreviewsForUrls(urls, this.newMessage.messagePreviews, this.noPreviewUrls);
+      appUrls = this._textService.convertUrlsToAppUrls(urls, appUrls);
+      this.newMessage.messagePreviews = this._textService.getPreviewsForUrls(appUrls, this.newMessage.messagePreviews);
     }, 2500);
   }
 }

@@ -3,5 +3,4 @@ export class LinkPreviewResponse {
   public description: string = '';
   public image: string = '';
   public url: string = '';
-  public bannedForPreview: boolean = false;
 }

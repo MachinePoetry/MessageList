@@ -208,8 +208,7 @@
                   </textarea>
                 </form>
                 <div class="w-100">
-                  <link-preview [previews]="newMessage.messagePreviews" (changePreviewsEvent)="changePreviews($event)" (setNoPreviewUrlsEvent)="noPreviewUrls = $event"
-                                [mode]="linkPreviewMode.preview"></link-preview>
+                  <link-preview [previews]="newMessage.messagePreviews" (changePreviewsEvent)="changePreviews($event)" [mode]="linkPreviewMode.preview"></link-preview>
                   <app-file-preview [fileCollection]="newMessage.fileCollection" (changeFilesEvent)="setChangedFilesCollection($event)"
                                     [mode]="filePreviewMode.preview">
                   </app-file-preview>

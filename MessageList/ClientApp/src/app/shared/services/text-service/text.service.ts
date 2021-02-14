@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LinkPreviewResponse } from './../../models/linkPreviewResponse';
 import { HttpService } from './../../services/http-service/http.service';
+import { AppUrl } from './../../models/appUrl';
 
 @Injectable()
 
@@ -20,57 +21,48 @@ export class TextService {
                                 '<li class="ml-1 mt-1"><b>ВАЖНО!!</b> При удалении всех групп сохранять информацию будет некуда, так что как минимум одна группа все-равно необходима. </li>';
 
   public getUrlsFromText(text: string): string[] {
-    let matches = [];
+    let matches: string[] = [];
     if (text.length) {
       matches = text.match(/(https?: \/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/g);
     }
     return matches ? matches : [];
   }
 
-  private _cleanUrl(url: string): string {
-    if (!url.endsWith('/')) {
-      url += '/';
-    }
-    return url.replace(/https?\:(\\\\|\/\/)(www.)?/i, '');
-  }
-
-  private _checkUrlForPreviewNecessity(url: string, urlsToCheckWith: LinkPreviewResponse[] | string[]): boolean {
-    for (let u of urlsToCheckWith) {
-      let urlToCheckWith = typeof u === 'string' ? u : u.url;
-      let moddedUrl = this._cleanUrl(url);
-      let moddedCheckUrl = this._cleanUrl(urlToCheckWith);
-      let urlObj;
-      try {
-        urlObj = new URL(url);
-      } catch (e) {
-        urlObj = new URL('https://error.com');
-        console.log(e.message);
-      }
-      let responseUrlObj = new URL(urlToCheckWith);
-      if (urlObj.pathname === '/' && moddedUrl === moddedCheckUrl) {
-        return true;
-      } else if (urlObj.pathname.length > 1 && responseUrlObj.pathname.length > 1 && (url.indexOf(urlToCheckWith) !== -1 || urlToCheckWith.indexOf(url) !== -1 || url === urlToCheckWith || moddedUrl === moddedCheckUrl ||
-        moddedUrl.indexOf(moddedCheckUrl) !== -1 || moddedCheckUrl.indexOf(moddedUrl) !== -1)) {
+  private _isUrlWithPreview(url: string, appUrls: AppUrl[]): boolean {
+    for (let appUrl of appUrls) {
+      if (appUrl.url === url) {
         return true;
       }
     }
     return false;
   }
 
-  public getPreviewsForUrls(urls: string[], linkPreviewResponses: LinkPreviewResponse[], noPreviewUrls: string[]): LinkPreviewResponse[] {
+  public convertUrlsToAppUrls(urls: string[], appUrls: AppUrl[]): AppUrl[] {
+    for (let url of urls) {
+      if (!this._isUrlWithPreview(url, appUrls)) {
+        appUrls.push(new AppUrl(url));
+      }
+    }
+    return appUrls;
+  }
+
+  public getPreviewsForUrls(urls: AppUrl[], linkPreviewResponses: LinkPreviewResponse[]): LinkPreviewResponse[] {
     document.body.style.cursor = 'progress';
     for (let url of urls) {
-      if (!this._checkUrlForPreviewNecessity(url, linkPreviewResponses) && !this._checkUrlForPreviewNecessity(url, noPreviewUrls)) {
-        this._httpService.get('https://api.linkpreview.net/?key=c5ba21883df06561e001eeada6f88a19&q=' + url).subscribe((data: LinkPreviewResponse) => {
+      if (!url.hasPreview) {
+        this._httpService.get('https://api.linkpreview.net/?key=c5ba21883df06561e001eeada6f88a19&q=' + url.url).subscribe((data: LinkPreviewResponse) => {
           let previewResponse: LinkPreviewResponse = data;
           if (previewResponse && previewResponse.title && previewResponse.url) {
-            previewResponse.bannedForPreview = false;
+            url.hasPreview = true;
             linkPreviewResponses.push(previewResponse);
           }
         },
         error => {
+          url.hasPreview = true;
           let errorResponse: LinkPreviewResponse = new LinkPreviewResponse();
-          errorResponse.title = 'Произошла ошибка при получении данных от сервиса превью'; errorResponse.image = './../../../assets/img/error.jpg'; errorResponse.url = url;
+          errorResponse.title = 'Произошла ошибка при получении данных от сервиса превью';
+          errorResponse.image = './../../../assets/img/error.jpg';
+          errorResponse.url = url.url;
           linkPreviewResponses.push(errorResponse);
         });
       }
