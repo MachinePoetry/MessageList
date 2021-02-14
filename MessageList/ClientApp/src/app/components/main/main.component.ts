@@ -257,7 +257,6 @@ export class MainComponent implements OnInit, AfterViewInit {
     modalRef.result.then((result) => {
       if (result instanceof Observable) {
         result.subscribe(data => {
-          this._toggleInlineSpinner(true);
           this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
             () => {
               if (url === 'api/messageGroup/delete' && this.selectedGroupId === entityId) {
@@ -279,7 +278,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       modalRef.componentInstance.modalWindowParams = new ConfirmModalParams(requesetMethod, header, body, this.authUserInfo, entityId, url,
         { authUserId: this.authUserInfo.id, selectedGroupId: entityId });
     }
-    modalRef.hidden.subscribe(() => this.enterMessageField.nativeElement.focus());
+    modalRef.hidden.subscribe(() => { this._toggleInlineSpinner(true), this.enterMessageField.nativeElement.focus() });
   }
 
   public attachFileModalOpen(modalType: string, header: string, entity: string): void {
