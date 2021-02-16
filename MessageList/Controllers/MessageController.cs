@@ -90,8 +90,8 @@ namespace MessageList.Controllers
             int reqAuthUserId, reqMessageGroupId;
             bool authUserIdResult = Int32.TryParse(mes.AuthUserId, out reqAuthUserId);
             bool messageGroupIdResult = Int32.TryParse(mes.MessageGroupId, out reqMessageGroupId);
-            bool isMessageWithFiles = FileService.isMessageWithFiles(mes);
-            bool isMessageWithUrlPreviews = FileService.isMessageWithUrlPreviews(mes);
+            bool isMessageWithFiles = FileHelper.isMessageWithFiles(mes);
+            bool isMessageWithUrlPreviews = FileHelper.isMessageWithUrlPreviews(mes);
 
             int res = 0;
             ResultInfo result = new ResultInfo();
@@ -110,10 +110,10 @@ namespace MessageList.Controllers
                 }
                 if (authUserIdResult && messageGroupIdResult && isMessageWithFiles)
                 {
-                    List<ImageFile> images = mes.Images?.Select(i => new ImageFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
-                    List<VideoFile> video = mes.Video?.Select(i => new VideoFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
-                    List<AudioFile> audio = mes.Audio?.Select(i => new AudioFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
-                    List<OtherFile> files = mes.Files?.Select(i => new OtherFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
+                    List<ImageFile> images = mes.Images?.Select(i => new ImageFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
+                    List<VideoFile> video = mes.Video?.Select(i => new VideoFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
+                    List<AudioFile> audio = mes.Audio?.Select(i => new AudioFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
+                    List<OtherFile> files = mes.Files?.Select(i => new OtherFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
                     message.FileCollection = new FileCollection(images, video, audio, files);
                 }
                 if (authUserIdResult && messageGroupIdResult && isMessageWithUrlPreviews)
@@ -154,10 +154,10 @@ namespace MessageList.Controllers
                 if (message != null)
                 {
                     message.Text = mes.Text;
-                    message.FileCollection.Images = mes.Images?.Select(i => new ImageFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
-                    message.FileCollection.Video = mes.Video?.Select(i => new VideoFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
-                    message.FileCollection.Audio = mes.Audio?.Select(i => new AudioFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
-                    message.FileCollection.Files = mes.Files?.Select(i => new OtherFile(i.ContentType, i.FileName, i.Length, FileService.getFileData(i))).ToList();
+                    message.FileCollection.Images = mes.Images?.Select(i => new ImageFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
+                    message.FileCollection.Video = mes.Video?.Select(i => new VideoFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
+                    message.FileCollection.Audio = mes.Audio?.Select(i => new AudioFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
+                    message.FileCollection.Files = mes.Files?.Select(i => new OtherFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
                     _db.Messages.Update(message);
                     res = await _db.SaveChangesAsync();
                 }

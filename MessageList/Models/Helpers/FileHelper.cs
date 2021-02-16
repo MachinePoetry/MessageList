@@ -10,7 +10,7 @@ using MessageList.Models.QueryModels;
 
 namespace MessageList.Models.Services
 {
-    public static class FileService
+    public static class FileHelper
     {
         public static byte[] getFileData(IFormFile file)
         {
