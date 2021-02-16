@@ -5,21 +5,28 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 
 export class SecondsToTimePipe implements PipeTransform {
-  public transform(value: number) {
-    if (typeof value !== 'number') {
-      throw new Error('SecondsToTime can only be used with number');
-    }
+  public transform(milliSeconds: number, mode: string) {
     let result: string = '';
-    let secondsAmount = Math.trunc(value);
-    let currentHour = Math.trunc(secondsAmount / 3600);
-    let currentMinute = Math.trunc(secondsAmount / 60) < 60 ? Math.trunc(secondsAmount / 60) : Math.trunc(secondsAmount / 60) - 60;
-    let currentSecond = secondsAmount < 60 ? secondsAmount : secondsAmount % 60;
+    let unitOfMeasure: number = (mode === 'audioPlayer' ? 1 : 1000);
+    let days = Math.floor(milliSeconds / (86400 * unitOfMeasure));
+    milliSeconds -= days * (86400 * unitOfMeasure);
+    let hours = Math.floor(milliSeconds / (60 * 60 * unitOfMeasure));
+    milliSeconds -= hours * (60 * 60 * unitOfMeasure);
+    let minutes = Math.floor(milliSeconds / (60 * unitOfMeasure));
+    milliSeconds -= minutes * (60 * unitOfMeasure);
+    let seconds = Math.floor(milliSeconds / unitOfMeasure);
 
-    if (currentHour > 0) {
-      // result string has format "00:00:00", so here are two types of ":"  1) a part of a string  2) a part of ternary operator "? :"
-      result = `${currentHour < 10 ? `0${currentHour}` : currentMinute}:${currentMinute < 10 ? `0${currentMinute}` : currentMinute}:${currentSecond < 10 ? `0${currentSecond}` : currentSecond}`;
-    } else {
-      result = `${ currentMinute < 10 ? `0${currentMinute}` : currentMinute }:${ currentSecond < 10 ? `0${currentSecond}` : currentSecond }`;
+    if (mode === 'uptime') {
+      result = (days < 10 ? '0' + days : days) + "d:" + (hours < 10 ? '0' + hours : hours) + "h:" + (minutes < 10 ? '0' + minutes : minutes) +
+        "m:" + (seconds < 10 ? '0' + seconds : seconds) + "sec";
+    }
+
+    if (mode === 'audioPlayer') {
+      if (hours > 0) {
+        result = (hours < 10 ? '0' + hours : hours) + ":" + (minutes < 10 ? '0' + minutes : minutes) + ":" + (seconds < 10 ? '0' + seconds : seconds);
+      } else {
+        result = (minutes < 10 ? '0' + minutes : minutes) + ":" + (seconds < 10 ? '0' + seconds : seconds);
+      }
     }
 
     return result;

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { User } from '../../shared/models/user';
+import { HttpService } from '../../shared/services/http-service/http.service';
 
 @Component({
   selector: 'app-profile',
@@ -9,15 +10,20 @@ import { User } from '../../shared/models/user';
 })
 
 export class ProfileComponent implements OnInit {
-  constructor(private _route: ActivatedRoute) { }
+  constructor(private _httpService: HttpService, private _route: ActivatedRoute) { }
 
-  public authUserInfo: User; 
-
-  parseDateToRussianLocale(date: string): string {
-    return new Date(date).toLocaleString("ru");
-  }
+  public authUserInfo: User = new User;
+  public uptime: number = 0;
 
   ngOnInit() {
     this.authUserInfo = this._route.snapshot.data['user'];
+  }
+  ngAfterViewInit() {
+    this._httpService.get('/api/application/getUptime').subscribe((data: number) => {
+      this.uptime = data;
+      setInterval(() => {
+        this.uptime += 1000;
+      }, 1000);
+    })
   }
 }

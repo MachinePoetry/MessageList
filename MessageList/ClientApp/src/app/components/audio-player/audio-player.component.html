@@ -21,9 +21,9 @@
     <div class="h-75 w-100">
       <div class="w-100 d-flex justify-content-end align-items-center" id="currentTimeContainer" [style.height.%]="isControlsVisible ? 65 : 95">
         <span *ngIf="!isPlayStarted" class="current-time" [ngClass]="mode === 'preview' ? 'player-color-light' : 'dark-color-text'">
-          {{audio.duration ? (audio.duration | secondsToTime) : '00:00'}}
+          {{audio.duration ? (audio.duration | secondsToTime: 'audioPlayer') : '00:00'}}
         </span>
-        <span *ngIf="isPlayStarted" class="current-time" [ngClass]="mode === 'preview' ? 'player-color-light' : 'dark-color-text'">{{audio.currentTime | secondsToTime}}</span>
+        <span *ngIf="isPlayStarted" class="current-time" [ngClass]="mode === 'preview' ? 'player-color-light' : 'dark-color-text'">{{audio.currentTime | secondsToTime: 'audioPlayer'}}</span>
       </div>
       <div *ngIf="isControlsVisible" class="w-100 h-25 d-flex align-items-start" id="volumeContainer">
         <input type="range" min="0" max="1" step="0.01" [(ngModel)]="volume" (input)="changeVolume(audio)" [ngClass]="mode === 'preview' ? 'light-mode' : 'dark-mode'">

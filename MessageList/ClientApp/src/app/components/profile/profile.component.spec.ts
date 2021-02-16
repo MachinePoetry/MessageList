@@ -1,6 +1,8 @@
 import { ProfileComponent } from './profile.component';
 import { HeaderComponent } from './../header/header.component';
 import { HttpService } from './../../shared/services/http-service/http.service';
+import { SecondsToTimePipe } from './../../shared/pipes/seconds-to-time/seconds-to-time.pipe';
+import { DateToLocalePipe } from './../../shared/pipes/date-to-locale/date-to-locale.pipe';
 import { User } from '../../shared/models/user';
 import { ActivatedRoute } from '@angular/router';
 import { of } from 'rxjs';
@@ -12,13 +14,13 @@ describe('ProfileComponent', () => {
   let fixture: ComponentFixture<ProfileComponent>;
   let mockActivatedRoute = { snapshot: { data: { user: { id: 1 } } } };
   let mockHttpService = {
-    get: jasmine.createSpy('get').and.returnValue(of('report created'))
+    get: jasmine.createSpy('get').and.returnValue(of(0))
   };
   let user: User = new User();
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      declarations: [ProfileComponent, HeaderComponent],
+      declarations: [ProfileComponent, HeaderComponent, DateToLocalePipe, SecondsToTimePipe],
       providers: [
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: HttpService, useValue: mockHttpService }

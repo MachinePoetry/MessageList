@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using MessageList.Data;
+using MessageList.Models.Services;
 
 namespace MessageList
 {
@@ -32,6 +33,7 @@ namespace MessageList
             {
                 options.UseNpgsql(Configuration["Data:MessageListDbConnection:ConnectionString"]);
             });
+            services.AddSingleton<UptimeService>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(); // TO DO: Change this. In broswer cookies are named .AspNetCore.Cookies
             services.ConfigureApplicationCookie(options =>
             {
