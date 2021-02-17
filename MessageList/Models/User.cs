@@ -27,18 +27,21 @@ namespace MessageList.Models
         public DateTime CreatedAt { get; set; }
         [Column("is_greeted")]
         public bool IsGreeted { get; set; }
+        [Column("messages_to_load_amount")]
+        public int MessagesToLoadAmount { get; set; } = 20;
         [Column("is_admin")]
         public bool IsAdmin { get; set; }
         public List<MessageGroup> MessageGroups { get; set; }
 
 
 
-        public User(string email, string password)
+        public User(string email, string password, int messagesToLoadAmount)
         {
             Email = email;
             Password = password;
             IsEmailConfirmed = false;
             CreatedAt = DateTime.Now;
+            MessagesToLoadAmount = messagesToLoadAmount;
             IsAdmin = false;
             MessageGroups = new List<MessageGroup>();
         }

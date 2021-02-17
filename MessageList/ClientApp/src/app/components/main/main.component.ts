@@ -314,7 +314,7 @@ export class MainComponent implements OnInit, AfterViewInit {
 
   private _refreshGroupsAndMessages(userMesagesParams: object, addActionsToPromise?: () => void): void {
     if (!userMesagesParams.hasOwnProperty('counter')) {
-      this._messagesToLoadCounter = 30;
+      this._messagesToLoadCounter = this.authUserInfo.messagesToLoadAmount;
     }
     this._httpService.get('api/messages/getGroupesAndMessages', userMesagesParams).subscribe((data: MessageGroup[]) => {
       this.authUserMessageGroups = data;
@@ -335,7 +335,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       this._isMessagesIterable = false;
       if (messagesInBlockAmount === this._messagesToLoadCounter) {
         this.isNewMessagesUploading = true;
-        this._messagesToLoadCounter += 30;
+        this._messagesToLoadCounter += this.authUserInfo.messagesToLoadAmount;
         this._freezeScrollBar = true;
         this._refreshGroupsAndMessages({ id: this.authUserInfo.id, counter: this._messagesToLoadCounter, groupId: this.selectedGroupId }, () => { this.isNewMessagesUploading = false });
       }
@@ -361,7 +361,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   public changeMessageGroup(): void {
     this.stopSearchMessages();
     this._isMessagesIterable = true;
-    this._messagesToLoadCounter = 30;
+    this._messagesToLoadCounter = this.authUserInfo.messagesToLoadAmount;
   }
 
   public hideGroupCreationForm(): void {
@@ -412,6 +412,7 @@ export class MainComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.authUserInfo = this._route.snapshot.data['user'];
+    this._messagesToLoadCounter = this.authUserInfo.messagesToLoadAmount;
 
     if (this.authUserInfo != null) {
       this._refreshGroupsAndMessages({ id: this.authUserInfo.id },

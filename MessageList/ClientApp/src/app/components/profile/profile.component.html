@@ -12,37 +12,61 @@
 
 <app-header [authUserInfo]="authUserInfo"></app-header>
 
+<app-toasts class="toasts-container"></app-toasts>
+
 <div class="container-fliud">
   <div class="container profile-container">
     <div class="row mt-5">
       <div class="col-12 col-lg-10 offset-lg-1 profile-panel round-border-top">
         <h1 class="text-center">Профиль</h1>
       </div>
-      <div class="col-lg-10 offset-lg-1 profile-content">
+      <div class="col-12 col-lg-10 offset-lg-1 profile-content">
         <div class="row align-items-center">
-          <div class="col-4 offset-1 offset-sm-0"><p class="mt-4 ml-sm-5"> Аптайм сервера: </p></div>
-          <div class="col-6 col-md-3"><p class="mt-4 text-success" id="serverUptime"> {{uptime | secondsToTime: 'uptime' || 'Загрузка...'}} </p></div>
+          <div class="col-5 col-sm-7"><p class="mt-5 ml-sm-2 ml-md-5" id="serverUptimeLabel"> Аптайм сервера: </p></div>
+          <div class="col-7 col-sm-5"><p class="mt-5 text-success" id="serverUptime"> {{uptime | secondsToTime: 'uptime' || 'Загрузка...'}} </p></div>
         </div>
         <div class="row align-items-center">
-          <div class="col-11 offset-1 offset-sm-0">
-            <h4 class="mt-3 ml-sm-5">Личные данные:</h4>
+          <div class="col-5 col-sm-7">
+            <h4 class="mt-3 ml-sm-2 ml-md-5">Личные данные:</h4>
           </div>
         </div>
-      </div>
-      <div class="col-lg-10 offset-lg-1 profile-content">
         <div class="row align-items-center">
-          <div class="col-4 offset-1 offset-sm-0">
-            <p class="mt-3 ml-sm-5">
-              Email: <i class="mdi mdi-lg mdi-help-circle-outline" placement="top"
-                        ngbTooltip="Поле, отображающее подтверждена ли почта.&#10;Пока не реализовано."></i>
+          <div class="col-5 col-sm-7"><p class="mt-3 ml-sm-2 ml-md-5" id="authUserEmailLabel"> Email: </p></div>
+          <div class="col-7 col-sm-5"><p class="mt-3 text-danger text-break" id="authUserEmail"> {{authUserInfo?.email || 'Загрузка...'}} </p> </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-5 col-sm-7"><p class="mt-3 ml-sm-2 ml-md-5" id="userCreatedAtLabel"> Дата регистрации: </p></div>
+          <div class="col-7 col-sm-5"><p class="mt-3 text-success" id="userCreatedAt"> {{authUserInfo?.createdAt | dateToLocale: 'ru' || 'Загрузка...'}} </p></div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-5 col-sm-7">
+            <p class="mt-2 ml-sm-2 ml-md-5" id="loadedMessagesAmountLabel"> Количество единовременно загружаемых сообщений: </p>
+          </div>
+          <div class="col-7 col-sm-5"><p class="mt-3 text-success"> {{(authUserInfo?.messagesToLoadAmount === 0 ? 'Все' : authUserInfo?.messagesToLoadAmount) || 'Загрузка...'}} </p></div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-5 col-sm-7">
+            <p class="mt-2 ml-sm-2 ml-md-5" id="changeLoadedMessagesAmountLabel"> Изменить количество единовременно загружаемых сообщений
+              <i class="mdi mdi-lg mdi-help-circle-outline" placement="top" ngbTooltip="Укажите новое количество единовременно загружаемых сообщений.&#10;Минимум 20, максимум 10000">
+              </i> :
             </p>
           </div>
-          <div class="col-6 col-md-3"><p class="mt-3 text-danger text-break" id="authUserEmail"> {{authUserInfo?.email || 'Загрузка...'}} </p> </div>
-          <div class="col-10 offset-1 col-sm-6 offset-sm-3 col-md-3 offset-md-0 mt-3 mt-md-0"><button class="btn btn-success w-100" type="button"> Подтвердить </button></div>
-        </div>
-        <div class="row align-items-center mb-5">
-          <div class="col-4 offset-1 offset-sm-0"><p class="mt-3 ml-sm-5"> Дата регистрации: </p></div>
-          <div class="col-6 col-md-3"><p class="mt-3 text-success" id="userCreatedAt"> {{authUserInfo?.createdAt | dateToLocale: 'ru' || 'Загрузка...'}} </p></div>
+          <div class="col-7 col-sm-5">
+            <div class="d-flex align-items-center w-100">
+              <form #messagesToLoadForm="ngForm" id="messagesToLoadForm" (ngSubmit)="onSubmit(messagesToLoadForm)" novalidate>
+                <input type="number" #messagesToLoad="ngModel" class="form-control" id="messagesToLoadCount" name="messagesToLoadCount"
+                       [ngClass]="{'submit-error': messagesToLoadForm.submitted && !messagesToLoadForm.control.disabled && (messagesToLoadAmount < 20 || messagesToLoadAmount > 10000)}"
+                       [(ngModel)]="messagesToLoadAmount" required min="20" max="10000" [disabled]="loadAllMessages">
+              </form>
+              <button type="submit" class="btn dark-login-button ml-2 ml-sm-3" form="messagesToLoadForm" id="messagesToLoadFormButton">
+                <span class="dark-color-text"> Сохранить </span>
+              </button>
+            </div>
+            <div class="d-flex align-items-center w-90 ml-4">
+              <input type="checkbox" class="form-check-input mt-1" name="loadAllMessages" [(ngModel)]="loadAllMessages">
+              <span class="lh-1 mt-1 mt-sm-0" (click)="loadAllMessages = !loadAllMessages" id="loadAllMessagesLabel"> Загружать все </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

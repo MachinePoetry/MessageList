@@ -1,7 +1,11 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { NgForm } from '@angular/forms';
 import { User } from '../../shared/models/user';
+import { ChangeMessagesToLoadParams } from './../../shared/models/params/ChangeMessagesToLoadParams';
 import { HttpService } from '../../shared/services/http-service/http.service';
+import { ToastService } from '../../shared/services/toast-service/toast.service';
+import { ResultInfo } from '../../shared/models/resultInfo';
 
 @Component({
   selector: 'app-profile',
@@ -9,14 +13,42 @@ import { HttpService } from '../../shared/services/http-service/http.service';
   styleUrls: ['./profile.component.css']
 })
 
-export class ProfileComponent implements OnInit {
-  constructor(private _httpService: HttpService, private _route: ActivatedRoute) { }
+export class ProfileComponent implements OnInit, AfterViewInit {
+  constructor(private _httpService: HttpService, private _toastService: ToastService, private _route: ActivatedRoute) { }
 
   public authUserInfo: User = new User;
+  public messagesToLoadAmount: number = 20;
+  public loadAllMessages: boolean = false;
   public uptime: number = 0;
+  private _report: ResultInfo = new ResultInfo();
+
+  public onSubmit(form: NgForm): void {
+    if (this.loadAllMessages) {
+      this.messagesToLoadAmount = 0;
+    }
+    if (this.messagesToLoadAmount != this.authUserInfo.messagesToLoadAmount && (this.loadAllMessages || (this.messagesToLoadAmount >= 20 && this.messagesToLoadAmount <= 10000))) {
+      let params: ChangeMessagesToLoadParams = new ChangeMessagesToLoadParams(this.authUserInfo.id, this.messagesToLoadAmount);
+      this._httpService.post('/api/users/setMessagesToLoadCounter', params).subscribe((data: ResultInfo) => {
+        this._report = data;
+        if (this._report.status === 'AmountOfLoadedMessagesChanged') {
+          this._toastService.showSuccess(this._report.info);
+          this._httpService.get('api/users/getAuthUserInfo').subscribe((data: User) => {
+            this.authUserInfo = data;
+            this.loadAllMessages = (this.authUserInfo.messagesToLoadAmount === 0);
+          });
+        } else {
+          this._toastService.showDanger(this._report.info);
+        }
+      },
+        error => this._toastService.showDanger(error.message)
+      )
+    }
+  }
 
   ngOnInit() {
     this.authUserInfo = this._route.snapshot.data['user'];
+    this.loadAllMessages = (this.authUserInfo.messagesToLoadAmount === 0);
+    this.messagesToLoadAmount = this.authUserInfo.messagesToLoadAmount;
   }
   ngAfterViewInit() {
     this._httpService.get('/api/application/getUptime').subscribe((data: number) => {

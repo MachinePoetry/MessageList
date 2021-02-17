@@ -13,12 +13,30 @@ p {
   background-color: white;
 }
 
+#messagesToLoadForm {
+  width: 90px;
+}
+
+#messagesToLoadCount::-webkit-outer-spin-button,
+#messagesToLoadCount::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+#messagesToLoadCount {
+  -moz-appearance: textfield;
+}
+
+#messagesToLoadCount.submit-error {
+  border: 2px solid #DC143C;
+}
 
 
 
 
 
-@media (max-width: 470px) {
+
+@media (max-width: 577px) {
 
   .profile-container h1 {
     font-size: 35px;
@@ -26,5 +44,22 @@ p {
 
   .profile-container p {
     font-size: 15px;
+  }
+}
+
+@media (min-width: 100px) and (max-width: 576px) {
+
+  #serverUptimeLabel,
+  #serverUptime,
+  #authUserEmailLabel,
+  #userCreatedAtLabel,
+  #loadedMessagesAmountLabel,
+  #changeLoadedMessagesAmountLabel,
+  #messagesToLoadFormButton {
+    font-size: 14px;
+  }
+
+  #loadAllMessagesLabel {
+    font-size: 11px;
   }
 }

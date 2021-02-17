@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using MessageList.Models;
 using MessageList.Models.Extensions;
+using MessageList.Models.QueryModels;
 using MessageList.Data;
 
 namespace MessageList.Controllers
@@ -45,6 +46,18 @@ namespace MessageList.Controllers
         {
             User user = await _db.Users.Where(u => u.Email.Equals(User.Identity.Name)).FirstOrDefaultAsync();
             return Json(user);
+        }
+
+        [HttpPost("setMessagesToLoadCounter")]
+        public async Task<JsonResult> SetMessagesToLoadCounterAsync([FromBody] QueryMessagesToLoadAmount mes)
+        {
+            User user = await _db.Users.Where(u => u.Id == mes.AuthUserId).FirstOrDefaultAsync();
+            user.MessagesToLoadAmount = mes.MessagesToLoadAmount;
+            int res = 0;
+            _db.Users.Update(user);
+            res = await _db.SaveChangesAsync();
+            ResultInfo result = ResultInfo.CreateResultInfo(res, "AmountOfLoadedMessagesChanged", "Данные успешно обновлены", "AmountOfLoadedMessagesFailed", "Произошла ошибка при обновлении даныых");
+            return Json(result);
         }
 
         [HttpPost("update")]
