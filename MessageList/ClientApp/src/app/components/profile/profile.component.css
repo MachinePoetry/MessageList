@@ -31,14 +31,6 @@ p {
   border: 2px solid #DC143C;
 }
 
-#oldPassword.ng-invalid.ng-dirty,
-#oldPassword.ng-invalid.submit-error,
-#newPassword.ng-invalid.ng-dirty,
-#newPassword.ng-invalid.submit-error,
-#confirmNewPassword.ng-invalid.submit-error {
-  border: 2px solid #DC143C;
-}
-
 
 
 
@@ -58,14 +50,15 @@ p {
 @media (min-width: 100px) and (max-width: 576px) {
 
   label,
-  .alert-text,
   #serverUptimeLabel,
   #serverUptime,
   #authUserEmailLabel,
   #userCreatedAtLabel,
   #loadedMessagesAmountLabel,
   #changeLoadedMessagesAmountLabel,
-  #messagesToLoadFormButton {
+  #changePasswordLabel,
+  #messagesToLoadFormButton,
+  button span {
     font-size: 14px;
   }
 

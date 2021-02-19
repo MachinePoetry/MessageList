@@ -6,7 +6,7 @@ import { ChangeMessagesToLoadParams } from './../../shared/models/params/ChangeM
 import { HttpService } from './../../shared/services/http-service/http.service';
 import { ToastService } from './../../shared/services/toast-service/toast.service';
 import { ResultInfo } from './../../shared/models/resultInfo';
-import { ChangePasswordParams } from './../../shared/models/params/changePasswordParams';
+import { ChangePasswordMode } from './../../shared/models/componentModes/changePasswordMode';
 
 @Component({
   selector: 'app-profile',
@@ -20,16 +20,11 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   public authUserInfo: User = new User;
   public messagesToLoadAmount: number = 20;
   public loadAllMessages: boolean = false;
-  public isPasswordChanging: boolean = false;
   public uptime: number = 0;
-  public changePasswordParams = {
-    oldPassword: '',
-    newPassword: '',
-    confirmNewPassword: ''
-  };
   private _report: ResultInfo = new ResultInfo();
+  public changePasswordMode = ChangePasswordMode;
 
-  public onMessagesToLoadFormSubmit(form: NgForm): void {
+  public onSubmit(form: NgForm): void {
     if (this.loadAllMessages) {
       this.messagesToLoadAmount = 0;
     }
@@ -52,19 +47,11 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     }
   }
 
-  public onChangePasswordFormSubmit(form: NgForm): void {
-    if (form.valid) {
-      let params = new ChangePasswordParams(this.authUserInfo.id, this.changePasswordParams.oldPassword, this.changePasswordParams.newPassword);
-      this._httpService.post('/api/users/changePassword', params).subscribe((data: ResultInfo) => {
-        this._report = data;
-        if (this._report.status === 'PasswordChanged') {
-          this._toastService.showSuccess(this._report.info);
-        } else {
-          this._toastService.showDanger(this._report.info);
-        }
-      },
-        error => this._toastService.showDanger(error.message)
-      )
+  public getChangedPasswordResult(result: ResultInfo): void {
+    if (result.status === 'PasswordChanged') {
+      this._toastService.showSuccess(result.info);
+    } else {
+      this._toastService.showDanger(result.info);
     }
   }
 

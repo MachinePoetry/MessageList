@@ -21,6 +21,7 @@ import { NotFoundComponent } from './components/not-found/not-found.component';
 import { MessageComponent } from './components/message/message.component';
 import { ToastsContainerComponent } from './components/toasts-container/toasts-container.component';
 import { AudioPlayerComponent } from './components/audio-player/audio-player.component';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
 
 import { HttpService } from './shared/services/http-service/http.service';
 import { TextService } from './shared/services/text-service/text.service';
@@ -58,7 +59,7 @@ const routes: Routes = [
   declarations: [
     AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, FilePreviewComponent, LinkPreviewComponent, NotFoundComponent,
     MessageComponent, ToastsContainerComponent, AudioPlayerComponent, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrlPipe, SecondsToTimePipe, BlobToSrcPipe,
-    CutLongStringPipe, TermsOfUseModal, ConfirmModal, WarningModal, AttachFileModal, AttachFileFromWebModal, RoundSpinner, InlineSpinner, LinkPreviewComponent
+    CutLongStringPipe, TermsOfUseModal, ConfirmModal, WarningModal, AttachFileModal, AttachFileFromWebModal, RoundSpinner, InlineSpinner, LinkPreviewComponent, ChangePasswordComponent
   ],
   imports: [
     BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, NgSelectModule, CommonModule, BrowserAnimationsModule
