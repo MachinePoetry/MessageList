@@ -60,6 +60,34 @@ namespace MessageList.Controllers
             return Json(result);
         }
 
+        [HttpPost("changePassword")]
+        public async Task<JsonResult> ChangePasswordAsync([FromBody] QueryChangePassword newPasswordInfo)
+        {
+            User user = await _db.Users.Where(u => u.Id == newPasswordInfo.AuthUserId).FirstOrDefaultAsync();
+            ResultInfo result = new ResultInfo();
+            int res = 0;
+            if (user == null)
+            {
+                result = new ResultInfo("UserNotFound", "Пользователь не найден");
+            }
+            else
+            {
+                if (!user.Password.Equals(newPasswordInfo.OldPassword.GetCustomAlgoHashCode(SHA256.Create())))
+                {
+                    result = new ResultInfo("OldPasswordMismatch", "Старый пароль указан неверно");
+                }
+                else
+                {
+                    user.Password = newPasswordInfo.NewPassword.GetCustomAlgoHashCode(SHA256.Create());
+                    _db.Users.Update(user);
+                    var us = user;
+                    res = await _db.SaveChangesAsync();
+                    result = ResultInfo.CreateResultInfo(res, "PasswordChanged", "Пароль обновлен", "PasswordChangeFailed", "Произошла ошибка при обновлении пароля");
+                }
+            } 
+            return Json(result);
+        }
+
         [HttpPost("update")]
         public async Task<JsonResult> UpdateUserAsync([FromBody] Account acc)
         {

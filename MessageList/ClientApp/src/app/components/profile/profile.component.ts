@@ -1,11 +1,12 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
-import { User } from '../../shared/models/user';
+import { User } from './../../shared/models/user';
 import { ChangeMessagesToLoadParams } from './../../shared/models/params/ChangeMessagesToLoadParams';
-import { HttpService } from '../../shared/services/http-service/http.service';
-import { ToastService } from '../../shared/services/toast-service/toast.service';
-import { ResultInfo } from '../../shared/models/resultInfo';
+import { HttpService } from './../../shared/services/http-service/http.service';
+import { ToastService } from './../../shared/services/toast-service/toast.service';
+import { ResultInfo } from './../../shared/models/resultInfo';
+import { ChangePasswordParams } from './../../shared/models/params/changePasswordParams';
 
 @Component({
   selector: 'app-profile',
@@ -19,10 +20,16 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   public authUserInfo: User = new User;
   public messagesToLoadAmount: number = 20;
   public loadAllMessages: boolean = false;
+  public isPasswordChanging: boolean = false;
   public uptime: number = 0;
+  public changePasswordParams = {
+    oldPassword: '',
+    newPassword: '',
+    confirmNewPassword: ''
+  };
   private _report: ResultInfo = new ResultInfo();
 
-  public onSubmit(form: NgForm): void {
+  public onMessagesToLoadFormSubmit(form: NgForm): void {
     if (this.loadAllMessages) {
       this.messagesToLoadAmount = 0;
     }
@@ -36,6 +43,22 @@ export class ProfileComponent implements OnInit, AfterViewInit {
             this.authUserInfo = data;
             this.loadAllMessages = (this.authUserInfo.messagesToLoadAmount === 0);
           });
+        } else {
+          this._toastService.showDanger(this._report.info);
+        }
+      },
+        error => this._toastService.showDanger(error.message)
+      )
+    }
+  }
+
+  public onChangePasswordFormSubmit(form: NgForm): void {
+    if (form.valid) {
+      let params = new ChangePasswordParams(this.authUserInfo.id, this.changePasswordParams.oldPassword, this.changePasswordParams.newPassword);
+      this._httpService.post('/api/users/changePassword', params).subscribe((data: ResultInfo) => {
+        this._report = data;
+        if (this._report.status === 'PasswordChanged') {
+          this._toastService.showSuccess(this._report.info);
         } else {
           this._toastService.showDanger(this._report.info);
         }
