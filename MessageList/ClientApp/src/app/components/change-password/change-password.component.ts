@@ -19,26 +19,29 @@ export class ChangePasswordComponent {
   @Output() processChangePasswordResult = new EventEmitter<ResultInfo>();
 
   public isPasswordChanging: boolean = false;
-  public changePasswordParams = new ChangePasswordParams();
+  public changePasswordParams: ChangePasswordParams = new ChangePasswordParams();
   public changePasswordMode = ChangePasswordMode;
   private _report: ResultInfo = new ResultInfo();
 
   public onSubmit(form: NgForm): void {
     let params = {};
     if (this.mode === this.changePasswordMode.profile) {
-      params = { authUserId: this.authUserInfo.id, oldPassword: this.changePasswordParams.oldPassword, newPassword: this.changePasswordParams.newPassword }
+      params = { authUserId: this.authUserInfo.id, oldPassword: this.changePasswordParams.oldPassword, newPassword: this.changePasswordParams.newPassword, mode: this.mode }
     } else if (this.mode === this.changePasswordMode.restore) {
-      params = { authUserId: this.authUserInfo.id, newPassword: this.changePasswordParams.newPassword }
+      params = { authUserId: this.authUserInfo.id, newPassword: this.changePasswordParams.newPassword, mode: this.mode }
     }
     if (form.valid) {
+      this.isPasswordChanging = true;
       this._httpService.post('/api/users/changePassword', params).subscribe((data: ResultInfo) => {
         this._report = data;
         this.processChangePasswordResult.emit(this._report);
+        this.isPasswordChanging = false;
       },
         error => {
           this._report.status = 'ChangePasswordFailed';
           this._report.info = error.message;
           this.processChangePasswordResult.emit(this._report);
+          this.isPasswordChanging = false;
         }
       )
     }
