@@ -27,7 +27,7 @@ export class FrontComponent implements OnInit {
   public authUserInfo: User;
 
   public onSubmit(form: NgForm): void {
-    if (form.valid && this._notOnlySpaceBar.test(this.params.reportText) && this._notOnlySpaceBar.test(this.params.reportContacts)) {
+    if (form.valid && this._notOnlySpaceBar.test(this.params.reportText) && (this.params.reportContacts.length ? this._notOnlySpaceBar.test(this.params.reportContacts) : true)) {
       this.isDisabled = true;
       this.isSpinnerShow = true;
       this._httpService.post('/api/bugReport/create', this.params).subscribe((data: ResultInfo) => {
@@ -38,7 +38,7 @@ export class FrontComponent implements OnInit {
       },
         error => this._toastService.showDanger(error.message)
       );
-      form.resetForm();
+      form.resetForm({reportText: '', reportContacts: ''});
     }
   }
 
