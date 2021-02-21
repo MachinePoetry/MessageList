@@ -13,7 +13,8 @@ p {
   background-color: white;
 }
 
-#messagesToLoadForm {
+#messagesToLoadForm,
+#changeKeyForm {
   width: 90px;
 }
 
@@ -27,7 +28,9 @@ p {
   -moz-appearance: textfield;
 }
 
-#messagesToLoadCount.submit-error {
+#messagesToLoadCount.submit-error,
+#changePasswordKey.ng-invalid.ng-dirty,
+#changePasswordKey.ng-invalid.submit-error {
   border: 2px solid #DC143C;
 }
 

@@ -60,7 +60,50 @@ namespace MessageList.Controllers
             return Json(result);
         }
 
+        [HttpPost("setChangePasswordKey")]
+        public async Task<JsonResult> SetChangePasswordKeyAsync([FromBody] QuerySetKey keyInfo)
+        {
+            User user = _db.Users.Find(keyInfo.AuthUserId);    // Method Find()
+            int res = 0;
+            ResultInfo result = new ResultInfo();
+            if (user != null)
+            {
+                user.Key = keyInfo.Key.GetCustomAlgoHashCode(SHA256.Create());
+                user.isChangePasswordKeySet = true;
+                _db.Users.Update(user);
+                res = await _db.SaveChangesAsync();
+                result = ResultInfo.CreateResultInfo(res, "KeySaved", "Ключ успешно сохранен", "KeyChangeFailed", "Произошла ошибка при сохранении ключа");
+            }
+            else 
+            {
+                result = new ResultInfo("UserNotFound", "Пользователь не найден");
+            }
+            return Json(result);
+        }
+
+        [HttpPost("validateChangePasswordKey")]
+        [AllowAnonymous]
+        public async Task<JsonResult> ValidateChangePasswordKeyAsync([FromBody] QueryValidateKey keyInfo)
+        {
+            User user = await _db.Users.Where(u => u.Email.Equals(keyInfo.Email)).FirstOrDefaultAsync();
+            ResultInfo result = new ResultInfo();
+            if (user != null && (String.IsNullOrEmpty(user.Key) || !user.Key.Equals(keyInfo.Key.GetCustomAlgoHashCode(SHA256.Create()))))
+            {
+                result = new ResultInfo("InvalidKey", "Неверный ключ восстановления пароля");
+            }
+            else if (user != null && user.Key.Equals(keyInfo.Key.GetCustomAlgoHashCode(SHA256.Create())))
+            {
+                return Json(user);
+            }
+            else 
+            {
+                result = new ResultInfo("UserNotFound", "Пользователь не найден");
+            }
+            return Json(result);
+        }
+
         [HttpPost("changePassword")]
+        [AllowAnonymous]
         public async Task<JsonResult> ChangePasswordAsync([FromBody] QueryChangePassword newPasswordInfo)
         {
             User user = await _db.Users.Where(u => u.Id == newPasswordInfo.AuthUserId).FirstOrDefaultAsync();
@@ -70,13 +113,24 @@ namespace MessageList.Controllers
             {
                 result = new ResultInfo("UserNotFound", "Пользователь не найден");
             }
-            else
+            else         
             {
-                if (!user.Password.Equals(newPasswordInfo.OldPassword.GetCustomAlgoHashCode(SHA256.Create())))
+                if (newPasswordInfo.Mode.Equals("profile") && !String.IsNullOrEmpty(newPasswordInfo.OldPassword) && !String.IsNullOrEmpty(newPasswordInfo.NewPassword))
                 {
-                    result = new ResultInfo("OldPasswordMismatch", "Старый пароль указан неверно");
+                    if (!user.Password.Equals(newPasswordInfo.OldPassword.GetCustomAlgoHashCode(SHA256.Create())))
+                    {
+                        result = new ResultInfo("OldPasswordMismatch", "Старый пароль указан неверно");
+                    }
+                    else
+                    {
+                        user.Password = newPasswordInfo.NewPassword.GetCustomAlgoHashCode(SHA256.Create());
+                        _db.Users.Update(user);
+                        var us = user;
+                        res = await _db.SaveChangesAsync();
+                        result = ResultInfo.CreateResultInfo(res, "PasswordChanged", "Пароль обновлен", "PasswordChangeFailed", "Произошла ошибка при обновлении пароля");
+                    }
                 }
-                else
+                else if (newPasswordInfo.Mode.Equals("restore") && !String.IsNullOrEmpty(newPasswordInfo.NewPassword))
                 {
                     user.Password = newPasswordInfo.NewPassword.GetCustomAlgoHashCode(SHA256.Create());
                     _db.Users.Update(user);
@@ -84,6 +138,7 @@ namespace MessageList.Controllers
                     res = await _db.SaveChangesAsync();
                     result = ResultInfo.CreateResultInfo(res, "PasswordChanged", "Пароль обновлен", "PasswordChangeFailed", "Произошла ошибка при обновлении пароля");
                 }
+
             } 
             return Json(result);
         }

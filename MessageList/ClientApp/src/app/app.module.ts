@@ -22,6 +22,7 @@ import { MessageComponent } from './components/message/message.component';
 import { ToastsContainerComponent } from './components/toasts-container/toasts-container.component';
 import { AudioPlayerComponent } from './components/audio-player/audio-player.component';
 import { ChangePasswordComponent } from './components/change-password/change-password.component';
+import { RestorePasswordComponent } from './components/restore-password/restore-password.component';
 
 import { HttpService } from './shared/services/http-service/http.service';
 import { TextService } from './shared/services/text-service/text.service';
@@ -52,6 +53,7 @@ const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'main', component: MainComponent, resolve: { user: AuthUserInfoResolver } },
   { path: 'profile', component: ProfileComponent, resolve: { user: AuthUserInfoResolver } },
+  { path: 'restore', component: RestorePasswordComponent },
   { path: '**', component: NotFoundComponent}
 ];
 
@@ -59,7 +61,8 @@ const routes: Routes = [
   declarations: [
     AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, FilePreviewComponent, LinkPreviewComponent, NotFoundComponent,
     MessageComponent, ToastsContainerComponent, AudioPlayerComponent, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrlPipe, SecondsToTimePipe, BlobToSrcPipe,
-    CutLongStringPipe, TermsOfUseModal, ConfirmModal, WarningModal, AttachFileModal, AttachFileFromWebModal, RoundSpinner, InlineSpinner, LinkPreviewComponent, ChangePasswordComponent
+    CutLongStringPipe, TermsOfUseModal, ConfirmModal, WarningModal, AttachFileModal, AttachFileFromWebModal, RoundSpinner, InlineSpinner, LinkPreviewComponent, ChangePasswordComponent,
+    RestorePasswordComponent
   ],
   imports: [
     BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, NgSelectModule, CommonModule, BrowserAnimationsModule

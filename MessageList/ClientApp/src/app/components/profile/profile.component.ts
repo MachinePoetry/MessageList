@@ -2,7 +2,8 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { User } from './../../shared/models/user';
-import { ChangeMessagesToLoadParams } from './../../shared/models/params/ChangeMessagesToLoadParams';
+import { ChangeMessagesToLoadParams } from './../../shared/models/params/changeMessagesToLoadParams';
+import { ChangePasswordKeyParams } from './../../shared/models/params/changePasswordKeyParams';
 import { HttpService } from './../../shared/services/http-service/http.service';
 import { ToastService } from './../../shared/services/toast-service/toast.service';
 import { ResultInfo } from './../../shared/models/resultInfo';
@@ -20,11 +21,24 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   public authUserInfo: User = new User;
   public messagesToLoadAmount: number = 20;
   public loadAllMessages: boolean = false;
+  public isKeyChanging: boolean = false;
+  public keyForPasswordChange: string = '';
   public uptime: number = 0;
   private _report: ResultInfo = new ResultInfo();
   public changePasswordMode = ChangePasswordMode;
 
-  public onSubmit(form: NgForm): void {
+  private _refreshAuthUserInfo(addActionsToPromise?: () => void): void {
+    this._httpService.get('api/users/getAuthUserInfo').subscribe((data: User) => {
+      this.authUserInfo = data;
+      if (addActionsToPromise) {
+        addActionsToPromise();
+      }
+    },
+      error => this._toastService.showDanger(error.message)
+    );
+  }
+
+  public onMessagesToLoadFormSubmit(form: NgForm): void {
     if (this.loadAllMessages) {
       this.messagesToLoadAmount = 0;
     }
@@ -34,16 +48,34 @@ export class ProfileComponent implements OnInit, AfterViewInit {
         this._report = data;
         if (this._report.status === 'AmountOfLoadedMessagesChanged') {
           this._toastService.showSuccess(this._report.info);
-          this._httpService.get('api/users/getAuthUserInfo').subscribe((data: User) => {
-            this.authUserInfo = data;
-            this.loadAllMessages = (this.authUserInfo.messagesToLoadAmount === 0);
-          });
+          this._refreshAuthUserInfo(() => this.loadAllMessages = (this.authUserInfo.messagesToLoadAmount === 0));     
         } else {
           this._toastService.showDanger(this._report.info);
         }
       },
         error => this._toastService.showDanger(error.message)
       )
+    }
+  }
+
+  public onChangeKeyFormSubmit(form: NgForm): void {
+    if (form.valid) {
+      this.isKeyChanging = true;
+      let params: ChangePasswordKeyParams = new ChangePasswordKeyParams(this.authUserInfo.id, this.keyForPasswordChange);
+      this._httpService.post('/api/users/setChangePasswordKey', params).subscribe((data: ResultInfo) => {
+        this._report = data;
+        this.isKeyChanging = false;
+        if (this._report.status === 'KeySaved') {
+          this._toastService.showSuccess(this._report.info);
+          this._refreshAuthUserInfo(); 
+        } else {
+          this.isKeyChanging = false;
+          this._toastService.showDanger(this._report.info);
+        }
+      },
+        error => this._toastService.showDanger(error.message)
+      )
+      form.resetForm();
     }
   }
 

@@ -20,8 +20,12 @@ namespace MessageList.Models
         [MaxLength(64)]
         [JsonIgnore]
         public string Password { get; set; }
-        [Column("is_email_confirmed")]
-        public bool IsEmailConfirmed { get; set; }
+        [Column("change_password_key")]
+        [MaxLength(64)]
+        [JsonIgnore]
+        public string Key { get; set; }
+        [NotMapped]
+        public bool isChangePasswordKeySet { get { return Key?.Length > 0; } set { } }
         [Column("created_at")]
         [Required]
         public DateTime CreatedAt { get; set; }
@@ -39,7 +43,6 @@ namespace MessageList.Models
         {
             Email = email;
             Password = password;
-            IsEmailConfirmed = false;
             CreatedAt = DateTime.Now;
             MessagesToLoadAmount = messagesToLoadAmount;
             IsAdmin = false;

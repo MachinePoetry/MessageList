@@ -32,7 +32,7 @@
         </div>
         <div class="row align-items-center">
           <div class="col-5 col-sm-7"><p class="mt-4 ml-sm-2 ml-md-5" id="authUserEmailLabel"> Email: </p></div>
-          <div class="col-7 col-sm-5"><p class="mt-4 text-danger text-break" id="authUserEmail"> {{authUserInfo?.email || 'Загрузка...'}} </p> </div>
+          <div class="col-7 col-sm-5"><p class="mt-4 text-success text-break" id="authUserEmail"> {{authUserInfo?.email || 'Загрузка...'}} </p> </div>
         </div>
         <div class="row align-items-center">
           <div class="col-5 col-sm-7"><p class="mt-3 ml-sm-2 ml-md-5" id="userCreatedAtLabel"> Дата регистрации: </p></div>
@@ -43,6 +43,14 @@
             <p class="mt-2 ml-sm-2 ml-md-5" id="loadedMessagesAmountLabel"> Количество единовременно загружаемых сообщений: </p>
           </div>
           <div class="col-7 col-sm-5"><p class="mt-3 text-success"> {{(authUserInfo?.messagesToLoadAmount === 0 ? 'Все' : authUserInfo?.messagesToLoadAmount) || 'Загрузка...'}} </p></div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-5 col-sm-7"><p class="mt-4 ml-sm-2 ml-md-5" id="changePasswordKeyLabel"> Ключ для восстановления пароля: </p></div>
+          <div class="col-7 col-sm-5">
+            <p class="mt-4 text-break" id="changePasswordKey" [ngClass]="authUserInfo?.isChangePasswordKeySet === true ? 'text-success' : 'text-danger'">
+              {{(authUserInfo?.isChangePasswordKeySet === true ? 'Задан' : 'Не задан') || 'Загрузка...'}}
+            </p>
+          </div>
         </div>
         <div class="row align-items-center">
           <div class="col-12 col-lg-10 offset-lg-1">
@@ -59,7 +67,7 @@
           </div>
           <div class="col-7 col-sm-5">
             <div class="d-flex align-items-center w-100 mt-4">
-              <form #messagesToLoadForm="ngForm" id="messagesToLoadForm" (ngSubmit)="onSubmit(messagesToLoadForm)" novalidate>
+              <form #messagesToLoadForm="ngForm" id="messagesToLoadForm" (ngSubmit)="onMessagesToLoadFormSubmit(messagesToLoadForm)" novalidate>
                 <input type="number" #messagesToLoad="ngModel" class="form-control" id="messagesToLoadCount" name="messagesToLoadCount"
                        [ngClass]="{'submit-error': messagesToLoadForm.submitted && !messagesToLoadForm.control.disabled && (messagesToLoadAmount < 20 || messagesToLoadAmount > 10000)}"
                        [(ngModel)]="messagesToLoadAmount" required min="20" max="10000" [disabled]="loadAllMessages">
@@ -75,7 +83,28 @@
           </div>
         </div>
         <div class="row align-items-center">
+          <div class="col-5 col-sm-7">
+            <p class="mt-4 ml-sm-2 ml-md-5"> Задать новый ключ для восстановления пароля
+              <i class="mdi mdi-lg mdi-help-circle-outline" placement="top" ngbTooltip="Укажите текстовый ключ (любой текст),
+                  который будет использоваться при восстановлении пароля (если вы его забудете).&#10;Минимум 1, максимум 30 символов.">
+              </i>:
+            </p>
+          </div>
           <div class="col-7 col-sm-5">
+            <div class="d-flex align-items-center w-100 mt-4">
+              <form #changeKeyForm="ngForm" id="changeKeyForm" (ngSubmit)="onChangeKeyFormSubmit(changeKeyForm)" novalidate>
+                <input type="text" #changePasswordKey="ngModel" class="form-control" id="changePasswordKey" name="changePasswordKey"
+                       [ngClass]="{'submit-error': changeKeyForm.submitted}" [(ngModel)]="keyForPasswordChange" required pattern="^.{1,30}$"
+                       minlength="1" maxlength="31" [disabled]="isKeyChanging">
+              </form>
+              <button type="submit" class="btn dark-login-button ml-2 ml-sm-3" form="changeKeyForm" id="changeKeyFormButton" [disabled]="isKeyChanging">
+                <span class="dark-color-text"> Сохранить </span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-7 col-sm-5 mb-5">
             <p class="mt-4 ml-sm-2 ml-md-5" id="changePasswordLabel">
               Изменить пароль:
             </p>
