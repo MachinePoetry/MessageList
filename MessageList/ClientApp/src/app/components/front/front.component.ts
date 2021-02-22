@@ -34,7 +34,7 @@ export class FrontComponent implements OnInit {
         this._report = data;
         this.isDisabled = false;
         this.isSpinnerShow = false;
-        this._toastService.showSuccess(this._report.info);
+        this._report.status === 'ReportCreated' ? this._toastService.showSuccess(this._report.info) : this._toastService.showDanger(this._report.info);
       },
         error => this._toastService.showDanger(error.message)
       );

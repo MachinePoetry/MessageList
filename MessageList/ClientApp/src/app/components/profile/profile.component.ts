@@ -51,12 +51,8 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       this._httpService.post('/api/users/setMessagesToLoadCounter', params).subscribe((data: ResultInfo) => {
         this.progressBarValue = 50;
         this._report = data;
-        if (this._report.status === 'AmountOfLoadedMessagesChanged') {
-          this._toastService.showSuccess(this._report.info);
-          this._refreshAuthUserInfo(() => this.loadAllMessages = (this.authUserInfo.messagesToLoadAmount === 0));     
-        } else {
-          this._toastService.showDanger(this._report.info);
-        }
+        this._report.status === 'AmountOfLoadedMessagesChanged' ? this._toastService.showSuccess(this._report.info) : this._toastService.showDanger(this._report.info);
+        this._refreshAuthUserInfo(() => this.loadAllMessages = (this.authUserInfo.messagesToLoadAmount === 0));  
         this.progressBarValue = 100;
         setTimeout(() => {
           this.isHidden = true;
@@ -77,15 +73,10 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       this._httpService.post('/api/users/setChangePasswordKey', params).subscribe((data: ResultInfo) => {
         this.progressBarValue = 50;
         this._report = data;
-        this.isKeyChanging = false;
-        if (this._report.status === 'KeySaved') {
-          this._toastService.showSuccess(this._report.info);
-          this._refreshAuthUserInfo(); 
-        } else {
-          this.isKeyChanging = false;
-          this._toastService.showDanger(this._report.info);
-        }
+        this._report.status === 'KeySaved' ? this._toastService.showSuccess(this._report.info) : this._toastService.showDanger(this._report.info);
+        this._refreshAuthUserInfo(); 
         this.progressBarValue = 100;
+        this.isKeyChanging = false;
         setTimeout(() => {
           this.isHidden = true;
           this.progressBarValue = 0;

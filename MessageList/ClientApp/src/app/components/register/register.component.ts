@@ -45,7 +45,7 @@ export class RegisterComponent {
         this._report = data;
         this.isDisabled = false;
         this.isSpinnerShow = false;
-        this._toastService.showSuccess(this._report.info);
+        this._report.status === 'UserCreated' ? this._toastService.showSuccess(this._report.info) : this._toastService.showDanger(this._report.info);
         this.progressBarValue = 100;
         if (this.progressBarValue === 100) {
           setTimeout(() => {
