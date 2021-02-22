@@ -22,6 +22,8 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   public messagesToLoadAmount: number = 20;
   public loadAllMessages: boolean = false;
   public isKeyChanging: boolean = false;
+  public progressBarValue: number = 0;
+  public isHidden: boolean = true;
   public keyForPasswordChange: string = '';
   public uptime: number = 0;
   private _report: ResultInfo = new ResultInfo();
@@ -43,8 +45,11 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       this.messagesToLoadAmount = 0;
     }
     if (this.messagesToLoadAmount != this.authUserInfo.messagesToLoadAmount && (this.loadAllMessages || (this.messagesToLoadAmount >= 20 && this.messagesToLoadAmount <= 10000))) {
+      this.isHidden = false;
       let params: ChangeMessagesToLoadParams = new ChangeMessagesToLoadParams(this.authUserInfo.id, this.messagesToLoadAmount);
+      this.progressBarValue = 30;
       this._httpService.post('/api/users/setMessagesToLoadCounter', params).subscribe((data: ResultInfo) => {
+        this.progressBarValue = 50;
         this._report = data;
         if (this._report.status === 'AmountOfLoadedMessagesChanged') {
           this._toastService.showSuccess(this._report.info);
@@ -52,6 +57,11 @@ export class ProfileComponent implements OnInit, AfterViewInit {
         } else {
           this._toastService.showDanger(this._report.info);
         }
+        this.progressBarValue = 100;
+        setTimeout(() => {
+          this.isHidden = true;
+          this.progressBarValue = 0;
+        }, 700);
       },
         error => this._toastService.showDanger(error.message)
       )
@@ -60,9 +70,12 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   public onChangeKeyFormSubmit(form: NgForm): void {
     if (form.valid) {
+      this.isHidden = false;
       this.isKeyChanging = true;
       let params: ChangePasswordKeyParams = new ChangePasswordKeyParams(this.authUserInfo.id, this.keyForPasswordChange);
+      this.progressBarValue = 30;
       this._httpService.post('/api/users/setChangePasswordKey', params).subscribe((data: ResultInfo) => {
+        this.progressBarValue = 50;
         this._report = data;
         this.isKeyChanging = false;
         if (this._report.status === 'KeySaved') {
@@ -72,10 +85,28 @@ export class ProfileComponent implements OnInit, AfterViewInit {
           this.isKeyChanging = false;
           this._toastService.showDanger(this._report.info);
         }
+        this.progressBarValue = 100;
+        setTimeout(() => {
+          this.isHidden = true;
+          this.progressBarValue = 0;
+        }, 700);
       },
         error => this._toastService.showDanger(error.message)
       )
       form.resetForm();
+    }
+  }
+
+  public showProgressBar(value: number): void {
+    if (value > 0 && value < 100) {
+      this.isHidden = false;
+      this.progressBarValue = value;
+    } else if (value === 100) {
+      this.progressBarValue = value;
+      setTimeout(() => {
+        this.isHidden = true;
+        this.progressBarValue = 0;
+      }, 700);
     }
   }
 

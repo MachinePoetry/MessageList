@@ -19,28 +19,52 @@ export class RestorePasswordComponent {
 
   public step: number = 1;
   public isKeyValidationProcess: boolean = false;
+  public progressBarValue: number = 0;
+  public isHidden: boolean = true;
   public validateKeyParams: ValidateKeyParams = new ValidateKeyParams();
   public changePasswordMode = ChangePasswordMode;
-  private _report: ResultInfo = new ResultInfo();
   public authUserInfo: User = new User();
+  private _result: ResultInfo = new ResultInfo();
 
   public onSubmit(form: NgForm): void {
     if (form.valid) {
+      this.isHidden = false;
       this.isKeyValidationProcess = true;
-      this._httpService.post('/api/users/validateChangePasswordKey', this.validateKeyParams).subscribe((data: User) => {
-        this.authUserInfo = data;
-        if (this.authUserInfo.email && this.authUserInfo.email.length) {
+      this.progressBarValue = 30;
+      this._httpService.post('/api/users/validateChangePasswordKey', this.validateKeyParams).subscribe((data: any) => {
+        this.progressBarValue = 50;
+        if (data.email && data.email.length) {
+          this.authUserInfo = data;
           this.step = 2;
-        } else {
-          this._toastService.showDanger('Неправильный email или ключ');
+        } else if (data.status && data.info) {
+          this._result = data;
+          this._toastService.showDanger(this._result.info);
         }
         this.isKeyValidationProcess = false;
+        this.progressBarValue = 100;
+        setTimeout(() => {
+          this.isHidden = true;
+          this.progressBarValue = 0;
+        }, 700);
       },
         error => {
           this._toastService.showDanger(error.message);
           this.isKeyValidationProcess = false;
         }
       )
+    }
+  }
+
+  public showProgressBar(value: number): void {
+    if (value > 0 && value < 100) {
+      this.isHidden = false;
+      this.progressBarValue = value;
+    } else if (value === 100) {
+      this.progressBarValue = value;
+      setTimeout(() => {
+        this.isHidden = true;
+        this.progressBarValue = 0;
+      }, 700);
     }
   }
 

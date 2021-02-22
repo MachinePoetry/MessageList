@@ -165,7 +165,8 @@ color: #f5f9f9;
 }
 
 .pbar {
-  position: absolute;
+  position: fixed;
+  z-index: 100;
   top: 0px;
   height: 7px;
   border-radius: 0;

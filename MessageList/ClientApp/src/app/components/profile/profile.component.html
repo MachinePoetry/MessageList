@@ -14,6 +14,8 @@
 
 <app-toasts class="toasts-container mr-2"></app-toasts>
 
+<ngb-progressbar class="pbar w-100" type="primary" height="7px" [value]="progressBarValue" [hidden]="isHidden"></ngb-progressbar>
+
 <div class="container-fliud">
   <div class="container profile-container">
     <div class="row mt-5">
@@ -108,7 +110,8 @@
             <p class="mt-4 ml-sm-2 ml-md-5" id="changePasswordLabel">
               Изменить пароль:
             </p>
-            <change-password [authUserInfo]="authUserInfo" [mode]="changePasswordMode.profile" (processChangePasswordResult)="getChangedPasswordResult($event)"></change-password>
+            <change-password [authUserInfo]="authUserInfo" [mode]="changePasswordMode.profile" (changePasswordResult)="getChangedPasswordResult($event)"
+                             (changePasswordProgress)="showProgressBar($event)"></change-password>
           </div>
         </div>
       </div>

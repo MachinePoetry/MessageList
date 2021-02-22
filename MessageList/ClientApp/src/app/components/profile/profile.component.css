@@ -15,7 +15,7 @@ p {
 
 #messagesToLoadForm,
 #changeKeyForm {
-  width: 90px;
+  width: 160px;
 }
 
 #messagesToLoadCount::-webkit-outer-spin-button,

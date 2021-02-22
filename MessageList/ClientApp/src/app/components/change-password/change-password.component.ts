@@ -16,9 +16,11 @@ export class ChangePasswordComponent {
 
   @Input() public authUserInfo: User = new User();
   @Input() public mode: string;
-  @Output() processChangePasswordResult = new EventEmitter<ResultInfo>();
+  @Output() changePasswordResult = new EventEmitter<ResultInfo>();
+  @Output() changePasswordProgress = new EventEmitter<number>();
 
   public isPasswordChanging: boolean = false;
+  public progressBarValue: number = 0;
   public changePasswordParams: ChangePasswordParams = new ChangePasswordParams();
   public changePasswordMode = ChangePasswordMode;
   private _report: ResultInfo = new ResultInfo();
@@ -32,15 +34,18 @@ export class ChangePasswordComponent {
     }
     if (form.valid) {
       this.isPasswordChanging = true;
+      this.changePasswordProgress.emit(30);
       this._httpService.post('/api/users/changePassword', params).subscribe((data: ResultInfo) => {
+        this.changePasswordProgress.emit(50);
         this._report = data;
-        this.processChangePasswordResult.emit(this._report);
+        this.changePasswordResult.emit(this._report);
         this.isPasswordChanging = false;
+        this.changePasswordProgress.emit(100);
       },
         error => {
           this._report.status = 'ChangePasswordFailed';
           this._report.info = error.message;
-          this.processChangePasswordResult.emit(this._report);
+          this.changePasswordResult.emit(this._report);
           this.isPasswordChanging = false;
         }
       )
