@@ -1,6 +1,8 @@
 import { ProfileComponent } from './profile.component';
 import { HeaderComponent } from './../header/header.component';
+import { ChangePasswordComponent } from './../change-password/change-password.component';
 import { HttpService } from './../../shared/services/http-service/http.service';
+import { ToastService } from './../../shared/services/toast-service/toast.service';
 import { SecondsToTimePipe } from './../../shared/pipes/seconds-to-time/seconds-to-time.pipe';
 import { DateToLocalePipe } from './../../shared/pipes/date-to-locale/date-to-locale.pipe';
 import { User } from '../../shared/models/user';
@@ -16,14 +18,16 @@ describe('ProfileComponent', () => {
   let mockHttpService = {
     get: jasmine.createSpy('get').and.returnValue(of(0))
   };
+  let mockToastService = { showDanger: jasmine.createSpy('showDanger'), showSuccess: jasmine.createSpy('showSuccess') };
   let user: User = new User();
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      declarations: [ProfileComponent, HeaderComponent, DateToLocalePipe, SecondsToTimePipe],
+      declarations: [ProfileComponent, HeaderComponent, ChangePasswordComponent, DateToLocalePipe, SecondsToTimePipe],
       providers: [
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
-        { provide: HttpService, useValue: mockHttpService }
+        { provide: HttpService, useValue: mockHttpService },
+        { provide: ToastService, useValue: mockToastService }
       ]
     });
     fixture = TestBed.createComponent(ProfileComponent);
@@ -33,6 +37,7 @@ describe('ProfileComponent', () => {
     user.email = 'some@mail.com';
     user.createdAt = '1970-01-01T00:00:00.294611';
     component.authUserInfo = user;
+    mockHttpService.get.calls.reset();
     fixture.detectChanges();
   });
 

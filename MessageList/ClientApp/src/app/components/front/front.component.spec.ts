@@ -1,6 +1,7 @@
 import { FrontComponent } from './front.component';
 import { HeaderComponent } from './../header/header.component';
 import { ToastsContainerComponent } from './../toasts-container/toasts-container.component';
+import { ChangePasswordComponent } from './../change-password/change-password.component';
 import { ReportParams } from './../../shared/models/params/reportParams';
 import { ResultInfo } from './../../shared/models/resultInfo';
 import { NgForm, FormsModule, AbstractControl } from '@angular/forms';
@@ -23,7 +24,7 @@ describe('FrontComponent', () => {
   beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [FormsModule],
-      declarations: [FrontComponent, HeaderComponent, ToastsContainerComponent],
+      declarations: [FrontComponent, HeaderComponent, ToastsContainerComponent, ChangePasswordComponent],
       providers: [
         NgForm,
         { provide: ToastService, useValue: mockToastService },
