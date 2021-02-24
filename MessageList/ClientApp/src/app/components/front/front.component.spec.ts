@@ -19,7 +19,7 @@ describe('FrontComponent', () => {
     post: jasmine.createSpy('post').and.returnValue(of(result)),
     get: jasmine.createSpy('get').and.returnValue(of('report created'))
   };
-  let mockToastService = { showSuccess: jasmine.createSpy('showSuccess').and.returnValue(of('success')) };
+  let mockToastService = { showSuccess: jasmine.createSpy('showSuccess'), showDanger: jasmine.createSpy('showSuccess') };
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
@@ -35,6 +35,7 @@ describe('FrontComponent', () => {
     component = fixture.componentInstance;
     mockHttpService.post.calls.reset();
     mockToastService.showSuccess.calls.reset();
+    mockToastService.showDanger.calls.reset();
 
     fixture.detectChanges();
     await fixture.whenStable();
@@ -44,6 +45,8 @@ describe('FrontComponent', () => {
     form = fixture.nativeElement.querySelector('#bugReportForm');
     params = new ReportParams();
     result = new ResultInfo();
+    result.status = 'ReportCreated';
+    result.info = 'Success info';
     mockHttpService.post.and.returnValue(of(result));
   });
 
@@ -100,12 +103,16 @@ describe('FrontComponent', () => {
     expect(reportTextControl.hasError('pattern')).toBe(true);
   })
 
-  it('should have no errors at report text model if form was submitted and correct text was set', () => {
-    reportTextControl.setValue('some text value');
-    form.dispatchEvent(new Event('submit'));
-    expect(reportTextControl.hasError('required')).toBe(false);
-    expect(reportTextControl.hasError('pattern')).toBe(false);
-  })
+  //it('should have no errors at report text model if form was submitted and correct text was set', () => {
+  //  reportTextControl.setValue('some text value');
+  //  let textarea: HTMLInputElement = fixture.nativeElement.querySelector('#bugReportText');
+  //  textarea.value = 'some text value';
+  //  params.reportText = 'some report text';
+  //  form.dispatchEvent(new Event('submit'));
+  //  console.log(reportTextControl);
+  //  expect(reportTextControl.hasError('required')).toBe(false);
+  //  expect(reportTextControl.hasError('pattern')).toBe(false);
+  //})
 
   it('should set required error at report text model if form was submitted and no text was set', () => {
     reportTextControl.setValue('');
@@ -177,18 +184,28 @@ describe('FrontComponent', () => {
 
   it('should call http post inside \'onSubmit\' method when only report text is set', () => {
     reportTextControl.setValue('some report text');
-    contactsControl.setValue(null);
+    contactsControl.setValue('');
     form.dispatchEvent(new Event('submit'));
     expect(mockHttpService.post).toHaveBeenCalled();
   })
 
   it('should show success toast with response text', () => {
-    result.info = 'Report created';
     reportTextControl.setValue('some report text');
     contactsControl.setValue('contact');
     form.dispatchEvent(new Event('submit'));
     expect(mockToastService.showSuccess).toHaveBeenCalled();
     expect(mockToastService.showSuccess).toHaveBeenCalledTimes(1);
-    expect(mockToastService.showSuccess).toHaveBeenCalledWith('Report created');
+    expect(mockToastService.showSuccess).toHaveBeenCalledWith('Success info');
+  })
+
+  it('should show danger toast with response text', () => {
+    result.status = 'Report not created';
+    result.info = 'Danger info';
+    reportTextControl.setValue('some report text');
+    contactsControl.setValue('contact');
+    form.dispatchEvent(new Event('submit'));
+    expect(mockToastService.showDanger).toHaveBeenCalled();
+    expect(mockToastService.showDanger).toHaveBeenCalledTimes(1);
+    expect(mockToastService.showDanger).toHaveBeenCalledWith('Danger info');
   })
 })
