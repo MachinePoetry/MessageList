@@ -18,17 +18,17 @@ p {
   width: 160px;
 }
 
-#messagesToLoadCount::-webkit-outer-spin-button,
-#messagesToLoadCount::-webkit-inner-spin-button {
+#messagesToLoadAmount::-webkit-outer-spin-button,
+#messagesToLoadAmount::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-#messagesToLoadCount {
+#messagesToLoadAmount {
   -moz-appearance: textfield;
 }
 
-#messagesToLoadCount.submit-error,
+#messagesToLoadAmount.submit-error,
 #changePasswordKey.ng-invalid.ng-dirty,
 #changePasswordKey.ng-invalid.submit-error {
   border: 2px solid #DC143C;

@@ -114,6 +114,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     this.loadAllMessages = (this.authUserInfo.messagesToLoadAmount === 0);
     this.messagesToLoadAmount = this.authUserInfo.messagesToLoadAmount;
   }
+
   ngAfterViewInit() {
     this._httpService.get('/api/application/getUptime').subscribe((data: number) => {
       this.uptime = data;

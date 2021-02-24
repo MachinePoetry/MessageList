@@ -44,12 +44,14 @@
           <div class="col-5 col-sm-7">
             <p class="mt-2 ml-sm-2 ml-md-5" id="loadedMessagesAmountLabel"> Количество единовременно загружаемых сообщений: </p>
           </div>
-          <div class="col-7 col-sm-5"><p class="mt-3 text-success"> {{(authUserInfo?.messagesToLoadAmount === 0 ? 'Все' : authUserInfo?.messagesToLoadAmount) || 'Загрузка...'}} </p></div>
+          <div class="col-7 col-sm-5">
+            <p class="mt-3 text-success" id="messagesAmount"> {{(authUserInfo?.messagesToLoadAmount === 0 ? 'Все' : authUserInfo?.messagesToLoadAmount) || 'Загрузка...'}} </p>
+          </div>
         </div>
         <div class="row align-items-center">
           <div class="col-5 col-sm-7"><p class="mt-4 ml-sm-2 ml-md-5" id="changePasswordKeyLabel"> Ключ для восстановления пароля: </p></div>
           <div class="col-7 col-sm-5">
-            <p class="mt-4 text-break" id="changePasswordKey" [ngClass]="authUserInfo?.isChangePasswordKeySet === true ? 'text-success' : 'text-danger'">
+            <p class="mt-4 text-break" id="isChangePasswordKeySet" [ngClass]="authUserInfo?.isChangePasswordKeySet === true ? 'text-success' : 'text-danger'">
               {{(authUserInfo?.isChangePasswordKeySet === true ? 'Задан' : 'Не задан') || 'Загрузка...'}}
             </p>
           </div>
@@ -70,7 +72,7 @@
           <div class="col-7 col-sm-5">
             <div class="d-flex align-items-center w-100 mt-4">
               <form #messagesToLoadForm="ngForm" id="messagesToLoadForm" (ngSubmit)="onMessagesToLoadFormSubmit(messagesToLoadForm)" novalidate>
-                <input type="number" #messagesToLoad="ngModel" class="form-control" id="messagesToLoadCount" name="messagesToLoadCount"
+                <input type="number" #messagesToLoad="ngModel" class="form-control" id="messagesToLoadAmount" name="messagesToLoadAmount"
                        [ngClass]="{'submit-error': messagesToLoadForm.submitted && !messagesToLoadForm.control.disabled && (messagesToLoadAmount < 20 || messagesToLoadAmount > 10000)}"
                        [(ngModel)]="messagesToLoadAmount" required min="20" max="10000" [disabled]="loadAllMessages">
               </form>
