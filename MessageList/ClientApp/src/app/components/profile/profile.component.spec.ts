@@ -1,6 +1,9 @@
 import { ProfileComponent } from './profile.component';
 import { HeaderComponent } from './../header/header.component';
 import { ChangePasswordComponent } from './../change-password/change-password.component';
+import { ToastsContainerComponent } from './../toasts-container/toasts-container.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgForm, FormsModule, AbstractControl } from '@angular/forms';
 import { HttpService } from './../../shared/services/http-service/http.service';
 import { ToastService } from './../../shared/services/toast-service/toast.service';
 import { SecondsToTimePipe } from './../../shared/pipes/seconds-to-time/seconds-to-time.pipe';
@@ -23,8 +26,10 @@ describe('ProfileComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      declarations: [ProfileComponent, HeaderComponent, ChangePasswordComponent, DateToLocalePipe, SecondsToTimePipe],
+      imports: [FormsModule, NgbModule],
+      declarations: [ProfileComponent, HeaderComponent, ChangePasswordComponent, ToastsContainerComponent, DateToLocalePipe, SecondsToTimePipe],
       providers: [
+        NgForm,
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: HttpService, useValue: mockHttpService },
         { provide: ToastService, useValue: mockToastService }
