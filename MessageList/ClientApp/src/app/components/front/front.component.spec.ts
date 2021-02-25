@@ -1,7 +1,4 @@
 import { FrontComponent } from './front.component';
-import { HeaderComponent } from './../header/header.component';
-import { ToastsContainerComponent } from './../toasts-container/toasts-container.component';
-import { ChangePasswordComponent } from './../change-password/change-password.component';
 import { ReportParams } from './../../shared/models/params/reportParams';
 import { ResultInfo } from './../../shared/models/resultInfo';
 import { NgForm, FormsModule, AbstractControl } from '@angular/forms';
@@ -9,6 +6,15 @@ import { HttpService } from './../../shared/services/http-service/http.service';
 import { ToastService } from './../../shared/services/toast-service/toast.service';
 import { of } from 'rxjs';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
+
+@Component({ selector: 'app-banner', template: '' })
+class HeaderComponentStub {
+}
+
+@Component({ selector: 'router-outlet', template: '' })
+class ToastsContainerComponentStub {
+}
 
 
 describe('FrontComponent', () => {
@@ -24,12 +30,13 @@ describe('FrontComponent', () => {
   beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [FormsModule],
-      declarations: [FrontComponent, HeaderComponent, ToastsContainerComponent, ChangePasswordComponent],
+      declarations: [FrontComponent, HeaderComponentStub, ToastsContainerComponentStub],
       providers: [
         NgForm,
         { provide: ToastService, useValue: mockToastService },
         { provide: HttpService, useValue: mockHttpService }
-      ]
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     });
     fixture = TestBed.createComponent(FrontComponent);
     component = fixture.componentInstance;
@@ -67,7 +74,7 @@ describe('FrontComponent', () => {
   it('should render seven \'blocks\' at page', () => {
     let blocks: HTMLElement[] = fixture.nativeElement.querySelectorAll('.container-fluid');
     expect(blocks).toBeTruthy();
-    expect(blocks.length).toBe(7);
+    expect(blocks.length).toBe(6);
   })
 
   it('should render bug report form', () => {

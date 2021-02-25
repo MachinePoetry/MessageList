@@ -1,5 +1,4 @@
 import { MessageComponent } from './message.component';
-import { FilePreviewComponent } from './../file-preview/file-preview.component';
 import { FileService } from '../../shared/services/file-service/file.service';
 import { DateToLocalePipe } from './../../shared/pipes/date-to-locale/date-to-locale.pipe';
 import { BlobToSrcPipe } from '../../shared/pipes/blob-to-src/blob-to-src.pipe';
@@ -7,6 +6,29 @@ import { SafeUrlPipe } from '../../shared/pipes/safe-url/safe-url.pipe';
 import { Message } from './../../shared/models/message';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FileCollection } from '../../shared/models/fileCollection';
+import { Component, Input, Pipe, NO_ERRORS_SCHEMA } from '@angular/core';
+
+@Pipe({ name: 'dateToLocale' })
+class DateToLocalePipeStub {
+  public transform() { return '01.01.1970, 00:00:00' };
+}
+
+@Pipe({ name: 'blobToSrc' })
+class BlobToSrcPipeStub {
+  public transform() { };
+}
+
+@Pipe({ name: 'safeUrl' })
+class SafeUrlPipeStub {
+  public transform() { };
+}
+
+@Component({ selector: 'app-file-preview', template: '' })
+class FilePreviewComponentStub {
+  @Input() public fileCollection: FileCollection = new FileCollection();
+  @Input() public mode: string;
+}
+
 
 describe('MessageComponent', () => {
   let component: MessageComponent, fixture: ComponentFixture<MessageComponent>, file: File;
@@ -17,13 +39,14 @@ describe('MessageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MessageComponent, FilePreviewComponent, DateToLocalePipe],
+      declarations: [MessageComponent, FilePreviewComponentStub, DateToLocalePipeStub, BlobToSrcPipeStub, SafeUrlPipeStub],
       providers: [
         { provide: FileService, useValue: mockFileService },
         { provide: BlobToSrcPipe, useValue: mockBlobToSrcPipe },
         { provide: DateToLocalePipe, useValue: mockDateToLocalePipe },
         { provide: SafeUrlPipe, useValue: mockSafeUrlPipe }
-      ]
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     })
       .compileComponents();
 

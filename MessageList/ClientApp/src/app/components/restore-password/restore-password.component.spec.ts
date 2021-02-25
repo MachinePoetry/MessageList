@@ -1,7 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RestorePasswordComponent } from './restore-password.component';
-import { ChangePasswordComponent } from './../change-password/change-password.component';
-import { ToastsContainerComponent } from './../toasts-container/toasts-container.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgForm, FormsModule, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -11,6 +9,18 @@ import { HttpService } from './../../shared/services/http-service/http.service';
 import { ToastService } from './../../shared/services/toast-service/toast.service';
 import { ResultInfo } from '../../shared/models/resultInfo';
 import { ValidateKeyParams } from './../../shared/models/params/validateKeyParams';
+import { Component, Input, NO_ERRORS_SCHEMA } from '@angular/core';
+
+@Component({ selector: 'app-toasts', template: '' })
+class ToastsContainerComponentStub {
+}
+
+@Component({ selector: 'change-password', template: '' })
+class ChangePasswordComponentStub {
+  @Input() public authUserInfo: any;
+  @Input() public mode: any;
+}
+
 
 describe('RestorePasswordComponent', () => {
   let component: RestorePasswordComponent;
@@ -23,13 +33,14 @@ describe('RestorePasswordComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [FormsModule, NgbModule],
-      declarations: [RestorePasswordComponent, ChangePasswordComponent, ToastsContainerComponent],
+      declarations: [RestorePasswordComponent, ChangePasswordComponentStub, ToastsContainerComponentStub],
       providers: [
         NgForm,
         { provide: HttpService, useValue: mockHttpService },
         { provide: Router, useValue: mockRouter },
         { provide: ToastService, useValue: mockToastService }
-      ]
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     })
       .compileComponents();
 

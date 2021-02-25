@@ -3,9 +3,19 @@ import { FileCollection } from './../../shared/models/fileCollection';
 import { AppFile } from './../../shared/models/appFile';
 import { FileService } from './../../shared/services/file-service/file.service';
 import { BlobToSrcPipe } from './../../shared/pipes/blob-to-src/blob-to-src.pipe';
-import { SafeUrlPipe } from './../../shared/pipes/safe-url/safe-url.pipe';
 import { TestBed } from '@angular/core/testing';
 import { ComponentFixture } from '@angular/core/testing';
+import { Pipe, NO_ERRORS_SCHEMA } from '@angular/core';
+
+@Pipe({ name: 'blobToSrc' })
+class BlobToSrcPipeStub {
+  public transform() { };
+}
+
+@Pipe({ name: 'safeUrl' })
+class SafeUrlPipeStub {
+  public transform() { };
+}
 
 
 describe('FilePreviewComponent', () => {
@@ -17,11 +27,12 @@ describe('FilePreviewComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      declarations: [FilePreviewComponent, BlobToSrcPipe, SafeUrlPipe],
+      declarations: [FilePreviewComponent, BlobToSrcPipeStub, SafeUrlPipeStub],
       providers: [
         { provide: BlobToSrcPipe, useValue: mockBlobToSrcPipe },
         { provide: FileService, useValue: mockFileService }
-      ]
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     });
     fixture = TestBed.createComponent(FilePreviewComponent);
     component = fixture.componentInstance;

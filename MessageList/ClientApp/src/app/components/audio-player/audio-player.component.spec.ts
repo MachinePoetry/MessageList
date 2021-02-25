@@ -3,9 +3,25 @@ import { AppFile } from './../../shared/models/appFile';
 import { BlobToSrcPipe } from './../../shared/pipes/blob-to-src/blob-to-src.pipe';
 import { SecondsToTimePipe } from './../../shared/pipes/seconds-to-time/seconds-to-time.pipe';
 import { SafeUrlPipe } from './../../shared/pipes/safe-url/safe-url.pipe';
+import { FormsModule } from '@angular/forms';
 import { TestBed } from '@angular/core/testing';
 import { ComponentFixture } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
+import { Pipe, NO_ERRORS_SCHEMA } from '@angular/core';
+
+@Pipe({ name: 'blobToSrc' })
+class BlobToSrcPipeStub {
+  public transform() { };
+}
+
+@Pipe({ name: 'safeUrl' })
+class SafeUrlPipeStub {
+  public transform() { };
+}
+
+@Pipe({ name: 'secondsToTime' })
+class SecondsToTimePipeStub {
+  public transform() { };
+}
 
 
 describe('AudioPlayerComponent', () => {
@@ -18,12 +34,13 @@ describe('AudioPlayerComponent', () => {
   beforeEach(async () => {
     TestBed.configureTestingModule({
       imports: [FormsModule],
-      declarations: [AudioPlayerComponent, BlobToSrcPipe, SafeUrlPipe, SecondsToTimePipe],
+      declarations: [AudioPlayerComponent, BlobToSrcPipeStub, SafeUrlPipeStub, SecondsToTimePipeStub],
       providers: [
         { provide: BlobToSrcPipe, useValue: mockBlobToSrcPipe },
         { provide: SecondsToTimePipe, useValue: mockFileService },
         { provide: SafeUrlPipe, useValue: mockFileService },
-      ]
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     });
     fixture = TestBed.createComponent(AudioPlayerComponent);
     component = fixture.componentInstance;

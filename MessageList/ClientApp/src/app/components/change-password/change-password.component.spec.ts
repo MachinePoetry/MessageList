@@ -1,4 +1,3 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ChangePasswordComponent } from './change-password.component';
 import { NgForm, FormsModule, AbstractControl } from '@angular/forms';
 import { of } from 'rxjs';
@@ -6,6 +5,7 @@ import { HttpService } from './../../shared/services/http-service/http.service';
 import { ChangePasswordMode } from './../../shared/models/componentModes/changePasswordMode';
 import { ResultInfo } from '../../shared/models/resultInfo';
 import { ChangePasswordParams } from './../../shared/models/params/changePasswordParams';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 describe('ChangePasswordComponent', () => {
   let component: ChangePasswordComponent;

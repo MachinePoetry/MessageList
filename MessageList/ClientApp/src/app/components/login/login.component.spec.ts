@@ -1,5 +1,4 @@
 import { LoginComponent } from './login.component';
-import { ToastsContainerComponent } from './../toasts-container/toasts-container.component';
 import { Router } from '@angular/router';
 import { NgForm, FormsModule, AbstractControl } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -9,6 +8,11 @@ import { ToastService } from './../../shared/services/toast-service/toast.servic
 import { LoginParams } from './../../shared/models/params/loginParams';
 import { ResultInfo } from '../../shared/models/resultInfo';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
+
+@Component({ selector: 'app-toasts', template: '' })
+class ToastsContainerComponentStub {
+}
 
 
 describe('LoginComponent', () => {
@@ -21,14 +25,15 @@ describe('LoginComponent', () => {
 
   beforeEach(async() => {
     TestBed.configureTestingModule({
-      declarations: [LoginComponent, ToastsContainerComponent],
+      declarations: [LoginComponent, ToastsContainerComponentStub],
       imports: [FormsModule, NgbModule],
       providers: [
         NgForm,
         { provide: HttpService, useValue: mockHttpService },
         { provide: Router, useValue: mockRouter },
         { provide: ToastService, useValue: mockToastService }
-      ]
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     });
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;

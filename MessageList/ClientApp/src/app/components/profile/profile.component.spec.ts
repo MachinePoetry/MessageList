@@ -1,5 +1,6 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
+import { Pipe, NO_ERRORS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
 import { ProfileComponent } from './profile.component';
 import { HeaderComponent } from './../header/header.component';
@@ -9,10 +10,18 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgForm, FormsModule } from '@angular/forms';
 import { HttpService } from './../../shared/services/http-service/http.service';
 import { ToastService } from './../../shared/services/toast-service/toast.service';
-import { SecondsToTimePipe } from './../../shared/pipes/seconds-to-time/seconds-to-time.pipe';
-import { DateToLocalePipe } from './../../shared/pipes/date-to-locale/date-to-locale.pipe';
 import { User } from '../../shared/models/user';
 import { ResultInfo } from './../../shared/models/resultInfo';
+
+@Pipe({ name: 'dateToLocale' })
+class DateToLocalePipeStub {
+  public transform() { return '01.01.1970, 00:00:00' };
+}
+
+@Pipe({ name: 'secondsToTime' })
+class SecondsToTimePipeStub {
+  public transform() { return '00d:00h:00m:00sec' };
+}
 
 
 describe('ProfileComponent', () => {
@@ -30,13 +39,14 @@ describe('ProfileComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FormsModule, NgbModule],
-      declarations: [ProfileComponent, HeaderComponent, ChangePasswordComponent, ToastsContainerComponent, DateToLocalePipe, SecondsToTimePipe],
+      declarations: [ProfileComponent, HeaderComponent, ChangePasswordComponent, ToastsContainerComponent, DateToLocalePipeStub, SecondsToTimePipeStub],
       providers: [
         NgForm,
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
         { provide: HttpService, useValue: mockHttpService },
         { provide: ToastService, useValue: mockToastService }
-      ]
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     });
     fixture = TestBed.createComponent(ProfileComponent);
     component = fixture.componentInstance;

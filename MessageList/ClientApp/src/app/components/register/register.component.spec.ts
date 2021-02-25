@@ -1,5 +1,4 @@
 import { RegisterComponent } from './register.component';
-import { ToastsContainerComponent } from './../toasts-container/toasts-container.component';
 import { Router } from '@angular/router';
 import { NgForm, FormsModule, AbstractControl } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -11,6 +10,11 @@ import { ToastService } from './../../shared/services/toast-service/toast.servic
 import { RegisterParams } from './../../shared/models/params/registerParams';
 import { ResultInfo } from '../../shared/models/resultInfo';
 import { ComponentFixture } from '@angular/core/testing';
+import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
+
+@Component({ selector: 'app-toasts', template: '' })
+class ToastsContainerComponentStub {
+}
 
 
 describe('RegisterComponent', () => {
@@ -25,7 +29,7 @@ describe('RegisterComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      declarations: [RegisterComponent, ToastsContainerComponent],
+      declarations: [RegisterComponent, ToastsContainerComponentStub],
       imports: [FormsModule, NgbModule],
       providers: [
         NgForm,
@@ -33,7 +37,8 @@ describe('RegisterComponent', () => {
         { provide: Router, useValue: mockRouter },
         { provide: ToastService, useValue: mockToastService },
         { provide: NgbModal, useValue: mockModalService }
-      ]
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     });
     fixture = TestBed.createComponent(RegisterComponent);
     component = fixture.componentInstance;

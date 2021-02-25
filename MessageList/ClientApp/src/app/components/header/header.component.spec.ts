@@ -2,7 +2,7 @@ import { HeaderComponent } from './header.component';
 import { HttpService } from './../../shared/services/http-service/http.service';
 import { User } from './../../shared/models/user';
 import { of } from 'rxjs';
-import { TestBed, ComponentFixture  } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 
 
 describe('HeaderComponent', () => {
@@ -30,7 +30,7 @@ describe('HeaderComponent', () => {
     expect(component).toBeTruthy();
   })
 
-  it('should render continer', () => {
+  it('should render container', () => {
     let container: HTMLDivElement = fixture.nativeElement.querySelector('.container-fluid');
     expect(container).toBeTruthy();
   })
