@@ -4,7 +4,7 @@ import { FileService } from '../../shared/services/file-service/file.service';
 import { DateToLocalePipe } from './../../shared/pipes/date-to-locale/date-to-locale.pipe';
 import { BlobToSrcPipe } from '../../shared/pipes/blob-to-src/blob-to-src.pipe';
 import { SafeUrlPipe } from '../../shared/pipes/safe-url/safe-url.pipe';
-import { Message } from './../../shared/models/Message';
+import { Message } from './../../shared/models/message';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FileCollection } from '../../shared/models/fileCollection';
 
