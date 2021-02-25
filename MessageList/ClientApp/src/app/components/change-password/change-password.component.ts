@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild, Input, Output, EventEmitter } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { HttpService } from './../../shared/services/http-service/http.service';
 import { User } from './../../shared/models/user';
@@ -13,6 +13,8 @@ import { ChangePasswordMode } from './../../shared/models/componentModes/changeP
 })
 export class ChangePasswordComponent {
   constructor(private _httpService: HttpService) { }
+
+  @ViewChild('changePasswordForm') changePasswordForm: NgForm;
 
   @Input() public authUserInfo: User = new User();
   @Input() public mode: string;
