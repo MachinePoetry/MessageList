@@ -94,7 +94,6 @@ describe('LoginComponent', () => {
     expect(emailControl.hasError('pattern')).toBe(true);
   })
 
-
   it('should have no errors at email model if form was submitted and correct email was set', () => {
     emailControl.setValue('qwerty@q.ru');
     form.dispatchEvent(new Event('submit'));
@@ -140,7 +139,6 @@ describe('LoginComponent', () => {
     passwordControl.markAsTouched();
     expect(passwordControl.hasError('pattern')).toBe(true);
   })
-
 
   it('should have no errors at password model if form was submitted and correct password was set', () => {
     passwordControl.setValue('password');

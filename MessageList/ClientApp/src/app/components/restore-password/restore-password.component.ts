@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { User } from './../../shared/models/user';
@@ -16,6 +16,8 @@ import { ChangePasswordMode } from './../../shared/models/componentModes/changeP
 
 export class RestorePasswordComponent {
   constructor(private _httpService: HttpService, private _router: Router, private _toastService: ToastService) { }
+
+  @ViewChild('validateKeyForm') validateKeyForm: NgForm;
 
   public step: number = 1;
   public isKeyValidationProcess: boolean = false;
