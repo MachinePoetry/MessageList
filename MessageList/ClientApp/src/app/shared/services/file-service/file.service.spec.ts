@@ -12,7 +12,10 @@ describe('FileService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [FileService, { provide: BlobToSrcPipe, useValue: fakeBlobToSrcPipe }]
+      providers: [
+        FileService,
+        { provide: BlobToSrcPipe, useValue: fakeBlobToSrcPipe }
+      ]
     });
     service = TestBed.get(FileService);
     previews = [new LinkPreviewResponse()];
@@ -46,25 +49,25 @@ describe('FileService', () => {
   });
 
   it('should clean file collection', () => {
-    let file = new File([""], "image.jpg", { type: "image/jpeg", lastModified: Date.now() });
+    let file: File = new File([""], "image.jpg", { type: "image/jpeg", lastModified: Date.now() });
     fileCollection.images.push(file);
     service.cleanFileCollection(fileCollection);
     expect(fileCollection).toEqual(new FileCollection());
   });
 
   it('should return correct file collection type', () => {
-    let file = new File([""], "image.jpg", { type: "image/jpeg", lastModified: Date.now() });
+    let file: File = new File([""], "image.jpg", { type: "image/jpeg", lastModified: Date.now() });
     fileCollection.images.push(file);
     expect(service.getFileCollectionType(fileCollection.images)).toBe('images');
   });
 
   it('should return correct audio file type', () => {
-    let file = new File([""], "audio.mp3", { type: "audio/mp3", lastModified: Date.now() });
+    let file: File = new File([""], "audio.mp3", { type: "audio/mp3", lastModified: Date.now() });
     expect(service.isAudio(file)).toBeTruthy();
   });
 
   it('should return false is file is not audio', () => {
-    let file = new File([""], "image.jpg", { type: "image/jpeg", lastModified: Date.now() });
+    let file: File = new File([""], "image.jpg", { type: "image/jpeg", lastModified: Date.now() });
     expect(service.isAudio(file)).toBeFalsy();
   });
 })
