@@ -50,7 +50,7 @@ describe('ConfirmModal', () => {
     expect(buttons.length).toBe(3);
   })
 
-  it('should autoclose modal window', () => {
+  it('should close modal window', () => {
     component.ok('closeType');
     expect(mockNgbActiveModalService.close).toHaveBeenCalled();
     expect(mockNgbActiveModalService.close).toHaveBeenCalledTimes(1);
