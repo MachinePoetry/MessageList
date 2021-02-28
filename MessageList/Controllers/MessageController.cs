@@ -9,7 +9,7 @@ using Newtonsoft.Json.Linq;
 using MessageList.Data;
 using MessageList.Models;
 using MessageList.Models.QueryModels;
-using MessageList.Models.Services;
+using MessageList.Models.Helpers;
 
 namespace MessageList.Controllers
 {

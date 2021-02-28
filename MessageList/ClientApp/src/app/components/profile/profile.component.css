@@ -34,13 +34,21 @@ p {
   border: 2px solid #DC143C;
 }
 
+#showUserActivity {
+  text-decoration: underline;
+}
+
+#showUserActivity:hover {
+  text-decoration: none;
+  cursor: pointer;
+}
+
 
 
 
 
 
 @media (max-width: 577px) {
-
   .profile-container h1 {
     font-size: 35px;
   }
@@ -61,6 +69,7 @@ p {
   #changeLoadedMessagesAmountLabel,
   #changePasswordLabel,
   #messagesToLoadFormButton,
+  #lastRequestBlock span,
   button span {
     font-size: 14px;
   }

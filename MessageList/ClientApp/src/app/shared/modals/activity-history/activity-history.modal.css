@@ -1,0 +1,27 @@
+#activitiesContainer {
+  max-height: 40vh;
+  overflow: scroll;
+}
+
+.activity-icon {
+  color: #1B5891;
+}
+
+.activity-text {
+  font-size: 14px;
+}
+
+#activitiesContainer {
+  scrollbar-face-color: #1B5891;
+  scrollbar-color: rgb(13,25,47) transparent;
+  scrollbar-width: thin;
+}
+
+#activitiesContainer::-webkit-scrollbar {
+  width: 5px;
+}
+
+#activitiesContainer::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background: linear-gradient(#1B5891, rgb(13,25,47)) #1B5891;
+}

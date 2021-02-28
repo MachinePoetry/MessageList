@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.Configuration;
 using MessageList.Data;
 using MessageList.Models;
 using MessageList.Models.Extensions;
+using MessageList.Models.Middleware;
 
 
 namespace MessageList.Controllers
@@ -22,9 +24,11 @@ namespace MessageList.Controllers
     public class AccountController : Controller
     {
         private ApplicationDbContext _db;
-        public AccountController(ApplicationDbContext db)
+        private IConfiguration _configuration { get; }
+        public AccountController(ApplicationDbContext db, IConfiguration configuration)
         {
             _db = db;
+            _configuration = configuration;
         }
 
         [HttpPost("login")]
@@ -38,13 +42,14 @@ namespace MessageList.Controllers
             {
                 await HttpContext.SignOutAsync();
                 await Authenticate(acc.Email);
+                UserActivityTracker activityHelper = new UserActivityTracker(_configuration);
+                await activityHelper.LogUserRequestAsync(Request.HttpContext, user.Id);
                 result = new ResultInfo(status: "AuthSuccess", info: "Доступ предоставлен");
             }
             else
             {
                 result = new ResultInfo(status: "AuthFailed", info: "Пользователь с таким email не найден"); // ModelState.AddModelError("", "Email или пароль введены неправильно");
             }
-            
             return Json(result);
         }
 

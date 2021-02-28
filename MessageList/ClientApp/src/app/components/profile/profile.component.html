@@ -29,7 +29,7 @@
         </div>
         <div class="row align-items-center">
           <div class="col-12 col-lg-10 offset-lg-1">
-            <h4 class="mt-3 text-center">Личные данные:</h4>
+            <h4 class="mt-5 mb-5 text-center">Личные данные:</h4>
           </div>
         </div>
         <div class="row align-items-center">
@@ -57,8 +57,29 @@
           </div>
         </div>
         <div class="row align-items-center">
-          <div class="col-12 col-lg-10 offset-lg-1">
-            <h4 class="mt-3 text-center">Изменение личных данных:</h4>
+          <div class="col-12 col-lg-10 offset-lg-1 my-1">
+            <h4 class="mt-5 mb-5 text-center">Безопасность:</h4>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-5 col-sm-7">
+            <p class="mt-3 ml-sm-2 ml-md-5"> Последняя активность: </p>
+          </div>
+          <div class="col-7 col-sm-5" id=" lastRequestBlock">
+            <span class="mt-3 text-success"> {{lastUserRequest.requestDate | dateToLocale: 'ru'}} </span>
+            <span class="mt-3 ml-1 text-success"> ( {{lastUserRequest.country}}, {{lastUserRequest.city}} ) </span>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-5 col-sm-7">
+          </div>
+          <div class="col-7 col-sm-5">
+            <span class="mt-1" id="showUserActivity" (click)="activityHistoryModalOpen()"> Показать историю активности </span>
+          </div>
+        </div>
+        <div class="row align-items-center">
+          <div class="col-12 col-lg-10 offset-lg-1 mt-3">
+            <h4 class="mt-5 mb-5 text-center">Изменение личных данных:</h4>
           </div>
         </div>
         <div class="row align-items-center">
@@ -88,7 +109,8 @@
         </div>
         <div class="row align-items-center">
           <div class="col-5 col-sm-7">
-            <p class="mt-4 ml-sm-2 ml-md-5"> Задать новый ключ для восстановления пароля
+            <p class="mt-4 ml-sm-2 ml-md-5">
+              Задать новый ключ для восстановления пароля
               <i class="mdi mdi-lg mdi-help-circle-outline" placement="top" ngbTooltip="Укажите текстовый ключ (любой текст),
                   который будет использоваться при восстановлении пароля (если вы его забудете).&#10;Минимум 1, максимум 30 символов.">
               </i>:

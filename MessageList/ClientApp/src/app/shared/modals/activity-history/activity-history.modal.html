@@ -1,0 +1,38 @@
+<div class="modal-header">
+  <h6 class="modal-title"><span> История активности </span></h6>
+  <button type="button" class="close" aria-label="Close" (click)="cancel('crossButton')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-12 mx-2">
+      <span class="my-2 activity-text"> <b> История активности </b> показывает информацию о том, с каких устройств и в какое время вы входили на сайт.
+                              Отображает информацию о последних 20ти входах: </span>
+    </div>
+  </div>
+  <div class="row mt-2" id="activitiesContainer">
+    <div *ngFor="let activity of userActivities" class="col-12 mt-2 d-flex">
+      <div class="col-2">
+        <div class="w-100 d-flex justify-content-center">
+          <i class="mdi mdi-36px mdi-desktop-mac activity-icon mt-2 lh-1" *ngIf="!activity.isMobile"></i>
+          <i class="mdi mdi-36px mdi-cellphone-android activity-icon mt-2 lh-1" *ngIf="activity.isMobile"></i>
+        </div>
+      </div>
+      <div class="col-9">
+        <div class="w-100" placement="top" ngbTooltip="{{activity.ip}}">
+          <span class="activity-text"><b>{{activity.country}},</b></span>
+          <span class="ml-2 activity-text"><b>{{activity.regionName}},</b></span>
+          <span class="ml-2 activity-text"><b>{{activity.city}}</b></span>
+        </div>
+        <div class="w-100">
+          <span class="activity-text dark-color-text">{{activity.requestDate | dateToLocale: 'ru'}},</span>
+          <span class="ml-2 activity-text dark-color-text">{{activity.provider}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" (click)="cancel('okButton')"> Закрыть </button>
+</div>

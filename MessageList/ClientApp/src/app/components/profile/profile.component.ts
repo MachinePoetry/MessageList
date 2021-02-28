@@ -2,12 +2,15 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { User } from './../../shared/models/user';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ActivityHistoryModal } from './../../shared/modals/activity-history/activity-history.modal';
 import { ChangeMessagesToLoadParams } from './../../shared/models/params/changeMessagesToLoadParams';
 import { ChangePasswordKeyParams } from './../../shared/models/params/changePasswordKeyParams';
 import { HttpService } from './../../shared/services/http-service/http.service';
 import { ToastService } from './../../shared/services/toast-service/toast.service';
 import { ResultInfo } from './../../shared/models/resultInfo';
 import { ChangePasswordMode } from './../../shared/models/componentModes/changePasswordMode';
+import { UserRequestInfo } from './../../shared/models/userRequestInfo';
 
 @Component({
   selector: 'app-profile',
@@ -16,7 +19,7 @@ import { ChangePasswordMode } from './../../shared/models/componentModes/changeP
 })
 
 export class ProfileComponent implements OnInit, AfterViewInit {
-  constructor(private _httpService: HttpService, private _toastService: ToastService, private _route: ActivatedRoute) { }
+  constructor(private _httpService: HttpService, private _toastService: ToastService, private _modalService: NgbModal, private _route: ActivatedRoute) { }
 
   public authUserInfo: User = new User;
   public messagesToLoadAmount: number = 20;
@@ -26,6 +29,7 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   public isHidden: boolean = true;
   public keyForPasswordChange: string = '';
   public uptime: number = 0;
+  public lastUserRequest: UserRequestInfo = new UserRequestInfo();
   private _report: ResultInfo = new ResultInfo();
   public changePasswordMode = ChangePasswordMode;
 
@@ -109,6 +113,12 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     }
   }
 
+  public activityHistoryModalOpen(): void {
+    let modalRef = this._modalService.open(ActivityHistoryModal, { centered: true });
+    modalRef.result.then((result) => { }, (reason) => { });
+    modalRef.componentInstance.authUserId = this.authUserInfo.id;
+  }
+
   ngOnInit() {
     this.authUserInfo = this._route.snapshot.data['user'];
     this.loadAllMessages = (this.authUserInfo.messagesToLoadAmount === 0);
@@ -121,6 +131,9 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       setInterval(() => {
         this.uptime += 1000;
       }, 1000);
+    })
+    this._httpService.get('/api/users/getLastUserActivity', { authUserId: this.authUserInfo?.id }).subscribe((data: UserRequestInfo) => {
+      this.lastUserRequest = data;
     })
   }
 }

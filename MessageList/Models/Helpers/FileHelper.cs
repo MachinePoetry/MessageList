@@ -8,7 +8,7 @@ using System.IO;
 using MessageList.Data;
 using MessageList.Models.QueryModels;
 
-namespace MessageList.Models.Services
+namespace MessageList.Models.Helpers
 {
     public static class FileHelper
     {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -197,6 +198,20 @@ namespace MessageList.Controllers
             ResultInfo result = ResultInfo.CreateResultInfo(res, "UserDeleted", "Пользователь успешно удален", "UserDeletionFailed", "Произошла ошибка при удалении пользователя");
             return Json(result);
 
+        }
+
+        [HttpGet("getUserActivityHistory")]
+        public async Task<JsonResult> GetUserActivityHistoryAsync([FromQuery] int authUserId)
+        {
+            List<UserRequestInfo> requests = await _db.UserRequestsHistory.Where(r => r.UserId == authUserId).OrderByDescending(req => req.Id).Take(20).ToListAsync();
+            return Json(requests);
+        }
+
+        [HttpGet("getLastUserActivity")]
+        public JsonResult GetLastUserActivity([FromQuery] int authUserId)
+        {
+            UserRequestInfo lastUserRequest = _db.UserRequestsHistory.Where(r => r.UserId == authUserId).OrderBy(req => req.Id).Last();
+            return Json(lastUserRequest);
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -9,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using MessageList.Data;
 using MessageList.Models.Services;
+using MessageList.Models.Middleware;
 
 namespace MessageList
 {
@@ -59,6 +61,15 @@ namespace MessageList
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseMvc();
+            app.Use(async (context, next) =>
+            {
+                if (context.User.Identity.IsAuthenticated)
+                {
+                    UserActivityTracker activityHelper = new UserActivityTracker(Configuration);
+                    await activityHelper.LogUserRequestAsync(context, null);
+                }
+                await next.Invoke();
+            });
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";

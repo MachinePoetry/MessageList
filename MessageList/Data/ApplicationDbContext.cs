@@ -16,6 +16,7 @@ namespace MessageList.Data
         public DbSet<VideoFile> Video { get; set; }
         public DbSet<AudioFile> Audio { get; set; }
         public DbSet<OtherFile> Files { get; set; }
+        public DbSet<UserRequestInfo> UserRequestsHistory { get; set; }
 
         public ApplicationDbContext (DbContextOptions<ApplicationDbContext> options) : base(options) { }
     }
