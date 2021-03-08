@@ -23,5 +23,10 @@ namespace MessageList.Models
         {
             Data = data;
         }
+
+        public ImageFile(int id, string contentType, string fileName, long length, int fileCollectionId, byte[] data) : base(id, contentType, fileName, length, fileCollectionId)
+        {
+            Data = data;
+        }
     }
 }

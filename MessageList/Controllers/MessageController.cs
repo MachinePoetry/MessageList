@@ -32,10 +32,17 @@ namespace MessageList.Controllers
 
             User user = _db.Users.Find(id);
             List<MessageGroup> messageGroups = await _db.MessageGroups.Where(mg => mg.UserId == id).AsNoTracking().AsSplitQuery().Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Images)
-                                                                                                    .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Video)
-                                                                                                    .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Audio)
-                                                                                                    .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Files)
-                                                                                                    .Include(m => m.Messages).ThenInclude(mes => mes.UrlPreviews).ToListAsync();
+                                                                                                                                 .Include(m => m.Messages).ThenInclude(mes => mes.UrlPreviews).ToListAsync();
+            foreach (var mg in messageGroups)
+            {
+                foreach (var m in mg.Messages)
+                {
+                    m.FileCollection.Video = await _db.Video.Where(video => video.FileCollectionId == m.FileCollection.Id).Select(v => new VideoFile(v.Id, v.ContentType, v.FileName, v.Length, v.FileCollectionId, null)).ToListAsync();
+                    m.FileCollection.Audio = await _db.Audio.Where(audio => audio.FileCollectionId == m.FileCollection.Id).Select(a => new AudioFile(a.Id, a.ContentType, a.FileName, a.Length, a.FileCollectionId, null)).ToListAsync();
+                    m.FileCollection.Files = await _db.Files.Where(file => file.FileCollectionId == m.FileCollection.Id).Select(f => new OtherFile(f.Id, f.ContentType, f.FileName, f.Length, f.FileCollectionId, null)).ToListAsync();
+                }
+            }
+
             if (user.MessagesToLoadAmount != 0)
             { 
                 messageGroups.ForEach(mg => mg.Messages = mg.Messages.AsEnumerable().Reverse().Take(user.MessagesToLoadAmount).Reverse().ToList());

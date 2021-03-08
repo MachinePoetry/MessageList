@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { BlobToSrcPipe } from './../../pipes/blob-to-src/blob-to-src.pipe';
 import { LinkPreviewResponse } from './../../models/linkPreviewResponse';
 import { FileCollection } from './../../models/fileCollection';
+import { AppFile } from './../../models/appFile';
 import { AppFileCollection } from './../../models/appFileCollection';
 import { MessageParams } from './../../models/params/messageParams';
 
 @Injectable()
 
 export class FileService {
-  constructor(private _blobToSrc: BlobToSrcPipe) { }
+  constructor(private _blobToSrc: BlobToSrcPipe, private _httpClient: HttpClient) { }
 
   public imageMaxSize: number = 1050000;
   public audioMaxSize: number = 20500000;
@@ -49,6 +51,28 @@ export class FileService {
     }
 
     return fd;
+  }
+
+  public getFileData(mediaFile: HTMLMediaElement, appFile: AppFile, fileType: string, mode: string): void {
+    if ((mode === 'message' && !mediaFile?.src?.startsWith('data:') && mediaFile.paused) || (mode === 'preview' && !appFile.src)) {
+      let httpParams: HttpParams = new HttpParams();                                                                                // потом при редактировании берутся и отправляются только те, у которых id - null и есть src. И на бэке они += к уже имеющимся у сообщения.
+      httpParams = httpParams.set('fileId', appFile.id.toString());
+      httpParams = httpParams.set('fileType', fileType);
+      httpParams = httpParams.set('contentType', appFile.type);
+
+      this._httpClient.get('api/files/fileData', {
+        params: httpParams,
+        responseType: 'blob'
+      }).subscribe(data => {
+        let reader = new FileReader();
+        reader.readAsDataURL(data);
+        reader.onload = function (e) {
+          mediaFile.src = e.target.result.toString();
+        };
+      });
+    } else if (mode === 'preview' && !mediaFile.src.length && appFile.src.length) {
+      mediaFile.src = appFile.src;
+    }
   }
 
   public convertBase64StringToFile(base64: string, fileName: string): File {

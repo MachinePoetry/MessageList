@@ -53,12 +53,12 @@ export class FilePreviewComponent implements AfterViewInit {
   }
 
   public setFileUrl(fileBlock: AppFile): void {
-    if (this.mode === this.filePreviewMode.message && fileBlock.src.startsWith("data:")) {
-      let base64string = this._blobToSrc.transform(fileBlock.src, fileBlock);
-      let fileToDownload: File = this._fileService.convertBase64StringToFile(base64string, fileBlock.name);
-      let url = URL.createObjectURL(fileToDownload);
-      this.fileUrl = url;
-    }
+    //if (this.mode === this.filePreviewMode.message && fileBlock.src.startsWith("data:")) {
+    //  let base64string = this._blobToSrc.transform(fileBlock.src, fileBlock);
+    //  let fileToDownload: File = this._fileService.convertBase64StringToFile(base64string, fileBlock.name);
+    //  let url = URL.createObjectURL(fileToDownload);
+    //  this.fileUrl = url;
+    //}
   }
 
   public deleteFile(file: File): void {
@@ -91,9 +91,13 @@ export class FilePreviewComponent implements AfterViewInit {
     });
   }
 
+  public getVideoData(video: HTMLMediaElement, videoAppFile: AppFile): void {
+    this._fileService.getFileData(video, videoAppFile, 'video', this.mode);
+  }
+
   ngAfterViewInit() {
     this._showPreview(this.imageBlockContainer, this.imageBlocks, 'images', 8, '0px');
-    this._showPreview(this.videoBlockContainer, this.videoBlocks, 'video', 8, '0px');
+    this._showPreview(this.videoBlockContainer, this.videoBlocks, 'video', 12, '0px');
     this._showPreview(this.audioBlockContainer, this.audioBlocks, 'audio', 42, '0px');
     this._showPreview(this.fileBlockContainer, this.fileBlocks, 'files', 4, '0px');
   }

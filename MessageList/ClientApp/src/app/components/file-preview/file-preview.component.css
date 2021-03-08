@@ -24,6 +24,19 @@ span {
   overflow: hidden;
 }
 
+.video-block {
+  position: relative;
+}
+
+#getFileDataButton {
+  color: red;
+}
+
+#getFileDataButton:hover {
+  cursor: pointer;
+  color: #06bab2;
+}
+
 #imgPreview {
   cursor: pointer;
   transition: 0.3s;
@@ -104,8 +117,37 @@ span {
   font-size: 100%;
 }
 
+#videoBlockContainer {
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.custom-scrollbar {
+  scrollbar-face-color: #1e96a1;
+  scrollbar-color: #1e96a1 transparent;
+  scrollbar-width: thin;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background: #1e96a1;
+}
+
+.disable-scrollbar::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+.disable-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 #imageBlockContainer::-webkit-scrollbar,
-#videoBlockContainer::-webkit-scrollbar,
 #audioBlockContainer::-webkit-scrollbar,
 #fileBlockContainer::-webkit-scrollbar {
   width: 0px;
@@ -113,7 +155,6 @@ span {
 }
 
 #imageBlockContainer,
-#videoBlockContainer,
 #audioBlockContainer,
 #fileBlockContainer {
   -ms-overflow-style: none; /* IE 10+ */

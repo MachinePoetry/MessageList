@@ -31,12 +31,14 @@ namespace MessageList.Models
             Length = length;
         }
 
-        public File(string contentType, string fileName, long length, int fileCollectionId)
+        public File(string contentType, string fileName, long length, int fileCollectionId) : this(contentType, fileName, length)
         {
-            ContentType = contentType;
-            FileName = fileName;
-            Length = length;
             FileCollectionId = fileCollectionId;
+        }
+
+        public File(int id, string contentType, string fileName, long length, int fileCollectionId) : this(contentType, fileName, length, fileCollectionId)
+        {
+            Id = id;
         }
     }
 }

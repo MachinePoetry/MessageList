@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { FileService } from './../../shared/services/file-service/file.service';
 import { AppFile } from './../../shared/models/appFile';
 
 @Component({
@@ -8,6 +9,7 @@ import { AppFile } from './../../shared/models/appFile';
 })
 
 export class AudioPlayerComponent {
+  constructor(private _fileService: FileService) { }
 
   @Input() public audioFile: AppFile;
   @Input() public fileUrl: string;
@@ -19,14 +21,14 @@ export class AudioPlayerComponent {
   public audioProgress: number = 0;
   public volume: number = 1;
 
-  public togglePlay(audio: HTMLMediaElement): void {
+  public togglePlay(audio: HTMLMediaElement, audioAppFile: AppFile): void {
+    this._fileService.getFileData(audio, audioAppFile, 'audio', this.mode);
+
     if (audio.paused) {
-      if (audio.readyState >= 2) {
-        audio.play();
-        this.isPaused = false;
-        this.isControlsVisible = true;
-        this.isPlayStarted = true;
-      }
+      audio.play();
+      this.isPaused = false;
+      this.isControlsVisible = true;
+      this.isPlayStarted = true;
     } else {
       audio.pause();
       this.isPaused = true;

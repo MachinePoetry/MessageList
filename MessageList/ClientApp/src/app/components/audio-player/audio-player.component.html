@@ -1,8 +1,8 @@
 <div class="d-flex h-100 w-100" id="audioContainer">
   <div class="col-1 d-flex justify-content-center align-items-center">
-    <audio #audio [src]="audioFile.src | blobToSrc: audioFile | safeUrl" class="d-none" (timeupdate)="showProgress(audio)" (ended)="resetAudioControls(audio)"></audio>
-    <span *ngIf="isPaused" class="mdi mdi-play-circle toggle-play lh-1 my-1" (click)="togglePlay(audio)" [ngClass]="mode === 'preview' ? 'player-color-light' : 'player-color-dark'"></span>
-    <span *ngIf="!isPaused" class="mdi mdi-pause-circle toggle-play lh-1 my-1" (click)="togglePlay(audio)" [ngClass]="mode === 'preview' ? 'player-color-light' : 'player-color-dark'"></span>
+    <audio #audio [src]="" class="d-none" (timeupdate)="showProgress(audio)" (ended)="resetAudioControls(audio)"></audio>
+    <span *ngIf="isPaused" class="mdi mdi-play-circle toggle-play lh-1 my-1" (click)="togglePlay(audio, audioFile)" [ngClass]="mode === 'preview' ? 'player-color-light' : 'player-color-dark'"></span>
+    <span *ngIf="!isPaused" class="mdi mdi-pause-circle toggle-play lh-1 my-1" (click)="togglePlay(audio, audioFile)" [ngClass]="mode === 'preview' ? 'player-color-light' : 'player-color-dark'"></span>
   </div>
   <div class="col-8 col-sm-9 d-flex align-items-center pl-1">
     <div class="h-75 w-100">
@@ -20,7 +20,7 @@
   <div class="col-3 col-sm-2 d-flex align-items-center">
     <div class="h-75 w-100">
       <div class="w-100 d-flex justify-content-end align-items-center" id="currentTimeContainer" [style.height.%]="isControlsVisible ? 65 : 95">
-        <span *ngIf="!isPlayStarted" class="current-time" [ngClass]="mode === 'preview' ? 'player-color-light' : 'dark-color-text'">
+        <span *ngIf="!isPlayStarted" class="current-time mt-1" [ngClass]="mode === 'preview' ? 'player-color-light' : 'dark-color-text'">
           {{audio.duration ? (audio.duration | secondsToTime: 'audioPlayer') : '00:00'}}
         </span>
         <span *ngIf="isPlayStarted" class="current-time" [ngClass]="mode === 'preview' ? 'player-color-light' : 'dark-color-text'">{{audio.currentTime | secondsToTime: 'audioPlayer'}}</span>
