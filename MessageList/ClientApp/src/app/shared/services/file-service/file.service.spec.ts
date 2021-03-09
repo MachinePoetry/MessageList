@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { FileService } from './file.service';
 import { BlobToSrcPipe } from './../../pipes/blob-to-src/blob-to-src.pipe';
 import { LinkPreviewResponse } from './../../models/linkPreviewResponse';
@@ -8,12 +9,14 @@ import { MessageParams } from './../../models/params/messageParams';
 describe('FileService', () => {
   let service: FileService;
   const fakeBlobToSrcPipe = { transform: () => 'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAA' };
+  let mockHttpClient = { post: jasmine.createSpy('post'), get: jasmine.createSpy('get') };
   let previews: LinkPreviewResponse[], fileCollection: FileCollection, messageParams: MessageParams;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       providers: [
         FileService,
+        { provide: HttpClient, useValue: mockHttpClient },
         { provide: BlobToSrcPipe, useValue: fakeBlobToSrcPipe }
       ]
     });

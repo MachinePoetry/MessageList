@@ -1,5 +1,6 @@
 import { AudioPlayerComponent } from './audio-player.component';
 import { AppFile } from './../../shared/models/appFile';
+import { FileService } from './../../shared/services/file-service/file.service';
 import { BlobToSrcPipe } from './../../shared/pipes/blob-to-src/blob-to-src.pipe';
 import { SecondsToTimePipe } from './../../shared/pipes/seconds-to-time/seconds-to-time.pipe';
 import { SafeUrlPipe } from './../../shared/pipes/safe-url/safe-url.pipe';
@@ -36,6 +37,7 @@ describe('AudioPlayerComponent', () => {
       imports: [FormsModule],
       declarations: [AudioPlayerComponent, BlobToSrcPipeStub, SafeUrlPipeStub, SecondsToTimePipeStub],
       providers: [
+        { provide: FileService, useValue: mockFileService },
         { provide: BlobToSrcPipe, useValue: mockBlobToSrcPipe },
         { provide: SecondsToTimePipe, useValue: mockFileService },
         { provide: SafeUrlPipe, useValue: mockFileService },
