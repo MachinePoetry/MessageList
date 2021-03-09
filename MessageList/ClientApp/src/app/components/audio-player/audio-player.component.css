@@ -2,6 +2,10 @@ span {
   font-family: Tahoma, Arial, sans-serif;
 }
 
+#audioNameLink:hover {
+  cursor: pointer;
+}
+
 #audioName {
   font-size: 14px;
 }

@@ -27,7 +27,6 @@ export class FilePreviewComponent implements AfterViewInit {
   @ViewChild('fileBlockContainer') fileBlockContainer: ElementRef;
   @ViewChildren('fileBlock') fileBlocks: QueryList<ElementRef>;
 
-  public fileUrl: string = '';
   public isImgModalVisible: boolean = false;
   public filePreviewMode = FilePreviewMode;
 
@@ -52,13 +51,10 @@ export class FilePreviewComponent implements AfterViewInit {
     this.isImgModalVisible = false;
   }
 
-  public setFileUrl(fileBlock: AppFile): void {
-    //if (this.mode === this.filePreviewMode.message && fileBlock.src.startsWith("data:")) {
-    //  let base64string = this._blobToSrc.transform(fileBlock.src, fileBlock);
-    //  let fileToDownload: File = this._fileService.convertBase64StringToFile(base64string, fileBlock.name);
-    //  let url = URL.createObjectURL(fileToDownload);
-    //  this.fileUrl = url;
-    //}
+  public setFileUrl(fileBlock: AppFile, fileType: string, link: HTMLLinkElement): void {
+    if (this.mode === this.filePreviewMode.message) {
+      this._fileService.getFileData(fileBlock, fileType, this.mode, null, link);
+    }
   }
 
   public deleteFile(file: File): void {
@@ -92,7 +88,7 @@ export class FilePreviewComponent implements AfterViewInit {
   }
 
   public getVideoData(video: HTMLMediaElement, videoAppFile: AppFile): void {
-    this._fileService.getFileData(video, videoAppFile, 'video', this.mode);
+    this._fileService.getFileData(videoAppFile, 'video', this.mode, video, null);
   }
 
   ngAfterViewInit() {

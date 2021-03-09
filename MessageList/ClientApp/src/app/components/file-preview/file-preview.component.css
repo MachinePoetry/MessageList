@@ -8,6 +8,10 @@
   }
 }
 
+#fileNameLink:hover {
+  cursor: pointer;
+}
+
 span {
   font-family: Tahoma, Arial, sans-serif;
 }
