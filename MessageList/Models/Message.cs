@@ -28,6 +28,7 @@ namespace MessageList.Models
 
         public Message() {
             Text = String.Empty;
+            CreatedAt = DateTime.Now;
             FileCollection = new FileCollection();
             UrlPreviews = new List<UrlPreview>();
         }
