@@ -35,6 +35,7 @@ import { SafeUrlPipe } from './shared/pipes/safe-url/safe-url.pipe';
 import { SecondsToTimePipe } from './shared/pipes/seconds-to-time/seconds-to-time.pipe';
 import { BlobToSrcPipe } from './shared/pipes/blob-to-src/blob-to-src.pipe';
 import { CutLongStringPipe } from './shared/pipes/cut-long-string/cut-long-string.pipe';
+import { FileSizePipe } from './shared/pipes/file-size/file-size.pipe';
 
 import { TermsOfUseModal } from './shared/modals/terms-of-use/terms-of-use.modal';
 import { ConfirmModal } from './shared/modals/confirm/confirm.modal';
@@ -62,8 +63,8 @@ const routes: Routes = [
   declarations: [
     AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, FilePreviewComponent, LinkPreviewComponent, NotFoundComponent,
     MessageComponent, ToastsContainerComponent, AudioPlayerComponent, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrlPipe, SecondsToTimePipe, BlobToSrcPipe,
-    CutLongStringPipe, TermsOfUseModal, ConfirmModal, WarningModal, AttachFileModal, AttachFileFromWebModal, ActivityHistoryModal, RoundSpinner, InlineSpinner, LinkPreviewComponent,
-    ChangePasswordComponent, RestorePasswordComponent
+    CutLongStringPipe, FileSizePipe, TermsOfUseModal, ConfirmModal, WarningModal, AttachFileModal, AttachFileFromWebModal, ActivityHistoryModal, RoundSpinner, InlineSpinner,
+    LinkPreviewComponent, ChangePasswordComponent, RestorePasswordComponent
   ],
   imports: [
     BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, NgSelectModule, CommonModule, BrowserAnimationsModule

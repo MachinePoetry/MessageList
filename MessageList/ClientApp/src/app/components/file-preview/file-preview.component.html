@@ -58,7 +58,7 @@
         </a>
       </div>
       <div class="w-100 h-50 d-flex align-items-start p-0 ml-1">
-        <span class="lh-1" id="fileSize">{{fileBlock.size}} КБ</span>
+        <span class="lh-1" id="fileSize">{{fileBlock.size | fileSize}}</span>
       </div>
     </div>
     <div *ngIf="mode === filePreviewMode.preview" class="d-flex w-10 justify-content-center align-items-center">
