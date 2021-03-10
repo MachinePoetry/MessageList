@@ -75,12 +75,6 @@ describe('AttachFileModal', () => {
     expect(mockNgbActiveModalService.close).toHaveBeenCalledTimes(1);
   })
 
-  it('should open new modal window to attach file from web', () => {
-    component.openFileFromWebModal();
-    expect(mockNgbModalService.open).toHaveBeenCalled();
-    expect(mockNgbModalService.open).toHaveBeenCalledTimes(1);
-  })
-
   it('should close modal window with given params', () => {
     component.cancel('closeButton');
     expect(mockNgbActiveModalService.close).toHaveBeenCalled();

@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FileService } from './../../services/file-service/file.service';
-import { AttachFileFromWebModal } from './../attach-file-from-web/attach-file-from-web.modal';
 import { AttachFileModalParams } from './../../models/params/attachFileModalParams';
 import { WarningModal } from './../warning/warning.modal';
 import { WarningModalParams } from './../../models/params/warningModalParams';
@@ -35,11 +34,6 @@ export class AttachFileModal implements OnInit {
       }
       this._activeModal.close(this.files);
     }
-  }
-
-  public openFileFromWebModal(): void {
-    let modalRef = this._modalService.open(AttachFileFromWebModal, { centered: true });
-    modalRef.result.then((result) => { }, (reason) => { });
   }
 
   public cancel(closeType: string): void {
