@@ -63,7 +63,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   public isFileMenuActive: boolean = false;
   private _previousMessageBlockHeight: number | null = null;
   public searchDate: NgbDateStruct;
-  public newMessage = { text: '', messagePreviews: [], fileCollection: { images: [], video: [], audio: [], files: [] } };
+  public newMessage = { text: '', urlPreviews: [], fileCollection: { images: [], video: [], audio: [], files: [] } };
   public filesDefaultState: FileCollection = new FileCollection();
   private _messagesToLoadCounter: number = 30;
   private _freezeScrollBar = false;
@@ -147,8 +147,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    if ((form.valid && this._notOnlySpaceBar.test(this.newMessage.text)) || this._fileService.isFileCollectionValid(this.newMessage.fileCollection) ||
-         this.newMessage.messagePreviews.length) {
+    if ((form.valid && this._notOnlySpaceBar.test(this.newMessage.text)) || this._fileService.isFileCollectionValid(this.newMessage.fileCollection) || this.newMessage.urlPreviews.length) {
 
       let tempMessageText = this.newMessage.text; // clear preview related code immideatly to prevent url previews creating again while they are being sent to server already
       form.resetForm();
@@ -158,11 +157,11 @@ export class MainComponent implements OnInit, AfterViewInit {
       this.newMessage.fileCollection = this._fileService.convertAppFileCollectionToFileCollection(this.newMessage.fileCollection);
 
       let params: MessageParams = new MessageParams(this.authUserInfo.id, this.selectedGroupId, tempMessageText, this.selectedMessageId);
-      let messageParams: FormData = this._fileService.convertParamsToFormData(this.newMessage.messagePreviews, this.newMessage.fileCollection, params);
+      let messageParams: FormData = this._fileService.convertParamsToFormData(this.newMessage.urlPreviews, this.newMessage.fileCollection, params);
 
       this.enterMessageField.nativeElement.focus();
       this.newMessage.text = '';
-      this.newMessage.messagePreviews = [];
+      this.newMessage.urlPreviews = [];
       this.newMessage.fileCollection = new FileCollection();
 
       let url: string = this.showEditMessageForm ? '/api/messages/update' : '/api/messages/create';
@@ -186,7 +185,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private _toggleForm(css1: string, css2: string, value: string, files: FileCollection) {
+  private _toggleForm(css1: string, css2: string, value: string, files: FileCollection, urls?: LinkPreviewResponse[]) {
     this.messageEditingBlock.nativeElement.classList.remove(css1);
     this.messageEditingBlock.nativeElement.classList.add(css2);
     this.enterMessageField.nativeElement.value = value;
@@ -194,18 +193,21 @@ export class MainComponent implements OnInit, AfterViewInit {
     if (files) {
       this.newMessage.fileCollection = files;
     }
+    if (urls) {
+      this.newMessage.urlPreviews = urls;
+    }
     this.setMessageCreationFormHeight();
     this._setMessageBlockHeight();
     this.enterMessageField.nativeElement.focus();
   }
 
-  public toggleEditingMessageForm(isVisible: boolean, messageId: number, messageText?: string, files?: FileCollection): void {
+  public toggleEditingMessageForm(isVisible: boolean, messageId: number, messageText?: string, files?: FileCollection, urls?: LinkPreviewResponse[]): void {
     this.showEditMessageForm = isVisible;
     this.selectedMessageId = messageId;
     if (isVisible) {
-      this._toggleForm('d-none', 'd-block', messageText, files);
+      this._toggleForm('d-none', 'd-block', messageText, files, urls);
     } else {
-      this._toggleForm('d-block', 'd-none', '', this.filesDefaultState);
+      this._toggleForm('d-block', 'd-none', '', this.filesDefaultState, []);
       this.newMessage.text = '';
     }
   }
@@ -383,7 +385,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   }
 
   public changePreviews(previews: LinkPreviewResponse[]): void {
-    this.newMessage.messagePreviews = previews;
+    this.newMessage.urlPreviews = previews;
     this._setMessageBlockHeight();
     this.enterMessageField.nativeElement.focus();
   }
@@ -455,7 +457,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     let timer = setInterval(() => {
       urls = this._textService.getUrlsFromText(this.newMessage.text).filter((value, index, thisArr) => thisArr.indexOf(value) === index);
       appUrls = this._textService.convertUrlsToAppUrls(urls, appUrls);
-      this.newMessage.messagePreviews = this._textService.getPreviewsForUrls(appUrls, this.newMessage.messagePreviews);
+      this.newMessage.urlPreviews = this._textService.getPreviewsForUrls(appUrls, this.newMessage.urlPreviews);
     }, 2500);
   }
 }

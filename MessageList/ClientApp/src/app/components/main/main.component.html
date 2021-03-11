@@ -143,7 +143,7 @@
               <div *ngFor="let group of authUserMessageGroups" class="w-100">
                 <div *ngIf="group.id == selectedGroupId" class="w-100">
                   <div #message *ngFor="let message of group.messages; trackBy: groupsTrackFn" class="w-100" id="messageContainer" style="border: 1px solid transparent">
-                    <app-message [message]="message" (editMessage)="this.toggleEditingMessageForm(true, $event.id, $event.text, $event.fileCollection)"
+                    <app-message [message]="message" (editMessage)="this.toggleEditingMessageForm(true, $event.id, $event.text, $event.fileCollection, $event.urlPreviews)"
                                  (deleteMessage)="modalOpen('post' ,'Удаление сообщения', 'Вы действительно хотите удалить сообщение?', $event.id, 'api/messages/delete')"></app-message>
                   </div>
                 </div>
@@ -212,7 +212,7 @@
                   </textarea>
                 </form>
                 <div class="w-100">
-                  <link-preview [previews]="newMessage.messagePreviews" (changePreviewsEvent)="changePreviews($event)" [mode]="linkPreviewMode.preview"></link-preview>
+                  <url-preview [previews]="newMessage.urlPreviews" (changePreviewsEvent)="changePreviews($event)" [mode]="linkPreviewMode.preview"></url-preview>
                   <app-file-preview [fileCollection]="newMessage.fileCollection" (changeFilesEvent)="setChangedFilesCollection($event)"
                                     [mode]="filePreviewMode.preview">
                   </app-file-preview>

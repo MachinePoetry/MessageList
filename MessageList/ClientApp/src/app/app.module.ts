@@ -16,7 +16,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { MainComponent } from './components/main/main.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { FilePreviewComponent } from './components/file-preview/file-preview.component';
-import { LinkPreviewComponent } from './components/link-preview/link-preview.component';
+import { UrlPreviewComponent } from './components/url-preview/url-preview.component';
 import { NotFoundComponent } from './components/not-found/not-found.component';
 import { MessageComponent } from './components/message/message.component';
 import { ToastsContainerComponent } from './components/toasts-container/toasts-container.component';
@@ -60,10 +60,10 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, FilePreviewComponent, LinkPreviewComponent, NotFoundComponent,
+    AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, FilePreviewComponent, UrlPreviewComponent, NotFoundComponent,
     MessageComponent, ToastsContainerComponent, AudioPlayerComponent, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrlPipe, SecondsToTimePipe, BlobToSrcPipe,
-    CutLongStringPipe, FileSizePipe, TermsOfUseModal, ConfirmModal, WarningModal, AttachFileModal, ActivityHistoryModal, RoundSpinner, InlineSpinner, LinkPreviewComponent,
-    ChangePasswordComponent, RestorePasswordComponent
+    CutLongStringPipe, FileSizePipe, TermsOfUseModal, ConfirmModal, WarningModal, AttachFileModal, ActivityHistoryModal, RoundSpinner, InlineSpinner, ChangePasswordComponent,
+    RestorePasswordComponent
   ],
   imports: [
     BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, NgSelectModule, CommonModule, BrowserAnimationsModule

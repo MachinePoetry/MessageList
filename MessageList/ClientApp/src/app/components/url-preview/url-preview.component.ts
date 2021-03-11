@@ -2,12 +2,12 @@ import { Component, Input, Output, EventEmitter, ViewChild, ViewChildren, Elemen
 import { LinkPreviewResponse } from './../../shared/models/linkPreviewResponse';
 
 @Component({
-  selector: 'link-preview',
-  templateUrl: './link-preview.component.html',
-  styleUrls: ['./link-preview.component.css']
+  selector: 'url-preview',
+  templateUrl: './url-preview.component.html',
+  styleUrls: ['./url-preview.component.css']
 })
 
-export class LinkPreviewComponent implements AfterViewInit {
+export class UrlPreviewComponent implements AfterViewInit {
 
   @Input() public previews: LinkPreviewResponse[] = [];
   @Input() public mode: string;

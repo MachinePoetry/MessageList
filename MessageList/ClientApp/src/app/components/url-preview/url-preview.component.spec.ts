@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { LinkPreviewComponent } from './link-preview.component';
+import { UrlPreviewComponent } from './url-preview.component';
 import { LinkPreviewResponse } from './../../shared/models/linkPreviewResponse';
 
-describe('LinkPreviewComponent', () => {
-  let component: LinkPreviewComponent;
-  let fixture: ComponentFixture<LinkPreviewComponent>;
+describe('UrlPreviewComponent', () => {
+  let component: UrlPreviewComponent;
+  let fixture: ComponentFixture<UrlPreviewComponent>;
   let testPreview: LinkPreviewResponse, appUrl: string;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [LinkPreviewComponent]
+      declarations: [UrlPreviewComponent]
     })
     .compileComponents();
-    fixture = TestBed.createComponent(LinkPreviewComponent);
+    fixture = TestBed.createComponent(UrlPreviewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
     
@@ -24,7 +24,7 @@ describe('LinkPreviewComponent', () => {
     appUrl = 'https://someurl.ru';
   });
 
-  it('should create Link preview component', () => {
+  it('should create Url preview component', () => {
     expect(component).toBeTruthy();
   });
 
