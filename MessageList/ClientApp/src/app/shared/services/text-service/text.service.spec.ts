@@ -50,7 +50,8 @@ describe('TextService', () => {
     let appUrl: AppUrl = new AppUrl('https://someurl.com');
     let appUrls: AppUrl[] = [appUrl];
     let responses: LinkPreviewResponse[] = [];
-    expect(service.getPreviewsForUrls(appUrls, responses).length).toBe(1);
+    service.getPreviewsForUrls(appUrls, responses);
+    expect(responses.length).toBe(1);
   });
 
   it('should return correct array of preview responses if one of urls have preview already', () => {
@@ -58,6 +59,7 @@ describe('TextService', () => {
     appUrl.hasPreview = true;
     let appUrls: AppUrl[] = [appUrl];
     let responses: LinkPreviewResponse[] = [returnedPreviewResponse];
-    expect(service.getPreviewsForUrls(appUrls, responses).length).toBe(1);
+    service.getPreviewsForUrls(appUrls, responses);
+    expect(responses.length).toBe(1);
   });
 })

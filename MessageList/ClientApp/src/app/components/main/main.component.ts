@@ -457,7 +457,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     let timer = setInterval(() => {
       urls = this._textService.getUrlsFromText(this.newMessage.text).filter((value, index, thisArr) => thisArr.indexOf(value) === index);
       appUrls = this._textService.convertUrlsToAppUrls(urls, appUrls);
-      this.newMessage.urlPreviews = this._textService.getPreviewsForUrls(appUrls, this.newMessage.urlPreviews);
+      this._textService.getPreviewsForUrls(appUrls, this.newMessage.urlPreviews);
     }, 2500);
   }
 }

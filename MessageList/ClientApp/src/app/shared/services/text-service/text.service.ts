@@ -28,8 +28,8 @@ export class TextService {
     return matches ? matches : [];
   }
 
-  private _isUrlWithPreview(url: string, appUrls: AppUrl[]): boolean {
-    for (let appUrl of appUrls) {
+  private _isUrlWithPreview(url: string, urlsCollection: AppUrl[] | LinkPreviewResponse[]): boolean {
+    for (let appUrl of urlsCollection) {
       if (appUrl.url === url) {
         return true;
       }
@@ -46,7 +46,7 @@ export class TextService {
     return appUrls;
   }
 
-  public getPreviewsForUrls(urls: AppUrl[], linkPreviewResponses: LinkPreviewResponse[]): LinkPreviewResponse[] {
+  public getPreviewsForUrls(urls: AppUrl[], linkPreviewResponses: LinkPreviewResponse[]): void {
     document.body.style.cursor = 'progress';
     for (let url of urls) {
       if (!url.hasPreview) {
@@ -54,7 +54,9 @@ export class TextService {
           let previewResponse: LinkPreviewResponse = data;
           if (previewResponse && previewResponse.title && previewResponse.url) {
             url.hasPreview = true;
-            linkPreviewResponses.push(previewResponse);
+            if (!this._isUrlWithPreview(previewResponse.url, linkPreviewResponses)) {
+              linkPreviewResponses.push(previewResponse);
+            }
           }
         },
         error => {
@@ -68,6 +70,5 @@ export class TextService {
       }
     }
     document.body.style.cursor = 'default';
-    return linkPreviewResponses;
   }
 }
