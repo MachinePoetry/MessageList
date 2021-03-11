@@ -18,7 +18,7 @@ import { User } from './../../shared/models/user';
 import { MessageGroup } from './../../shared/models/messageGroup';
 import { SpinnerMode } from './../../shared/models/componentModes/spinnerMode';
 import { FilePreviewMode } from './../../shared/models/componentModes/filePreviewMode';
-import { LinkPreviewResponse } from './../../shared/models/linkPreviewResponse';
+import { UrlPreviewResponse } from './../../shared/models/urlPreviewResponse';
 import { LinkPreviewMode } from './../../shared/models/componentModes/linkPreviewMode';
 import { AppUrl } from './../../shared/models/appUrl';
 import { FileCollection } from './../../shared/models/fileCollection';
@@ -185,7 +185,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private _toggleForm(css1: string, css2: string, value: string, files: FileCollection, urls?: LinkPreviewResponse[]) {
+  private _toggleForm(css1: string, css2: string, value: string, files: FileCollection, urls?: UrlPreviewResponse[]) {
     this.messageEditingBlock.nativeElement.classList.remove(css1);
     this.messageEditingBlock.nativeElement.classList.add(css2);
     this.enterMessageField.nativeElement.value = value;
@@ -201,7 +201,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.enterMessageField.nativeElement.focus();
   }
 
-  public toggleEditingMessageForm(isVisible: boolean, messageId: number, messageText?: string, files?: FileCollection, urls?: LinkPreviewResponse[]): void {
+  public toggleEditingMessageForm(isVisible: boolean, messageId: number, messageText?: string, files?: FileCollection, urls?: UrlPreviewResponse[]): void {
     this.showEditMessageForm = isVisible;
     this.selectedMessageId = messageId;
     if (isVisible) {
@@ -384,7 +384,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.enterMessageField.nativeElement.focus();
   }
 
-  public changePreviews(previews: LinkPreviewResponse[]): void {
+  public changePreviews(previews: UrlPreviewResponse[]): void {
     this.newMessage.urlPreviews = previews;
     this._setMessageBlockHeight();
     this.enterMessageField.nativeElement.focus();

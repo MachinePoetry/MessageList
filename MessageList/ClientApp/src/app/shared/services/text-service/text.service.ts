@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LinkPreviewResponse } from './../../models/linkPreviewResponse';
+import { UrlPreviewResponse } from './../../models/urlPreviewResponse';
 import { HttpService } from './../../services/http-service/http.service';
 import { AppUrl } from './../../models/appUrl';
 
@@ -28,7 +28,7 @@ export class TextService {
     return matches ? matches : [];
   }
 
-  private _isUrlWithPreview(url: string, urlsCollection: AppUrl[] | LinkPreviewResponse[]): boolean {
+  private _isUrlWithPreview(url: string, urlsCollection: AppUrl[] | UrlPreviewResponse[]): boolean {
     for (let appUrl of urlsCollection) {
       if (appUrl.url === url) {
         return true;
@@ -46,12 +46,12 @@ export class TextService {
     return appUrls;
   }
 
-  public getPreviewsForUrls(urls: AppUrl[], linkPreviewResponses: LinkPreviewResponse[]): void {
+  public getPreviewsForUrls(urls: AppUrl[], linkPreviewResponses: UrlPreviewResponse[]): void {
     document.body.style.cursor = 'progress';
     for (let url of urls) {
       if (!url.hasPreview) {
-        this._httpService.get('https://api.linkpreview.net/?key=c5ba21883df06561e001eeada6f88a19&q=' + url.url).subscribe((data: LinkPreviewResponse) => {
-          let previewResponse: LinkPreviewResponse = data;
+        this._httpService.get('https://api.linkpreview.net/?key=c5ba21883df06561e001eeada6f88a19&q=' + url.url).subscribe((data: UrlPreviewResponse) => {
+          let previewResponse: UrlPreviewResponse = data;
           if (previewResponse && previewResponse.title && previewResponse.url) {
             url.hasPreview = true;
             if (!this._isUrlWithPreview(previewResponse.url, linkPreviewResponses)) {
@@ -61,7 +61,7 @@ export class TextService {
         },
         error => {
           url.hasPreview = true;
-          let errorResponse: LinkPreviewResponse = new LinkPreviewResponse();
+          let errorResponse: UrlPreviewResponse = new UrlPreviewResponse();
           errorResponse.title = 'Произошла ошибка при получении данных от сервиса превью';
           errorResponse.image = './../../../assets/img/error.jpg';
           errorResponse.url = url.url;

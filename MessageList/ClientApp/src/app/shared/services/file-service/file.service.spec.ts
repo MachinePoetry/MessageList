@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { FileService } from './file.service';
 import { BlobToSrcPipe } from './../../pipes/blob-to-src/blob-to-src.pipe';
-import { LinkPreviewResponse } from './../../models/linkPreviewResponse';
+import { UrlPreviewResponse } from './../../models/urlPreviewResponse';
 import { FileCollection } from './../../models/fileCollection';
 import { MessageParams } from './../../models/params/messageParams';
 
@@ -10,7 +10,7 @@ describe('FileService', () => {
   let service: FileService;
   const fakeBlobToSrcPipe = { transform: () => 'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAA' };
   let mockHttpClient = { post: jasmine.createSpy('post'), get: jasmine.createSpy('get') };
-  let previews: LinkPreviewResponse[], fileCollection: FileCollection, messageParams: MessageParams;
+  let previews: UrlPreviewResponse[], fileCollection: FileCollection, messageParams: MessageParams;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -21,7 +21,7 @@ describe('FileService', () => {
       ]
     });
     service = TestBed.get(FileService);
-    previews = [new LinkPreviewResponse()];
+    previews = [new UrlPreviewResponse()];
     fileCollection = new FileCollection();
     messageParams = new MessageParams(1, 2, 'message text', 5);
   });
@@ -40,7 +40,7 @@ describe('FileService', () => {
     for (var key of fd.values()) {
       result.push(key);
     }
-    expect(result).toEqual(['1', '2', 'message text', '5', JSON.stringify(new LinkPreviewResponse())]);
+    expect(result).toEqual(['1', '2', 'message text', '5', JSON.stringify(new UrlPreviewResponse())]);
   });
 
   it('should correctly validate file collection', () => {

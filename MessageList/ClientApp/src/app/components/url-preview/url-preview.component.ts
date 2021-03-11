@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, ViewChild, ViewChildren, ElementRef, QueryList, AfterViewInit } from '@angular/core';
-import { LinkPreviewResponse } from './../../shared/models/linkPreviewResponse';
+import { UrlPreviewResponse } from './../../shared/models/urlPreviewResponse';
 
 @Component({
   selector: 'url-preview',
@@ -9,9 +9,9 @@ import { LinkPreviewResponse } from './../../shared/models/linkPreviewResponse';
 
 export class UrlPreviewComponent implements AfterViewInit {
 
-  @Input() public previews: LinkPreviewResponse[] = [];
+  @Input() public previews: UrlPreviewResponse[] = [];
   @Input() public mode: string;
-  @Output() public changePreviewsEvent = new EventEmitter<LinkPreviewResponse[]>();
+  @Output() public changePreviewsEvent = new EventEmitter<UrlPreviewResponse[]>();
 
   @ViewChild('linkPreviewContainer') linkPreviewContainer: ElementRef;
   @ViewChildren('linkPreviewBlock') linkPreviewBlocks: QueryList<ElementRef>;

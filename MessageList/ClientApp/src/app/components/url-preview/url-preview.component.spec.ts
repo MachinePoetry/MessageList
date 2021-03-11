@@ -1,11 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UrlPreviewComponent } from './url-preview.component';
-import { LinkPreviewResponse } from './../../shared/models/linkPreviewResponse';
+import { UrlPreviewResponse } from './../../shared/models/urlPreviewResponse';
 
 describe('UrlPreviewComponent', () => {
   let component: UrlPreviewComponent;
   let fixture: ComponentFixture<UrlPreviewComponent>;
-  let testPreview: LinkPreviewResponse, appUrl: string;
+  let testPreview: UrlPreviewResponse, appUrl: string;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -16,7 +16,7 @@ describe('UrlPreviewComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
     
-    testPreview = new LinkPreviewResponse();
+    testPreview = new UrlPreviewResponse();
     testPreview.title = 'title';
     testPreview.description = 'some description';
     testPreview.image = '';

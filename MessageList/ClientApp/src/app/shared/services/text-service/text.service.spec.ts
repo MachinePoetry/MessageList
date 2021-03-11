@@ -3,16 +3,16 @@ import { of } from 'rxjs';
 import { AppUrl } from './../../models/appUrl';
 import { TextService } from './text.service';
 import { HttpService } from './../http-service/http.service';
-import { LinkPreviewResponse } from './../../models/linkPreviewResponse';
+import { UrlPreviewResponse } from './../../models/urlPreviewResponse';
 
 describe('TextService', () => {
   let service: TextService;
-  const returnedPreviewResponse: LinkPreviewResponse = new LinkPreviewResponse();
+  const returnedPreviewResponse: UrlPreviewResponse = new UrlPreviewResponse();
   returnedPreviewResponse.title = 'Link preview response';
   returnedPreviewResponse.description = 'first link preview response of two';
   returnedPreviewResponse.image = 'some image url';
   returnedPreviewResponse.url = 'https://www.someresponseurl.com';
-  const receivedPreviewResponse: LinkPreviewResponse = new LinkPreviewResponse();
+  const receivedPreviewResponse: UrlPreviewResponse = new UrlPreviewResponse();
   receivedPreviewResponse.title = 'Link preview response';
   receivedPreviewResponse.description = 'first link preview response of two';
   receivedPreviewResponse.image = 'some image url';
@@ -49,7 +49,7 @@ describe('TextService', () => {
   it('should return correct array of preview responses if no one of urls have preview already', () => {
     let appUrl: AppUrl = new AppUrl('https://someurl.com');
     let appUrls: AppUrl[] = [appUrl];
-    let responses: LinkPreviewResponse[] = [];
+    let responses: UrlPreviewResponse[] = [];
     service.getPreviewsForUrls(appUrls, responses);
     expect(responses.length).toBe(1);
   });
@@ -58,7 +58,7 @@ describe('TextService', () => {
     let appUrl: AppUrl = new AppUrl('https://www.someresponseurl.com');
     appUrl.hasPreview = true;
     let appUrls: AppUrl[] = [appUrl];
-    let responses: LinkPreviewResponse[] = [returnedPreviewResponse];
+    let responses: UrlPreviewResponse[] = [returnedPreviewResponse];
     service.getPreviewsForUrls(appUrls, responses);
     expect(responses.length).toBe(1);
   });

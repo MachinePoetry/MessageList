@@ -1,4 +1,4 @@
-export class LinkPreviewResponse {
+export class UrlPreviewResponse {
   public title: string = '';
   public description: string = '';
   public image: string = '';
