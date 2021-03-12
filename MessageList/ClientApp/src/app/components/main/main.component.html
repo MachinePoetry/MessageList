@@ -213,9 +213,9 @@
                 </form>
                 <div class="w-100">
                   <url-preview [previews]="newMessage.urlPreviews" (changePreviewsEvent)="changePreviews($event)" [mode]="linkPreviewMode.preview"></url-preview>
-                  <app-file-preview [fileCollection]="newMessage.fileCollection" (changeFilesEvent)="setChangedFilesCollection($event)"
+                  <file-preview [fileCollection]="newMessage.fileCollection" (changeFilesEvent)="setChangedFilesCollection($event)"
                                     [mode]="filePreviewMode.preview">
-                  </app-file-preview>
+                  </file-preview>
                   <div #spinner class="ml-2 d-none">
                     <inline-spinner></inline-spinner>
                   </div>

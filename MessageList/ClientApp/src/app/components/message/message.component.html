@@ -17,7 +17,7 @@
     <url-preview [previews]="message.urlPreviews" (changePreviewsEvent)="null" (setNoPreviewUrlsEvent)="null" [mode]="linkPreviewMode.message"></url-preview>
   </div>
   <div *ngIf="fileService.isFileCollectionValid(message.fileCollection)" class="w-90 mt-3 mx-auto">
-    <app-file-preview [fileCollection]="message.fileCollection" (changeFilesEvent)="null" [mode]="filePreviewMode.message"></app-file-preview>
+    <file-preview [fileCollection]="message.fileCollection" (changeFilesEvent)="null" [mode]="filePreviewMode.message"></file-preview>
   </div>
 </div>
 

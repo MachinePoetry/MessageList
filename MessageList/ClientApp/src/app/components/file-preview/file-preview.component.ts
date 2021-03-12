@@ -6,7 +6,7 @@ import { FileCollection } from './../../shared/models/fileCollection';
 import { BlobToSrcPipe } from './../../shared/pipes/blob-to-src/blob-to-src.pipe';
 
 @Component({
-  selector: 'app-file-preview',
+  selector: 'file-preview',
   templateUrl: './file-preview.component.html',
   styleUrls: ['./file-preview.component.css']
 })
