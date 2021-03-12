@@ -73,6 +73,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   public isSubmitButtonDisabled: boolean = false;
   public isNewMessagesUploading: boolean = false;
   public isFirstLoad: boolean = true;
+  public appUrls: AppUrl[] = [];
   public spinnerMode = SpinnerMode;
   public filePreviewMode = FilePreviewMode;
   public linkPreviewMode = UrlPreviewMode;
@@ -207,6 +208,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     } else {
       this._toggleForm('d-block', 'd-none', '', this.filesDefaultState, []);
       this.newMessage.text = '';
+      this.appUrls = [];
     }
   }
 
@@ -451,12 +453,11 @@ export class MainComponent implements OnInit, AfterViewInit {
     }
 
     let urls: string[] = [];
-    let appUrls: AppUrl[] = [];
 
     let timer = setInterval(() => {
       urls = this._textService.getUrlsFromText(this.newMessage.text).filter((value, index, thisArr) => thisArr.indexOf(value) === index);
-      appUrls = this._textService.convertUrlsToAppUrls(urls, appUrls);
-      this._textService.getPreviewsForUrls(appUrls, this.newMessage.urlPreviews);
+      this.appUrls = this._textService.convertUrlsToAppUrls(urls, this.appUrls);
+      this._textService.getPreviewsForUrls(this.appUrls, this.newMessage.urlPreviews);
     }, 2500);
   }
 }
