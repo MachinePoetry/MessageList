@@ -19,7 +19,7 @@ import { MessageGroup } from './../../shared/models/messageGroup';
 import { SpinnerMode } from './../../shared/models/componentModes/spinnerMode';
 import { FilePreviewMode } from './../../shared/models/componentModes/filePreviewMode';
 import { UrlPreviewResponse } from './../../shared/models/urlPreviewResponse';
-import { LinkPreviewMode } from './../../shared/models/componentModes/linkPreviewMode';
+import { UrlPreviewMode } from './../../shared/models/componentModes/urlPreviewMode';
 import { AppUrl } from './../../shared/models/appUrl';
 import { FileCollection } from './../../shared/models/fileCollection';
 import { SearchParams } from './../../shared/models/params/searchParams';
@@ -75,7 +75,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   public isFirstLoad: boolean = true;
   public spinnerMode = SpinnerMode;
   public filePreviewMode = FilePreviewMode;
-  public linkPreviewMode = LinkPreviewMode;
+  public linkPreviewMode = UrlPreviewMode;
 
   public authUserInfo: User = new User();
   public authUserMessageGroups: MessageGroup[] = [];

@@ -1,5 +1,5 @@
 import { FilePreviewMode } from './filePreviewMode';
 
-export class LinkPreviewMode extends FilePreviewMode {
+export class UrlPreviewMode extends FilePreviewMode {
 
 }
