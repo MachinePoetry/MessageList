@@ -10,7 +10,7 @@ describe('FileService', () => {
   let service: FileService;
   const fakeBlobToSrcPipe = { transform: () => 'data:image/jpeg;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAA' };
   let mockHttpClient = { post: jasmine.createSpy('post'), get: jasmine.createSpy('get') };
-  let previews: UrlPreviewResponse[], fileCollection: FileCollection, messageParams: MessageParams;
+  let urlPreviews: UrlPreviewResponse[], fileCollection: FileCollection, messageParams: MessageParams;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -21,7 +21,7 @@ describe('FileService', () => {
       ]
     });
     service = TestBed.get(FileService);
-    previews = [new UrlPreviewResponse()];
+    urlPreviews = [new UrlPreviewResponse()];
     fileCollection = new FileCollection();
     messageParams = new MessageParams(1, 2, 'message text', 5);
   });
@@ -31,11 +31,11 @@ describe('FileService', () => {
   });
 
   it('should create object (FormData) from given params', () => {
-    expect(typeof(service.convertParamsToFormData(previews, fileCollection, messageParams))).toBe('object');
+    expect(typeof (service.convertParamsToFormData(urlPreviews, fileCollection, messageParams))).toBe('object');
   });
 
   it('should create FormData object with correct values', () => {
-    let fd: FormData = service.convertParamsToFormData(previews, fileCollection, messageParams);
+    let fd: FormData = service.convertParamsToFormData(urlPreviews, fileCollection, messageParams);
     let result = [];
     for (var key of fd.values()) {
       result.push(key);
@@ -47,8 +47,12 @@ describe('FileService', () => {
     expect(service.isFileCollectionValid(fileCollection)).toBeFalsy();
   });
 
+  it('should return the same url previews collection with another reference', () => {
+    expect(service.getUrlPreviewsClone(urlPreviews)).not.toEqual(urlPreviews);
+  });
+
   it('should return the same file collection with another reference', () => {
-    expect(service.getCollectionClone(fileCollection)).not.toEqual(fileCollection);
+    expect(service.getFileCollectionClone(fileCollection)).not.toEqual(fileCollection);
   });
 
   it('should clean file collection', () => {

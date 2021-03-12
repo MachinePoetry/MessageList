@@ -375,7 +375,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   }
 
   public setChangedFilesCollection(files: FileCollection): void {
-    let fileCollectionClone = this._fileService.getCollectionClone(files);
+    let fileCollectionClone: FileCollection = this._fileService.getFileCollectionClone(files);
     this.newMessage.fileCollection = fileCollectionClone;
     this._setMessageBlockHeight();
     this._scrollToBottom(this.messageBlock);
@@ -383,7 +383,8 @@ export class MainComponent implements OnInit, AfterViewInit {
   }
 
   public changePreviews(previews: UrlPreviewResponse[]): void {
-    this.newMessage.urlPreviews = previews;
+    let previewsClone: UrlPreviewResponse[] = this._fileService.getUrlPreviewsClone(previews);
+    this.newMessage.urlPreviews = previewsClone;
     this._setMessageBlockHeight();
     this.enterMessageField.nativeElement.focus();
   }

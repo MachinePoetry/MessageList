@@ -129,7 +129,13 @@ export class FileService {
     return (collection.images.length > 0 || collection.video.length > 0 || collection.audio.length > 0 || collection.files.length > 0);
   }
 
-  public getCollectionClone(collection: FileCollection): FileCollection {
+  public getUrlPreviewsClone(collection: UrlPreviewResponse[]): UrlPreviewResponse[] {
+    let collectionClone: UrlPreviewResponse[] = [];
+    collectionClone = collection.slice();
+    return collectionClone;
+  }
+
+  public getFileCollectionClone(collection: FileCollection): FileCollection {
     let collectionClone: FileCollection = {
       images: [], video: [], audio: [], files: []
     };
