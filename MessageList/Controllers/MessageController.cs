@@ -121,10 +121,10 @@ namespace MessageList.Controllers
                 }
                 if (authUserIdResult && messageGroupIdResult && isMessageWithFiles)
                 {
-                    List<ImageFile> images = mes.Images?.Select(i => new ImageFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
-                    List<VideoFile> video = mes.Video?.Select(i => new VideoFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
-                    List<AudioFile> audio = mes.Audio?.Select(i => new AudioFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
-                    List<OtherFile> files = mes.Files?.Select(i => new OtherFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
+                    List<ImageFile> images = mes.Images.Select(i => new ImageFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
+                    List<VideoFile> video = mes.Video.Select(i => new VideoFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
+                    List<AudioFile> audio = mes.Audio.Select(i => new AudioFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
+                    List<OtherFile> files = mes.Files.Select(i => new OtherFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
                     message.FileCollection = new FileCollection(images, video, audio, files);
                 }
                 if (authUserIdResult && messageGroupIdResult && isMessageWithUrlPreviews)
@@ -158,17 +158,54 @@ namespace MessageList.Controllers
             int res = 0;
             if (selectedMessageIdResult)
             {
-                Message message = await _db.Messages.Where(m => m.Id == selectedMessageId).Include(m => m.FileCollection.Images)
-                                                                                          .Include(m => m.FileCollection.Video)
-                                                                                          .Include(m => m.FileCollection.Audio)
-                                                                                          .Include(m => m.FileCollection.Files).FirstOrDefaultAsync();
+                Message message = await _db.Messages.Where(m => m.Id == selectedMessageId).Include(mes => mes.FileCollection).Include(mes => mes.UrlPreviews).FirstOrDefaultAsync();
+
                 if (message != null)
                 {
                     message.Text = mes.Text;
-                    message.FileCollection.Images = mes.Images?.Select(i => new ImageFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
-                    message.FileCollection.Video = mes.Video?.Select(i => new VideoFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
-                    message.FileCollection.Audio = mes.Audio?.Select(i => new AudioFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
-                    message.FileCollection.Files = mes.Files?.Select(i => new OtherFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
+                    message.UrlPreviews = message.UrlPreviews.Where(p => mes.UrlPreviewIds.Contains(p.Id)).ToList();
+                    foreach (var jStr in mes.UrlPreviews)
+                    {
+                        JObject jObj = JObject.Parse(jStr);
+                        if (jObj != null && jObj.HasValues)
+                        {
+                            string title = jObj.Property("title").Value.ToString();
+                            string description = jObj.Property("description").Value.ToString();
+                            string image = jObj.Property("image").Value.ToString();
+                            string url = jObj.Property("url").Value.ToString();
+                            UrlPreview preview = new UrlPreview(title, description, image, url);
+                            message.UrlPreviews.Add(preview);
+                        }
+                    }
+                    if (mes.Images.Count > 0 || mes.ImagesIds.Count > 0)
+                    {
+                        message.FileCollection.Images = await _db.Images.Where(i => i.FileCollectionId == message.FileCollection.Id).ToListAsync();
+                        message.FileCollection.Images = message.FileCollection.Images.Where(i => mes.ImagesIds.Contains(i.Id)).ToList();
+                        List<ImageFile> newImages = mes.Images.Select(i => new ImageFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
+                        message.FileCollection.Images.AddRange(newImages);
+                    }
+                    if (mes.Video.Count > 0 || mes.VideoIds.Count > 0)
+                    {
+                        message.FileCollection.Video = await _db.Video.Where(v => v.FileCollectionId == message.FileCollection.Id).ToListAsync();
+                        message.FileCollection.Video = message.FileCollection.Video.Where(v => mes.VideoIds.Contains(v.Id)).ToList();
+                        List<VideoFile> newVideo = mes.Video.Select(v => new VideoFile(v.ContentType, v.FileName, v.Length, FileHelper.getFileData(v))).ToList();
+                        message.FileCollection.Video.AddRange(newVideo);
+                    }
+                    if (mes.Audio.Count > 0 || mes.AudioIds.Count > 0)
+                    {
+                        message.FileCollection.Audio = await _db.Audio.Where(a => a.FileCollectionId == message.FileCollection.Id).ToListAsync();
+                        message.FileCollection.Audio = message.FileCollection.Audio.Where(a => mes.AudioIds.Contains(a.Id)).ToList();
+                        List<AudioFile> newAudio = mes.Audio.Select(a => new AudioFile(a.ContentType, a.FileName, a.Length, FileHelper.getFileData(a))).ToList();
+                        message.FileCollection.Audio.AddRange(newAudio);
+                    }
+                    if (mes.Files.Count > 0 || mes.FilesIds.Count > 0)
+                    {
+                        message.FileCollection.Files = await _db.Files.Where(f => f.FileCollectionId == message.FileCollection.Id).ToListAsync();
+                        message.FileCollection.Files = message.FileCollection.Files.Where(f => mes.FilesIds.Contains(f.Id)).ToList();
+                        List<OtherFile> newFiles = mes.Files.Select(f => new OtherFile(f.ContentType, f.FileName, f.Length, FileHelper.getFileData(f))).ToList();
+                        message.FileCollection.Files.AddRange(newFiles);
+                    }
+
                     _db.Messages.Update(message);
                     res = await _db.SaveChangesAsync();
                 }

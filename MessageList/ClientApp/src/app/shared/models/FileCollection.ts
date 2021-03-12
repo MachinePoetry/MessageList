@@ -1,6 +1,8 @@
+import { AppFile } from './appFile';
+
 export class FileCollection {
-  public images: File[] = [];
-  public video: File[] = [];
-  public audio: File[] = [];
-  public files: File[] = [];
+  public images: (File | AppFile)[] = [];
+  public video: (File | AppFile)[] = [];
+  public audio: (File | AppFile)[] = [];
+  public files: (File | AppFile)[] = [];
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { BlobToSrcPipe } from './../../pipes/blob-to-src/blob-to-src.pipe';
-import { LinkPreviewResponse } from './../../models/linkPreviewResponse';
+import { UrlPreviewResponse } from './../../models/urlPreviewResponse';
 import { FileCollection } from './../../models/fileCollection';
 import { AppFile } from './../../models/appFile';
 import { AppFileCollection } from './../../models/appFileCollection';
@@ -17,7 +17,7 @@ export class FileService {
   public videoMaxSize: number = 105000000;
   public fileMaxSize: number = 10500000;
 
-  public convertParamsToFormData(previews: LinkPreviewResponse[], fileCollection: FileCollection, params: MessageParams): FormData {
+  public convertParamsToFormData(previews: UrlPreviewResponse[], fileCollection: FileCollection, params: MessageParams): FormData {
     let fd: FormData = new FormData();
 
     fd.append('authUserId', params.authUserId.toString());
@@ -26,29 +26,24 @@ export class FileService {
     params.selectedMessageId ? fd.append('selectedMessageId', params.selectedMessageId.toString()) : fd.append('selectedMessageId', null);
 
     previews.forEach((value) => {
-      fd.append('urlPreviews', JSON.stringify(value));
+      value.id ? fd.append('urlPreviewIds', value.id.toString()) : fd.append('urlPreviews', JSON.stringify(value));
     });
 
-    if (fileCollection.images.length) {
-      fileCollection.images.forEach((value) => {
-        fd.append('images', value);
-      });
-    }
-    if (fileCollection.video.length) {
-      fileCollection.video.forEach((value) => {
-        fd.append('video', value);
-      });
-    }
-    if (fileCollection.audio.length) {
-      fileCollection.audio.forEach((value) => {
-        fd.append('audio', value);
-      });
-    }
-    if (fileCollection.files.length) {
-      fileCollection.files.forEach((value) => {
-        fd.append('files', value);
-      });
-    }
+    fileCollection.images.forEach((value) => {
+      value instanceof File ? fd.append('images', value) : fd.append('ImagesIds', value.id.toString());
+    });
+
+    fileCollection.video.forEach((value) => {
+      value instanceof File ? fd.append('video', value) : fd.append('VideoIds', value.id.toString());
+    });
+
+    fileCollection.audio.forEach((value) => {
+      value instanceof File ? fd.append('audio', value) : fd.append('AudioIds', value.id.toString());
+    });
+
+    fileCollection.files.forEach((value) => {
+      value instanceof File ? fd.append('files', value) : fd.append('FilesIds', value.id.toString());
+    });
 
     return fd;
   }
@@ -60,7 +55,7 @@ export class FileService {
     httpParams = httpParams.set('contentType', appFile.type);
 
     if (mediaFile) {
-      if ((mode === 'message' && !mediaFile?.src?.startsWith('data:') && mediaFile.paused) || (mode === 'preview' && !appFile.src)) {
+      if (appFile.id && !mediaFile?.src?.startsWith('data:') && mediaFile.paused) {
         this._httpClient.get('api/files/fileData', { params: httpParams, responseType: 'blob' }).subscribe(data => {
           let reader = new FileReader();
           reader.readAsDataURL(data);
@@ -68,7 +63,7 @@ export class FileService {
             mediaFile.src = e.target.result.toString();
           };
         });
-      } else if (mode === 'preview' && !mediaFile.src.length && appFile.src.length) {
+      } else if (!appFile.id && mode === 'preview' && !mediaFile.src.length) {
         mediaFile.src = appFile.src;
       }
     } else if (link && !link.href.length) {
@@ -83,52 +78,52 @@ export class FileService {
     }
   }
 
-  public convertBase64StringToFile(base64: string, fileName: string): File {
-    let arr: string[] = base64.split(',');
-    let mime: string = arr[0].match(/:(.*?);/)[1];
-    let bstr;
-    try {
-      bstr = atob(arr[1]);
-    } catch { };
-    if (bstr) {
-      let byteArrLength = bstr.length;
-      let u8arr = new Uint8Array(byteArrLength);
+  //public convertBase64StringToFile(base64: string, fileName: string): File {
+  //  let arr: string[] = base64.split(',');
+  //  let mime: string = arr[0].match(/:(.*?);/)[1];
+  //  let bstr;
+  //  try {
+  //    bstr = atob(arr[1]);
+  //  } catch { };
+  //  if (bstr) {
+  //    let byteArrLength = bstr.length;
+  //    let u8arr = new Uint8Array(byteArrLength);
 
-      while (byteArrLength--) {
-        u8arr[byteArrLength] = bstr.charCodeAt(byteArrLength);
-      }
-    return new File([u8arr], fileName, { type: mime });
-    }
-  }
+  //    while (byteArrLength--) {
+  //      u8arr[byteArrLength] = bstr.charCodeAt(byteArrLength);
+  //    }
+  //  return new File([u8arr], fileName, { type: mime });
+  //  }
+  //}
 
-  public convertAppFileCollectionToFileCollection(collection: AppFileCollection): FileCollection {
-    let resultCollection: FileCollection = {
-      images: [], video: [], audio: [], files: []
-    }
-    for (let arr in collection) {
-      if (collection[arr].length) {
-        let fileArr: File[] = [];
-        collection[arr].forEach(el => {
-          // Preview component gets files from 2 sources: from message (means from server) and from user PC, but they all are sent to server as js File.
-          // If element is not a js File type (if came to preview from server) convert it to js File type. If it is File (came to preview from user PC) take it as is.
-          if (!(el instanceof File)) {
-            let base64: string = this._blobToSrc.transform(el.src, el);
-            if (base64) {
-              let newFile = this.convertBase64StringToFile(base64, el.name);
-              if (newFile) {
-                Object.defineProperty(newFile, 'src', { value: base64, writable: true });
-                fileArr.push(newFile);
-              }
-            }
-          } else {
-            fileArr.push(el);
-          }
-        })
-        resultCollection[arr] = fileArr;
-      }
-    }
-    return resultCollection;
-  } 
+  //public convertAppFileCollectionToFileCollection(collection: AppFileCollection): FileCollection {
+  //  let resultCollection: FileCollection = {
+  //    images: [], video: [], audio: [], files: []
+  //  }
+  //  for (let arr in collection) {
+  //    if (collection[arr].length) {
+  //      let fileArr: File[] = [];
+  //      collection[arr].forEach(el => {
+  //        // Preview component gets files from 2 sources: from message (means from server) and from user PC, but they all are sent to server as js File.
+  //        // If element is not a js File type (if came to preview from server) convert it to js File type. If it is File (came to preview from user PC) take it as is.
+  //        if (!(el instanceof File)) {
+  //          let base64: string = this._blobToSrc.transform(el.src, el);
+  //          if (base64) {
+  //            let newFile = this.convertBase64StringToFile(base64, el.name);
+  //            if (newFile) {
+  //              Object.defineProperty(newFile, 'src', { value: base64, writable: true });
+  //              fileArr.push(newFile);
+  //            }
+  //          }
+  //        } else {
+  //          fileArr.push(el);
+  //        }
+  //      })
+  //      resultCollection[arr] = fileArr;
+  //    }
+  //  }
+  //  return resultCollection;
+  //} 
 
   public isFileCollectionValid(collection: FileCollection | AppFileCollection): boolean {
     return (collection.images.length > 0 || collection.video.length > 0 || collection.audio.length > 0 || collection.files.length > 0);
@@ -151,7 +146,7 @@ export class FileService {
     }
   }
 
-  public getFileCollectionType(collection: File[]): string {
+  public getFileCollectionType(collection: (File | AppFile)[]): string {
     let collectionType: string = '';
 
     if (this.isImage(collection[0])) {
@@ -167,19 +162,19 @@ export class FileService {
     return collectionType;
   }
 
-  public isImage = (file: File) => {
+  public isImage = (file: File | AppFile) => {
     return file.type.startsWith('image/') ? true : false;
   }
 
-  public isVideo = (file: File) => {
+  public isVideo = (file: File | AppFile) => {
     return file.type.startsWith('video/') ? true : false;
   }
 
-  public isAudio = (file: File) => {
+  public isAudio = (file: File | AppFile) => {
     return file.type.startsWith('audio/') ? true : false;
   }
 
-  public isFile = (file: File) => {
+  public isFile = (file: File | AppFile) => {
     return (!file.type.startsWith('image/') && !file.type.startsWith('video/') && !file.type.startsWith('audio/')) ? true : false;
   }
 }

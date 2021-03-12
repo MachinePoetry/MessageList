@@ -154,13 +154,11 @@ export class MainComponent implements OnInit, AfterViewInit {
       this.newMessage.text = '';
 
       this._toggleInlineSpinner(true);
-      this.newMessage.fileCollection = this._fileService.convertAppFileCollectionToFileCollection(this.newMessage.fileCollection);
 
       let params: MessageParams = new MessageParams(this.authUserInfo.id, this.selectedGroupId, tempMessageText, this.selectedMessageId);
       let messageParams: FormData = this._fileService.convertParamsToFormData(this.newMessage.urlPreviews, this.newMessage.fileCollection, params);
 
       this.enterMessageField.nativeElement.focus();
-      this.newMessage.text = '';
       this.newMessage.urlPreviews = [];
       this.newMessage.fileCollection = new FileCollection();
 
@@ -410,7 +408,7 @@ export class MainComponent implements OnInit, AfterViewInit {
                                                    this.searchBlock.nativeElement.offsetHeight - this.enterMessageBlock.nativeElement.offsetHeight + 'px';
   }
 
-  // Implemented interfaces
+  // Implemented interfaces' methods
 
   ngOnInit() {
     this.authUserInfo = this._route.snapshot.data['user'];
