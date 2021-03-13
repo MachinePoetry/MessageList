@@ -177,34 +177,25 @@ namespace MessageList.Controllers
                             message.UrlPreviews.Add(preview);
                         }
                     }
-                    if (mes.Images.Count > 0 || mes.ImagesIds.Count > 0)
-                    {
-                        message.FileCollection.Images = await _db.Images.Where(i => i.FileCollectionId == message.FileCollection.Id).ToListAsync();
-                        message.FileCollection.Images = message.FileCollection.Images.Where(i => mes.ImagesIds.Contains(i.Id)).ToList();
-                        List<ImageFile> newImages = mes.Images.Select(i => new ImageFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
-                        message.FileCollection.Images.AddRange(newImages);
-                    }
-                    if (mes.Video.Count > 0 || mes.VideoIds.Count > 0)
-                    {
-                        message.FileCollection.Video = await _db.Video.Where(v => v.FileCollectionId == message.FileCollection.Id).ToListAsync();
-                        message.FileCollection.Video = message.FileCollection.Video.Where(v => mes.VideoIds.Contains(v.Id)).ToList();
-                        List<VideoFile> newVideo = mes.Video.Select(v => new VideoFile(v.ContentType, v.FileName, v.Length, FileHelper.getFileData(v))).ToList();
-                        message.FileCollection.Video.AddRange(newVideo);
-                    }
-                    if (mes.Audio.Count > 0 || mes.AudioIds.Count > 0)
-                    {
-                        message.FileCollection.Audio = await _db.Audio.Where(a => a.FileCollectionId == message.FileCollection.Id).ToListAsync();
-                        message.FileCollection.Audio = message.FileCollection.Audio.Where(a => mes.AudioIds.Contains(a.Id)).ToList();
-                        List<AudioFile> newAudio = mes.Audio.Select(a => new AudioFile(a.ContentType, a.FileName, a.Length, FileHelper.getFileData(a))).ToList();
-                        message.FileCollection.Audio.AddRange(newAudio);
-                    }
-                    if (mes.Files.Count > 0 || mes.FilesIds.Count > 0)
-                    {
-                        message.FileCollection.Files = await _db.Files.Where(f => f.FileCollectionId == message.FileCollection.Id).ToListAsync();
-                        message.FileCollection.Files = message.FileCollection.Files.Where(f => mes.FilesIds.Contains(f.Id)).ToList();
-                        List<OtherFile> newFiles = mes.Files.Select(f => new OtherFile(f.ContentType, f.FileName, f.Length, FileHelper.getFileData(f))).ToList();
-                        message.FileCollection.Files.AddRange(newFiles);
-                    }
+                    message.FileCollection.Images = await _db.Images.Where(i => i.FileCollectionId == message.FileCollection.Id).ToListAsync();
+                    message.FileCollection.Images = message.FileCollection.Images.Where(i => mes.ImagesIds.Contains(i.Id)).ToList();
+                    List<ImageFile> newImages = mes.Images.Select(i => new ImageFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
+                    message.FileCollection.Images.AddRange(newImages);
+
+                    message.FileCollection.Video = await _db.Video.Where(v => v.FileCollectionId == message.FileCollection.Id).ToListAsync();
+                    message.FileCollection.Video = message.FileCollection.Video.Where(v => mes.VideoIds.Contains(v.Id)).ToList();
+                    List<VideoFile> newVideo = mes.Video.Select(v => new VideoFile(v.ContentType, v.FileName, v.Length, FileHelper.getFileData(v))).ToList();
+                    message.FileCollection.Video.AddRange(newVideo);
+
+                    message.FileCollection.Audio = await _db.Audio.Where(a => a.FileCollectionId == message.FileCollection.Id).ToListAsync();
+                    message.FileCollection.Audio = message.FileCollection.Audio.Where(a => mes.AudioIds.Contains(a.Id)).ToList();
+                    List<AudioFile> newAudio = mes.Audio.Select(a => new AudioFile(a.ContentType, a.FileName, a.Length, FileHelper.getFileData(a))).ToList();
+                    message.FileCollection.Audio.AddRange(newAudio);
+
+                    message.FileCollection.Files = await _db.Files.Where(f => f.FileCollectionId == message.FileCollection.Id).ToListAsync();
+                    message.FileCollection.Files = message.FileCollection.Files.Where(f => mes.FilesIds.Contains(f.Id)).ToList();
+                    List<OtherFile> newFiles = mes.Files.Select(f => new OtherFile(f.ContentType, f.FileName, f.Length, FileHelper.getFileData(f))).ToList();
+                    message.FileCollection.Files.AddRange(newFiles);
 
                     _db.Messages.Update(message);
                     res = await _db.SaveChangesAsync();
