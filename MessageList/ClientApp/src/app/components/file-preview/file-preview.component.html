@@ -50,7 +50,7 @@
       <img src="./../../assets/img/file.svg" class="img-fluid m-0" />
     </div>
     <div class="p-0 w-75">
-      <div class="w-100 h-50 d-flex align-items-end overflow-hidden p-0 ml-1">
+      <div class="w-100 h-50 overflow-hidden p-0 ml-1">
         <a #a [href]="" class="text-decoration-none" id="fileNameLink" download="{{fileBlock.name}}" (click)="setFileUrl(fileBlock, 'file', a)">
           <span class="text-nowrap lh-1 mb-0" id="fileName" [ngClass]="mode === filePreviewMode.preview ? 'text-light' : 'dark-color-text'">
             {{fileBlock.name}}
