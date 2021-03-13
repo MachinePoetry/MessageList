@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { BlobToSrcPipe } from './../../pipes/blob-to-src/blob-to-src.pipe';
 import { UrlPreviewResponse } from './../../models/urlPreviewResponse';
 import { FileCollection } from './../../models/fileCollection';
 import { AppFile } from './../../models/appFile';
@@ -10,12 +9,18 @@ import { MessageParams } from './../../models/params/messageParams';
 @Injectable()
 
 export class FileService {
-  constructor(private _blobToSrc: BlobToSrcPipe, private _httpClient: HttpClient) { }
+  constructor(private _httpClient: HttpClient) { }
 
   public imageMaxSize: number = 1050000;
   public audioMaxSize: number = 20500000;
   public videoMaxSize: number = 105000000;
   public fileMaxSize: number = 10500000;
+
+  private _appendFilesToFormData(collection: (File | AppFile)[], paramName: string, paramIdsName: string, fd: FormData): void {
+    collection.forEach((value) => {
+      value instanceof File ? fd.append(paramName, value) : fd.append(paramIdsName, value.id.toString());
+    });
+  }
 
   public convertParamsToFormData(previews: UrlPreviewResponse[], fileCollection: FileCollection, params: MessageParams): FormData {
     let fd: FormData = new FormData();
@@ -29,21 +34,10 @@ export class FileService {
       value.id ? fd.append('urlPreviewIds', value.id.toString()) : fd.append('urlPreviews', JSON.stringify(value));
     });
 
-    fileCollection.images.forEach((value) => {
-      value instanceof File ? fd.append('images', value) : fd.append('ImagesIds', value.id.toString());
-    });
-
-    fileCollection.video.forEach((value) => {
-      value instanceof File ? fd.append('video', value) : fd.append('VideoIds', value.id.toString());
-    });
-
-    fileCollection.audio.forEach((value) => {
-      value instanceof File ? fd.append('audio', value) : fd.append('AudioIds', value.id.toString());
-    });
-
-    fileCollection.files.forEach((value) => {
-      value instanceof File ? fd.append('files', value) : fd.append('FilesIds', value.id.toString());
-    });
+    this._appendFilesToFormData(fileCollection.images, 'images', 'imagesIds', fd);
+    this._appendFilesToFormData(fileCollection.video, 'video', 'videoIds', fd);
+    this._appendFilesToFormData(fileCollection.audio, 'audio', 'audioIds', fd);
+    this._appendFilesToFormData(fileCollection.files, 'files', 'filesIds', fd);
 
     return fd;
   }
