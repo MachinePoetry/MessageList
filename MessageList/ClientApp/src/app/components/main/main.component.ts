@@ -15,6 +15,7 @@ import { AttachFileModalParams } from './../../shared/models/params/attachFileMo
 import { WarningModal } from './../../shared/modals/warning/warning.modal';
 import { WarningModalParams } from './../../shared/models/params/warningModalParams';
 import { User } from './../../shared/models/user';
+import { NewMessage } from './../../shared/models/newMessage';
 import { MessageGroup } from './../../shared/models/messageGroup';
 import { SpinnerMode } from './../../shared/models/componentModes/spinnerMode';
 import { FilePreviewMode } from './../../shared/models/componentModes/filePreviewMode';
@@ -63,7 +64,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   public isFileMenuActive: boolean = false;
   private _previousMessageBlockHeight: number | null = null;
   public searchDate: NgbDateStruct;
-  public newMessage = { text: '', urlPreviews: [], fileCollection: { images: [], video: [], audio: [], files: [] } };
+  public newMessage: NewMessage = new NewMessage();
   public filesDefaultState: FileCollection = new FileCollection();
   private _messagesToLoadCounter: number = 30;
   private _freezeScrollBar = false;
