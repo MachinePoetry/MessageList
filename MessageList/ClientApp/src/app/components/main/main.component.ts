@@ -295,7 +295,7 @@ export class MainComponent implements OnInit, AfterViewInit {
           return;
         } else {
           for (let file of result) {
-            var reader = new FileReader();
+            let reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = function (e) {
               file.src = e.target.result;

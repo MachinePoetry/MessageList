@@ -53,7 +53,7 @@ export class FilePreviewComponent implements AfterViewInit {
 
   public setFileUrl(fileBlock: AppFile, fileType: string, link: HTMLLinkElement): void {
     if (this.mode === this.filePreviewMode.message) {
-      this._fileService.getFileData(fileBlock, fileType, this.mode, null, link);
+      this._fileService.getFileData(fileBlock, fileType, null, link);
     }
   }
 
@@ -88,7 +88,7 @@ export class FilePreviewComponent implements AfterViewInit {
   }
 
   public getVideoData(video: HTMLMediaElement, videoAppFile: AppFile): void {
-    this._fileService.getFileData(videoAppFile, 'video', this.mode, video, null);
+    this._fileService.getFileData(videoAppFile, 'video', video, null);
   }
 
   ngAfterViewInit() {

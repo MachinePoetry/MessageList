@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FileService } from './../../shared/services/file-service/file.service';
+import { ToastService } from './../../shared/services/toast-service/toast.service';
 import { AppFile } from './../../shared/models/appFile';
 import { FilePreviewMode } from './../../shared/models/componentModes/filePreviewMode';
 
@@ -10,7 +11,7 @@ import { FilePreviewMode } from './../../shared/models/componentModes/filePrevie
 })
 
 export class AudioPlayerComponent {
-  constructor(private _fileService: FileService) { }
+  constructor(private _fileService: FileService, private _toastService: ToastService) { }
 
   @Input() public audioFile: AppFile;
   @Input() public mode: string;
@@ -22,8 +23,17 @@ export class AudioPlayerComponent {
   public volume: number = 1;
   public filePreviewMode = FilePreviewMode;
 
-  public togglePlay(audio: HTMLMediaElement, audioAppFile: AppFile): void {
-    this._fileService.getFileData(audioAppFile, 'audio', this.mode, audio, null);
+  public togglePlay(audio: HTMLMediaElement): void {
+
+    if ((this.audioFile instanceof File) && !audio.src.startsWith('data:')) {
+      if (!this.audioFile.src) {
+        this._toastService.showDanger('Файл еще не готов для воспроизведения!');
+        return;
+      }
+      audio.src = this.audioFile.src;
+    } else if (!(this.audioFile instanceof File) && !audio.src?.startsWith('data:')) {
+      this._fileService.getFileData(this.audioFile, 'audio', audio, null);
+    }
 
     if (audio.paused) {
       audio.play();
@@ -57,7 +67,7 @@ export class AudioPlayerComponent {
 
   public setFileUrl(fileBlock: AppFile, fileType: string, link: HTMLLinkElement): void {
     if (this.mode === this.filePreviewMode.message) {
-      this._fileService.getFileData(fileBlock, fileType, this.mode, null, link);
+      this._fileService.getFileData(fileBlock, fileType, null, link);
     }
   }
 }

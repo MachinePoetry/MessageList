@@ -42,33 +42,31 @@ export class FileService {
     return fd;
   }
 
-  public getFileData(appFile: AppFile, fileType: string, mode: string, mediaFile?: HTMLMediaElement, link?: HTMLLinkElement): void {
+  private _sendDataRequest(appFile: AppFile, fileType: string, mediaFile: HTMLMediaElement, link: HTMLLinkElement, addActionsToPromise: () => void): void {
     let httpParams: HttpParams = new HttpParams();
     httpParams = httpParams.set('fileId', appFile.id.toString());
     httpParams = httpParams.set('fileType', fileType);
     httpParams = httpParams.set('contentType', appFile.type);
 
-    if (mediaFile) {
-      if (appFile.id && !mediaFile?.src?.startsWith('data:') && mediaFile.paused) {
-        this._httpClient.get('api/files/fileData', { params: httpParams, responseType: 'blob' }).subscribe(data => {
-          let reader = new FileReader();
-          reader.readAsDataURL(data);
-          reader.onload = function (e) {
-            mediaFile.src = e.target.result.toString();
-          };
-        });
-      } else if (!appFile.id && mode === 'preview' && !mediaFile.src.length) {
-        mediaFile.src = appFile.src;
-      }
-    } else if (link && !link.href.length) {
-      this._httpClient.get('api/files/fileData', { params: httpParams, responseType: 'blob' }).subscribe(data => {
-        let reader = new FileReader();
-        reader.readAsDataURL(data);
-        reader.onload = function (e) {
+    this._httpClient.get('api/files/fileData', { params: httpParams, responseType: 'blob' }).subscribe(data => {
+      let reader = new FileReader();
+      reader.readAsDataURL(data);
+      reader.onload = function (e) {
+        if (mediaFile) {
+          mediaFile.src = e.target.result.toString();
+        } else if (link) {
           link.href = e.target.result.toString();
-          link.click();
-        };
-      });
+          addActionsToPromise ? addActionsToPromise() : null;
+        }
+      };
+    });
+  }
+
+  public getFileData(appFile: AppFile, fileType: string, mediaFile?: HTMLMediaElement, link?: HTMLLinkElement): void {
+    if (mediaFile) {
+      this._sendDataRequest(appFile, fileType, mediaFile, null, null);
+    } else if (link && !link.href.length) {
+      this._sendDataRequest(appFile, fileType, null, link, () => link.click());
     }
   }
 
