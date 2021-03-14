@@ -121,6 +121,7 @@ span {
   font-size: 100%;
 }
 
+#imageBlockContainer,
 #videoBlockContainer {
   overflow-x: hidden;
   overflow-y: scroll;
@@ -151,14 +152,12 @@ span {
   scrollbar-width: none;
 }
 
-#imageBlockContainer::-webkit-scrollbar,
 #audioBlockContainer::-webkit-scrollbar,
 #fileBlockContainer::-webkit-scrollbar {
   width: 0px;
   background: transparent;
 }
 
-#imageBlockContainer,
 #audioBlockContainer,
 #fileBlockContainer {
   -ms-overflow-style: none; /* IE 10+ */

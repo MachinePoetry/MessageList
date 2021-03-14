@@ -1,6 +1,8 @@
 <div #imageBlockContainer class="d-flex flex-wrap w-100 file-container" id="imageBlockContainer"
-     [ngClass]="{'d-none': !fileCollection.images?.length, 'mb-3': fileCollection.images?.length}">
-  <div #imageBlock *ngFor="let imageBlock of fileCollection.images" class="image-block round-borders mr-1" [style.width.%]="setPreviewWidth(fileCollection.images)">
+     [ngClass]="{'d-none': !fileCollection.images?.length, 'mb-3': fileCollection.images?.length, 'disable-scrollbar disable-scrollbar::-webkit-scrollbar': mode === filePreviewMode.message,
+     'custom-scrollbar custom-scrollbar::-webkit-scrollbar-thumb': mode === filePreviewMode.preview}">
+  <div #imageBlock *ngFor="let imageBlock of fileCollection.images" class="image-block round-borders mr-1"
+       [style.width.%]="setPreviewWidth(fileCollection.images)">
     <img class="img-fluid round-borders" id="imgPreview" [src]="imageBlock.src | blobToSrc: imageBlock | safeUrl" alt="{{imageBlock.name}}" (click)="showImageModal(imageBlock, imgModalContent)">
     <div *ngIf="mode === filePreviewMode.preview" class="close-button" (click)="deleteFile(imageBlock)"><span class="mdi mdi-close-box lh-1 close"></span></div>
   </div>

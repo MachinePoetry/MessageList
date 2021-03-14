@@ -31,15 +31,7 @@ export class FilePreviewComponent implements AfterViewInit {
   public filePreviewMode = FilePreviewMode;
 
   public setPreviewWidth(collection: File[] | AppFile[]): number {
-    if (collection.length <= 3) {
-      return 32;
-    } else if (collection.length >= 4 && collection.length <= 5) {
-      return Math.ceil(95 / collection.length);
-    } else if (collection.length >= 6 && collection.length <= 9) {
-      return Math.ceil(88 / collection.length);
-    } else {
-      return 10;
-    }
+    return collection.length <= 3 ?  30 : 24;
   }
 
   public showImageModal(image: AppFile, imgModal: AppFile): void {
