@@ -46,10 +46,6 @@ describe('ProfileComponent', () => {
     });
     fixture = TestBed.createComponent(ProfileComponent);
     component = fixture.componentInstance;
-    mockHttpService.post.and.returnValue(of(result));
-    mockHttpService.get.and.returnValue(of(0));
-    component.ngOnInit();
-    component.ngAfterViewInit();
     mockHttpService.get.calls.reset();
     mockHttpService.post.calls.reset();
     mockToastService.showSuccess.calls.reset();
@@ -71,6 +67,10 @@ describe('ProfileComponent', () => {
     result = new ResultInfo();
     result.status = 'AmountOfLoadedMessagesChanged';
     result.info = 'Success info';
+    mockHttpService.post.and.returnValue(of(result));
+    mockHttpService.get.and.returnValue(of(0));
+    component.ngOnInit();
+    component.ngAfterViewInit();
 
     fixture.detectChanges();
   });

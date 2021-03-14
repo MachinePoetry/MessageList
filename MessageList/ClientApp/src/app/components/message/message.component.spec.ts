@@ -103,14 +103,14 @@ describe('MessageComponent', () => {
   it('should render file collection if it is in message', () => {
     mockFileService.isFileCollectionValid.and.returnValue(true);
     fixture.detectChanges();
-    let filePreviewComponent: HTMLElement = fixture.nativeElement.querySelector('app-file-preview');
+    let filePreviewComponent: HTMLElement = fixture.nativeElement.querySelector('file-preview');
     expect(filePreviewComponent).toBeTruthy();
   })
 
   it('should not render file collection if it is empty in message', () => {
     mockFileService.isFileCollectionValid.and.returnValue(false);
     fixture.detectChanges();
-    let filePreviewComponent: HTMLElement = fixture.nativeElement.querySelector('app-file-preview');
+    let filePreviewComponent: HTMLElement = fixture.nativeElement.querySelector('file-preview');
     expect(filePreviewComponent).toBeFalsy();
   })
 });

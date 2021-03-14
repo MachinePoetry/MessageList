@@ -23,7 +23,7 @@ describe('FilePreviewComponent', () => {
   let fixture: ComponentFixture<FilePreviewComponent>;
   let mockBlobToSrcPipe = { transform: jasmine.createSpy('transform').and.returnValue(true) };
   let mockFileService = { isImage: jasmine.createSpy('transform').and.returnValue(true) };
-  let appFile: AppFile, appFileArr: AppFile[], file: File;
+  let appFile: AppFile, appFileArr: AppFile[], file: File, fileCollection: FileCollection;
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
@@ -43,6 +43,7 @@ describe('FilePreviewComponent', () => {
     appFile.type = 'image/jpeg';
     appFile.src = 'iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAA';
     appFileArr = [];
+    fileCollection = new FileCollection();
     const dataBase64 = "VEhJUyBJUyBUSEUgQU5TV0VSCg==";
     const arrayBuffer = Uint8Array.from(window.atob(dataBase64), c => c.charCodeAt(0));
     file = new File([arrayBuffer], "picture.jpeg", { type: 'image/jpeg' });
@@ -60,7 +61,7 @@ describe('FilePreviewComponent', () => {
   it('should return correct width for files', () => {
     appFileArr.push(appFile);
     appFileArr.push(appFile);
-    expect(component.setPreviewWidth(appFileArr)).toBe(32);
+    expect(component.setPreviewWidth(appFileArr)).toBe(30);
     appFileArr.push(appFile);
     appFileArr.push(appFile);
     expect(component.setPreviewWidth(appFileArr)).toBe(24);
@@ -77,5 +78,14 @@ describe('FilePreviewComponent', () => {
     component.fileCollection.images.push(file);
     component.deleteFile(file)
     expect(component.fileCollection).toEqual(new FileCollection());
+  })
+
+  it('render correct height for blocks', () => {
+    appFileArr = [appFile, appFile, appFile];
+    fileCollection.images = appFileArr;
+    component.fileCollection = fileCollection;
+    component.ngAfterViewInit();
+    fixture.detectChanges();
+    expect(component.imageBlockContainer.nativeElement.style.height).toBe('8vh');
   })
 })

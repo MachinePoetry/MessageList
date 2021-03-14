@@ -45,11 +45,11 @@ describe('FileService', () => {
   });
 
   it('should return the same url previews collection with another reference', () => {
-    expect(service.getUrlPreviewsClone(urlPreviews)).not.toEqual(urlPreviews);
+    expect(service.getUrlPreviewsClone(urlPreviews)).not.toBe(urlPreviews);
   });
 
   it('should return the same file collection with another reference', () => {
-    expect(service.getFileCollectionClone(fileCollection)).not.toEqual(fileCollection);
+    expect(service.getFileCollectionClone(fileCollection)).not.toBe(fileCollection);
   });
 
   it('should clean file collection', () => {
