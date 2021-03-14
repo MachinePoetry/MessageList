@@ -18,9 +18,7 @@ export class WarningModal {
 
   public cancel(closeType: string): void {
     this._activeModal.close(closeType);
-    if (this.modalWindowParams.type === 'greeting') {
-      sessionStorage.setItem("isGreeted", 'true');
-    }
+
     if (this.isGreeted) {
       let params = { id: this.modalWindowParams.id };
       this._httpService.post('/api/users/greeting', params).subscribe(data => { }, error => () => { });

@@ -447,9 +447,10 @@ export class MainComponent implements OnInit, AfterViewInit {
         this._isGroupesIterable = false;
       }
     });
+
     if (!this.authUserInfo.isGreeted && sessionStorage.getItem('isGreeted') !== 'true') {
       let modalRef = this._modalService.open(WarningModal);
-      modalRef.result.then((result) => { }, (reason) => { });
+      modalRef.result.then((result) => { sessionStorage.setItem("isGreeted", 'true'); }, (reason) => { sessionStorage.setItem("isGreeted", 'true'); });
       modalRef.componentInstance.modalWindowParams = new WarningModalParams('Приветствие', this._textService.greetingText, 'greeting', this.authUserInfo.id);
     }
 
