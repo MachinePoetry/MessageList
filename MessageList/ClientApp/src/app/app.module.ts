@@ -42,6 +42,7 @@ import { ConfirmModal } from './shared/modals/confirm/confirm.modal';
 import { WarningModal } from './shared/modals/warning/warning.modal';
 import { AttachFileModal } from './shared/modals/attach-file/attach-file.modal';
 import { ActivityHistoryModal } from './shared/modals/activity-history/activity-history.modal';
+import { UserManagementModal } from './shared/modals/user-management/user-management.modal';
 
 import { RoundSpinner } from './shared/spinners/round/round.spinner';
 import { InlineSpinner } from './shared/spinners/inline/inline.spinner';
@@ -62,8 +63,8 @@ const routes: Routes = [
   declarations: [
     AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, FilePreviewComponent, UrlPreviewComponent, NotFoundComponent,
     MessageComponent, ToastsContainerComponent, AudioPlayerComponent, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrlPipe, SecondsToTimePipe, BlobToSrcPipe,
-    CutLongStringPipe, FileSizePipe, TermsOfUseModal, ConfirmModal, WarningModal, AttachFileModal, ActivityHistoryModal, RoundSpinner, InlineSpinner, ChangePasswordComponent,
-    RestorePasswordComponent
+    CutLongStringPipe, FileSizePipe, TermsOfUseModal, ConfirmModal, WarningModal, AttachFileModal, ActivityHistoryModal, UserManagementModal, RoundSpinner, InlineSpinner,
+    ChangePasswordComponent, RestorePasswordComponent
   ],
   imports: [
     BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, NgSelectModule, CommonModule, BrowserAnimationsModule

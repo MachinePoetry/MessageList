@@ -28,6 +28,14 @@
           <div class="col-7 col-sm-5"><p class="mt-5 text-success" id="serverUptime"> {{uptime | secondsToTime: 'uptime' || 'Загрузка...'}} </p></div>
         </div>
         <div class="row align-items-center">
+          <div class="col-12 col-md-6 d-flex align-items-center justify-content-center admin-button-container">
+            <button type="button" class="btn btn-primary mt-5 w-50" (click)="openUserManagementModal()"><span> Редактирование пользователей </span></button>
+          </div>
+          <div class="col-12 col-md-6 d-flex align-items-center justify-content-center admin-button-container">
+            <button type="button" class="btn btn-primary mt-5 w-50" (click)="openFeedbackModal()"><span> Просмотр <br> обратной связи </span></button>
+          </div>
+        </div>
+        <div class="row align-items-center">
           <div class="col-12 col-lg-10 offset-lg-1">
             <h4 class="mt-5 mb-5 text-center">Личные данные:</h4>
           </div>

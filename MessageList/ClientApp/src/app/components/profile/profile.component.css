@@ -13,6 +13,10 @@ p {
   background-color: white;
 }
 
+.adminButtonContainer {
+  height: 100px;
+}
+
 #messagesToLoadForm,
 #changeKeyForm {
   width: 160px;

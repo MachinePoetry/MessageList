@@ -1,0 +1,27 @@
+.vertical-align-middle {
+  vertical-align: middle;
+}
+
+#userList {
+  max-height: 40vh;
+  overflow: scroll;
+}
+
+#userList {
+  scrollbar-face-color: #1B5891;
+  scrollbar-color: rgb(13,25,47) transparent;
+  scrollbar-width: thick;
+}
+
+#userList::-webkit-scrollbar {
+  width: 7px;
+}
+
+#userList::-webkit-scrollbar-thumb {
+  border-radius: 7px;
+  background: linear-gradient(#1B5891, rgb(13,25,47)) #1B5891;
+}
+
+.user-info:hover {
+  cursor: pointer;
+}

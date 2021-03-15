@@ -25,22 +25,6 @@ namespace MessageList.Controllers
             _db = db;
         }
 
-        [HttpGet("getUsers")]
-        //TODO: Создать и дать атрибут [AdminOnly]
-        public async Task<JsonResult> GetUsers()
-        {
-            return Json(await _db.Users.ToListAsync());
-        }
-
-        [HttpGet("getUser")]
-        //TODO: Создать и дать атрибут [AdminOnly]
-        public async Task<JsonResult> GetUser([FromQuery] int id)
-        {
-
-            User user = await _db.Users.FirstOrDefaultAsync(userId => userId.Id == id);
-            return Json(user);
-        }
-
         [HttpGet("getAuthUserInfo")]
         [AllowAnonymous]
         public async Task<JsonResult> GetAuthUserInfo()
@@ -181,22 +165,6 @@ namespace MessageList.Controllers
                 res = await _db.SaveChangesAsync();
             }
             return Json("Приветственное модальное окно отключено");
-
-        }
-
-        [HttpPost("delete")]
-        public async Task<JsonResult> DeleteUserAsync([FromBody] int id)
-        {
-            User user = await _db.Users.FirstOrDefaultAsync(userId => userId.Id == id);
-            int res = 0;
-
-            if (user != null)
-            {
-                _db.Users.Remove(user);
-                res = await _db.SaveChangesAsync();
-            }
-            ResultInfo result = ResultInfo.CreateResultInfo(res, "UserDeleted", "Пользователь успешно удален", "UserDeletionFailed", "Произошла ошибка при удалении пользователя");
-            return Json(result);
 
         }
 

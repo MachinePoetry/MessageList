@@ -4,6 +4,7 @@ import { NgForm } from '@angular/forms';
 import { User } from './../../shared/models/user';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivityHistoryModal } from './../../shared/modals/activity-history/activity-history.modal';
+import { UserManagementModal } from './../../shared/modals/user-management/user-management.modal';
 import { ChangeMessagesToLoadParams } from './../../shared/models/params/changeMessagesToLoadParams';
 import { ChangePasswordKeyParams } from './../../shared/models/params/changePasswordKeyParams';
 import { HttpService } from './../../shared/services/http-service/http.service';
@@ -90,6 +91,16 @@ export class ProfileComponent implements OnInit, AfterViewInit {
       )
       form.resetForm();
     }
+  }
+
+  public openUserManagementModal(): void {
+    let modalRef = this._modalService.open(UserManagementModal, { centered: true, size: 'lg' });
+    modalRef.result.then((result) => { }, (reason) => { });
+    modalRef.componentInstance.authUserId = this.authUserInfo.id;
+  }
+
+  public openFeedbackModal(): void {
+
   }
 
   public showProgressBar(value: number): void {
