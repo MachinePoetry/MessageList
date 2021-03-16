@@ -1,5 +1,5 @@
 export class User {
-  public id: number;
+  public id: number | null = null;
   public email: string = '';
   public isChangePasswordKeySet: boolean = false;
   public createdAt: string = '';

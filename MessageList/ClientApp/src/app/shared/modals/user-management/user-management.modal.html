@@ -10,7 +10,7 @@
       <table class="table table-bordered table-hover table-sm">
         <thead class="thead-light">
           <tr>
-            <th scope="col" class="text-center vertical-align-middle w-5">#</th>
+            <th scope="col" class="text-center vertical-align-middle w-5"> # </th>
             <th scope="col" class="text-center vertical-align-middle w-20"> Email </th>
             <th scope="col" class="text-center vertical-align-middle w-15"> Дата регистрации </th>
             <th scope="col" class="text-center vertical-align-middle w-15"> Количество загружаемых сообщений </th>
@@ -36,13 +36,15 @@
   <hr />
   <div class="row">
     <div class="col-12 col-sm-4 mt-2 mt-sm-0 d-flex align-items-center justify-content-center">
-      <button type="button" class="btn btn-primary" (click)="null"><span class="small"> Создать пользователя </span></button>
+      <button type="button" class="btn btn-primary" (click)="openUserInfoModal('create')"><span class="small"> Создать пользователя </span></button>
     </div>
     <div class="col-12 col-sm-4 mt-2 mt-sm-0 d-flex align-items-center justify-content-center">
-      <button type="button" class="btn btn-primary" (click)="null"><span class="small"> Редактировать пользователя </span></button>
+      <button type="button" class="btn btn-primary" [disabled]="selectedIds.length != 1" (click)="openUserInfoModal('update')">
+        <span class="small"> Редактировать пользователя </span>
+      </button>
     </div>
     <div class="col-12 col-sm-4 mt-2 mt-sm-0 d-flex align-items-center justify-content-center">
-      <button type="button" class="btn btn-primary" (click)="null"><span class="small"> Удалить пользователя </span></button>
+      <button type="button" class="btn btn-primary" [disabled]="selectedIds.length < 1" (click)="null"><span class="small"> Удалить пользователя </span></button>
     </div>
   </div>
 </div>

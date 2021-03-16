@@ -1,0 +1,15 @@
+#userEmail.ng-invalid.ng-dirty,
+#userEmail.ng-invalid.ng-touched,
+#userEmail.ng-invalid.submit-error,
+#messagesToLoadAmount.submit-error,
+#changePasswordKey.ng-invalid.ng-dirty,
+#changePasswordKey.ng-invalid.ng-touched,
+#changePasswordKey.ng-invalid.submit-error,
+#password.ng-invalid.ng-dirty,
+#password.ng-invalid.ng-touched,
+#password.ng-invalid.submit-error,
+#confirmPassword.ng-invalid.ng-dirty,
+#confirmPassword.ng-invalid.ng-touched,
+#confirmPassword.ng-invalid.submit-error {
+  border: 2px solid #DC143C;
+}
