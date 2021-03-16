@@ -99,7 +99,7 @@
             </p>
           </div>
           <div class="col-7 col-sm-5">
-            <div class="d-flex align-items-center w-100 mt-4">
+            <div class="d-flex align-items-center mt-4">
               <form #messagesToLoadForm="ngForm" id="messagesToLoadForm" (ngSubmit)="onMessagesToLoadFormSubmit(messagesToLoadForm)" novalidate>
                 <input type="number" #messagesToLoad="ngModel" class="form-control" id="messagesToLoadAmount" name="messagesToLoadAmount"
                        [ngClass]="{'submit-error': messagesToLoadForm.submitted && !messagesToLoadForm.control.disabled && (messagesToLoadAmount < 20 || messagesToLoadAmount > 10000)}"
@@ -109,9 +109,9 @@
                 <span class="dark-color-text"> Сохранить </span>
               </button>
             </div>
-            <div class="d-flex align-items-center w-90 ml-4">
-              <input type="checkbox" class="form-check-input mt-1" name="loadAllMessages" [(ngModel)]="loadAllMessages">
-              <span class="lh-1 mt-1 mt-sm-0" (click)="loadAllMessages = !loadAllMessages" id="loadAllMessagesLabel"> Загружать все </span>
+            <div class="w-100 d-flex align-items-center">
+              <input type="checkbox" class="mt-1" name="loadAllMessages" [(ngModel)]="loadAllMessages">
+              <span class="small lh-1 ml-1" (click)="loadAllMessages = !loadAllMessages"> Загружать все </span>
             </div>
           </div>
         </div>
