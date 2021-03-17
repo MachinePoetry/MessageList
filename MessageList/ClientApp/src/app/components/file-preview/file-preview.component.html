@@ -52,15 +52,15 @@
       <img src="./../../assets/img/file.svg" class="img-fluid m-0" />
     </div>
     <div class="p-0 w-75">
-      <div class="w-100 h-50 overflow-hidden p-0 ml-1">
-        <a #a [href]="" class="text-decoration-none" id="fileNameLink" download="{{fileBlock.name}}" (click)="setFileUrl(fileBlock, 'file', a)">
-          <span class="text-nowrap lh-1 mb-0" id="fileName" [ngClass]="mode === filePreviewMode.preview ? 'text-light' : 'dark-color-text'">
+      <div class="w-100 h-50 overflow-hidden ml-1">
+        <a #a [href]="" class="text-decoration-none mb-1" id="fileNameLink" download="{{fileBlock.name}}" (click)="setFileUrl(fileBlock, 'file', a)">
+          <span class="text-nowrap lh-1" id="fileName" [ngClass]="mode === filePreviewMode.preview ? 'text-light' : 'dark-color-text'">
             {{fileBlock.name}}
           </span><br />
         </a>
       </div>
-      <div class="w-100 h-50 d-flex align-items-start p-0 ml-1">
-        <span class="lh-1" id="fileSize">{{fileBlock.size | fileSize}}</span>
+      <div class="w-100 h-50 d-flex align-items-start ml-1">
+        <span class="lh-1 mt-1" id="fileSize">{{fileBlock.size | fileSize}}</span>
       </div>
     </div>
     <div *ngIf="mode === filePreviewMode.preview" class="d-flex w-10 justify-content-center align-items-center">
