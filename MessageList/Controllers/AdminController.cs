@@ -35,22 +35,31 @@ namespace MessageList.Controllers
         [HttpPost("createUser")]
         public async Task<JsonResult> CreateUserAsync([FromBody] QueryUserInfo userInfo)
         {
+            User user = await _db.Users.FirstOrDefaultAsync(u => u.Email == userInfo.Email);
             ResultInfo result = new ResultInfo();
-            if (userInfo != null)
+            if (user != null)
             {
-                User newUser = new User(userInfo.Email, userInfo.Password.GetCustomAlgoHashCode(SHA256.Create()), userInfo.MessagesToLoadAmount);
-                newUser.IsAdmin = userInfo.IsAdmin;
-                if (userInfo.ChangePasswordKey != null)
-                {
-                    newUser.Key = userInfo.ChangePasswordKey; 
-                }
-                _db.Users.Add(newUser);
-                int res = await _db.SaveChangesAsync();
-                result = ResultInfo.CreateResultInfo(res, "UserCreated", "Новый пользователь успешно создан", "UserCreationFailed", "Произошла ошибка при создании пользователя");
+                result = new ResultInfo(status: "UserExists", info: "Пользователь с таким email уже существует");
             }
             else
             {
-                result = new ResultInfo(status: "UserCreationFailed", info: "Ошибка при получении данных для создания пользователя");
+                if (userInfo != null)
+                {
+
+                    User newUser = new User(userInfo.Email, userInfo.Password.GetCustomAlgoHashCode(SHA256.Create()), userInfo.MessagesToLoadAmount);
+                    newUser.IsAdmin = userInfo.IsAdmin;
+                    if (userInfo.ChangePasswordKey != null)
+                    {
+                        newUser.Key = userInfo.ChangePasswordKey;
+                    }
+                    _db.Users.Add(newUser);
+                    int res = await _db.SaveChangesAsync();
+                    result = ResultInfo.CreateResultInfo(res, "UserCreated", "Новый пользователь успешно создан", "UserCreationFailed", "Произошла ошибка при создании пользователя");
+                }
+                else
+                {
+                    result = new ResultInfo(status: "UserCreationFailed", info: "Ошибка при получении данных для создания пользователя");
+                }
             }
             return Json(result);
         }

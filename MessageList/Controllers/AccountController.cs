@@ -35,7 +35,7 @@ namespace MessageList.Controllers
         [AllowAnonymous]
         public async Task<JsonResult> LoginAsync([FromBody] Account acc)
         {
-            ResultInfo result = null;
+            ResultInfo result = new ResultInfo();
             User user = await _db.Users.FirstOrDefaultAsync(u => u.Email == acc.Email && u.Password == acc.Password.GetCustomAlgoHashCode(SHA256.Create()));
 
             if (user != null)
@@ -57,8 +57,8 @@ namespace MessageList.Controllers
         [AllowAnonymous]
         public async Task<JsonResult> RegisterAsync([FromBody] Account acc)
         {
-            User user = await _db.Users.FirstOrDefaultAsync(u => u.Email == acc.Email && u.Password == acc.Password.GetCustomAlgoHashCode(SHA256.Create()));
-            ResultInfo result;
+            User user = await _db.Users.FirstOrDefaultAsync(u => u.Email == acc.Email);
+            ResultInfo result = new ResultInfo();
 
             if (user != null)
             {
