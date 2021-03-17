@@ -12,11 +12,10 @@
           <tr>
             <th scope="col" class="text-center vertical-align-middle w-5"> # </th>
             <th scope="col" class="text-center vertical-align-middle w-20"> Email </th>
-            <th scope="col" class="text-center vertical-align-middle w-15"> Дата регистрации </th>
+            <th scope="col" class="text-center vertical-align-middle w-20"> Дата регистрации </th>
             <th scope="col" class="text-center vertical-align-middle w-15"> Количество загружаемых сообщений </th>
-            <th scope="col" class="text-center vertical-align-middle w-15"> Количество групп </th>
-            <th scope="col" class="text-center vertical-align-middle w-15"> Количество сообщений </th>
-            <th scope="col" class="text-center vertical-align-middle w-15"> Права администратора </th>
+            <th scope="col" class="text-center vertical-align-middle w-20"> Ключ для смены пароля </th>
+            <th scope="col" class="text-center vertical-align-middle w-20"> Права администратора </th>
           </tr>
         </thead>
         <tbody>
@@ -25,8 +24,7 @@
             <td class="text-break text-center vertical-align-middle">{{user.email}}</td>
             <td class="text-center vertical-align-middle">{{user.createdAt | dateToLocale: 'ru'}}</td>
             <td class="text-center vertical-align-middle">{{user.messagesToLoadAmount === 0 ? 'Все' : user.messagesToLoadAmount}}</td>
-            <td class="text-center vertical-align-middle"></td>
-            <td class="text-center vertical-align-middle"></td>
+            <td class="text-center vertical-align-middle">{{user.isChangePasswordKeySet ? 'Задан' : 'Не задан'}}</td>
             <td class="text-center vertical-align-middle" [ngClass]="user.isAdmin ? 'text-success' : 'text-danger'">{{(user.isAdmin ? 'Да' : 'Нет') || 'Загрузка...'}}</td>
           </tr>
         </tbody>
