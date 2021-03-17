@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Observable } from 'rxjs';
 import { HttpService } from './../../services/http-service/http.service';
 import { ToastService } from '../../services/toast-service/toast.service';
 import { ResultInfo } from './../../models/resultInfo';
 import { UserInfoModal } from './../user-info/user-info.modal';
+import { ConfirmModal } from './../confirm/confirm.modal';
+import { ConfirmModalParams } from './../../models/params/confirmModalParams';
 import { User } from './../../../shared/models/user';
 import { UserInfoParams } from './../../../shared/models/params/userInfoParams';
 
@@ -19,7 +22,6 @@ export class UserManagementModal implements OnInit {
   public authUserId: number | null = null;
   public users: User[] = [];
   public selectedIds: number[] = [];
-  private _report: ResultInfo = new ResultInfo();
 
   public toggleSelection(id: number): void {
     const idIndex = this.selectedIds.indexOf(id);
@@ -29,7 +31,17 @@ export class UserManagementModal implements OnInit {
   private _getUsersInfo() {
     this._httpService.get('api/admin/getUsers').subscribe((data: User[]) => {
       this.users = data;
+      this.users = this.users.filter(user => user.id !== this.authUserId);
     })
+  }
+
+  private _showToast(firstStringToCheck: string, secondStringToCheck: string, report: ResultInfo) {
+    if (report.status === firstStringToCheck || report.status === secondStringToCheck) {
+      this._toastService.showSuccess(report.info);
+      this._getUsersInfo();
+    } else {
+      this._toastService.showDanger(report.info);
+    }
   }
 
   public openUserInfoModal(type: string): void {
@@ -38,22 +50,36 @@ export class UserManagementModal implements OnInit {
       if (userInfo) {
         const url: string = type === 'create' ? 'api/admin/createUser' : 'api/admin/updateUser';
         this._httpService.post(url, userInfo).subscribe((data: ResultInfo) => {
-          this._report = data;
-          if (this._report.status === 'UserCreated' || this._report.status === 'UserUpdated') {
-            this._toastService.showSuccess(this._report.info);
-            this._getUsersInfo();
-          } else {
-            this._toastService.showDanger(this._report.info);
-          }
+          const report: ResultInfo = data;
+          this._showToast('UserCreated', 'UserUpdated', report);
         },
           error => this._toastService.showDanger(error.message)
         );
-      } else {
-        this._toastService.showDanger('Произошла ошибка при получении данных о пользователе');
       }
     }, (reason) => { });
     let selectedUser: User = this.users.find(u => u.id === this.selectedIds[0]);
     type === 'update' ? modalRef.componentInstance.userInfo = new UserInfoParams(selectedUser, 'update') : modalRef.componentInstance.userInfo = new UserInfoParams(new User(), 'create');
+  }
+
+  public deleteUsers(): void {
+    if (this.selectedIds.length) {
+      let modalRef = this._modalService.open(ConfirmModal);
+      modalRef.result.then((result) => {
+        if (result instanceof Observable) {
+          result.subscribe((data: ResultInfo) => {
+            const report: ResultInfo = data;
+            this._showToast('UsersDeleted', 'UsersDeleted', report);
+          },
+            error => this._toastService.showDanger(error.message)
+          );
+        }
+      }, (reason) => { });
+      modalRef.componentInstance.modalWindowParams = new ConfirmModalParams('post', 'Удаление пользователей', 'Вы действительно хотите удалить выбранных пользователей?', null, 0,
+        'api/admin/deleteUsers', { ids: this.selectedIds });
+    } else {
+      this._toastService.showDanger('Не выбраны пользователи для удаления');
+    }
+
   }
 
   ngOnInit() {

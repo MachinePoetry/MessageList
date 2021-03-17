@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -81,18 +82,20 @@ namespace MessageList.Controllers
             return Json(result);
         }
 
-        [HttpPost("delete")]
-        public async Task<JsonResult> DeleteUserAsync([FromBody] List<int> ids)
+        [HttpPost("deleteUsers")]
+        public async Task<JsonResult> DeleteUserAsync([FromBody] Identificators ids)
         {
-            User user = await _db.Users.FirstOrDefaultAsync(userId => userId.Id == ids[0]);
+            // убрать это в Валидатор. Из массива пришедших Id надо отфильтровать Id самого юзера, чтоб он сам себя не удалил.
+            User authenticatedUser = await _db.Users.FirstOrDefaultAsync(u => u.Email.Equals(User.Identity.Name));
             int res = 0;
-
-            if (user != null)
+            List<int> filteredIds = ids.Ids.Where(id => id != authenticatedUser.Id).ToList();
+            List<User> usersToDelete = _db.Users.Where(u => filteredIds.Contains(u.Id)).ToList();
+            foreach (var userToDelete in usersToDelete)
             {
-                _db.Users.Remove(user);
-                res = await _db.SaveChangesAsync();
+                _db.Users.Remove(userToDelete);
             }
-            ResultInfo result = ResultInfo.CreateResultInfo(res, "UserDeleted", "Пользователь успешно удален", "UserDeletionFailed", "Произошла ошибка при удалении пользователя");
+            res = await _db.SaveChangesAsync();
+            ResultInfo result = ResultInfo.CreateResultInfo(res, "UsersDeleted", "Пользователи успешно удалены", "UsersDeletionFailed", "Произошла ошибка при удалении пользователей");
             return Json(result);
         }
     }
