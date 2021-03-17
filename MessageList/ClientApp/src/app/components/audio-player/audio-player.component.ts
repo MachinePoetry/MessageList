@@ -27,7 +27,7 @@ export class AudioPlayerComponent {
 
     if ((this.audioFile instanceof File) && !audio.src.startsWith('data:')) {
       if (!this.audioFile.src) {
-        this._toastService.showDanger('Файл еще не готов для воспроизведения!');
+        this._toastService.showDanger('Файл еще не готов для воспроизведения! Мешает подгрузка видео.');
         return;
       }
       audio.src = this.audioFile.src;
