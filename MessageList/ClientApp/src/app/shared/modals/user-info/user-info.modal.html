@@ -15,7 +15,7 @@
           <div class="col-7 d-flex align-items-center pl-0">
             <input #email="ngModel" class="form-control" [ngClass]="{'submit-error': userInfoForm.submitted}" type="text" name="email" id="userEmail"
                    [(ngModel)]="userInfo.email" required pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$" (keydown.enter)="onSubmit(userInfoForm)"
-                   maxlength="300" [disabled]="isUserInfoUpdating" />
+                   maxlength="300" />
           </div>
         </div>
         <div class="form-row">
@@ -66,7 +66,7 @@
           <div class="col-7 d-flex align-items-center pl-0">
             <input type="text" #changePasswordKey="ngModel" class="form-control" id="changePasswordKey" name="changePasswordKey"
                    [ngClass]="{'submit-error': userInfoForm.submitted}" [(ngModel)]="userInfo.changePasswordKey" pattern="^.{1,30}$"
-                   minlength="1" maxlength="31" [disabled]="isUserInfoUpdating">
+                   minlength="1" maxlength="31">
           </div>
         </div>
         <div class="form-row">
@@ -133,6 +133,6 @@
   </div>
 </div>
 <div class="modal-footer">
-  <button type="submit" form="userInfoForm" class="btn btn-primary" [disabled]="isUserInfoUpdating"> Сохранить </button>
+  <button type="submit" form="userInfoForm" class="btn btn-primary"> Сохранить </button>
   <button type="button" class="btn btn-primary" (click)="activeModal.close()"> Закрыть </button>
 </div>

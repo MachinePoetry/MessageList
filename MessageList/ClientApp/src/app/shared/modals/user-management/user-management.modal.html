@@ -16,7 +16,7 @@
             <th scope="col" class="text-center vertical-align-middle w-15"> Количество загружаемых сообщений </th>
             <th scope="col" class="text-center vertical-align-middle w-15"> Количество групп </th>
             <th scope="col" class="text-center vertical-align-middle w-15"> Количество сообщений </th>
-            <th scope="col" class="text-center vertical-align-middle w-15"> Админ </th>
+            <th scope="col" class="text-center vertical-align-middle w-15"> Права администратора </th>
           </tr>
         </thead>
         <tbody>
@@ -24,7 +24,7 @@
             <td class="d-flex justify-content-center border-0 mt-3"><input type="checkbox" [checked]="selectedIds.indexOf(user.id) > -1"></td>
             <td class="text-break text-center vertical-align-middle">{{user.email}}</td>
             <td class="text-center vertical-align-middle">{{user.createdAt | dateToLocale: 'ru'}}</td>
-            <td class="text-center vertical-align-middle"> 20 ?? </td>
+            <td class="text-center vertical-align-middle">{{user.messagesToLoadAmount === 0 ? 'Все' : user.messagesToLoadAmount}}</td>
             <td class="text-center vertical-align-middle"></td>
             <td class="text-center vertical-align-middle"></td>
             <td class="text-center vertical-align-middle" [ngClass]="user.isAdmin ? 'text-success' : 'text-danger'">{{(user.isAdmin ? 'Да' : 'Нет') || 'Загрузка...'}}</td>

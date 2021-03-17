@@ -1,9 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HttpService } from '../../shared/services/http-service/http.service';
-import { ToastService } from '../../shared/services/toast-service/toast.service';
-import { ResultInfo } from '../../shared/models/resultInfo';
+import { HttpService } from './../../shared/services/http-service/http.service';
+import { ToastService } from './../../shared/services/toast-service/toast.service';
+import { ResultInfo } from './../../shared/models/resultInfo';
 import { LoginParams } from './../../shared/models/params/loginParams';
 
 @Component({

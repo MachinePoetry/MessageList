@@ -14,11 +14,14 @@ export class UserInfoModal{
 
   public userInfo: UserInfoParams = null;
   public loadAllMessages: boolean = false;
-  public isUserInfoUpdating: boolean = false;
   public newPassword: string = '';
   public confirmNewPassword: string = '';
 
   public onSubmit(form: NgForm): void {
-
+    if (form.valid && (this.loadAllMessages || (this.userInfo.messagesToLoadAmount >= 20 && this.userInfo.messagesToLoadAmount <= 10000))) {
+      this.userInfo.messagesToLoadAmount = this.loadAllMessages ? 0 : this.userInfo.messagesToLoadAmount;
+      this.userInfo.password = this.newPassword;
+      this.activeModal.close(this.userInfo);
+    }
   }
 }
