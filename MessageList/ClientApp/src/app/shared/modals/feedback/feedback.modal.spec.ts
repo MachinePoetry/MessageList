@@ -49,24 +49,21 @@ describe('FeedbackModal', () => {
   })
 
   it('should render correct modal header', () => {
-    fixture.detectChanges();
     const header: HTMLElement = fixture.nativeElement.querySelector('h5');
     expect(header.textContent).toBe(' Обратная связь ');
   })
 
   it('should render modal body', () => {
-    fixture.detectChanges();
     const body: HTMLBodyElement = fixture.nativeElement.querySelector('.modal-body');
     expect(body).toBeTruthy();
   })
 
   it('should render modal footer', () => {
-    fixture.detectChanges();
     const footer: HTMLBodyElement = fixture.nativeElement.querySelector('.modal-footer');
     expect(footer).toBeTruthy();
   })
 
-  it('should render two buttons', () => {
+  it('should render three buttons', () => {
     const buttons: HTMLButtonElement[] = fixture.nativeElement.querySelectorAll('button');
     expect(buttons.length).toBe(3);
   })
