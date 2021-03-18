@@ -1,0 +1,39 @@
+<div class="modal-header">
+  <h5 class="modal-title"> Обратная связь </h5>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.close()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="modal-body">
+  <div class="row">
+    <div class="col-12" id="feedbackList">
+      <table class="table table-bordered table-hover table-sm">
+        <thead class="thead-light">
+          <tr>
+            <th scope="col" class="text-center vertical-align-middle w-5"> # </th>
+            <th scope="col" class="text-center vertical-align-middle w-20"> Дата </th>
+            <th scope="col" class="text-center vertical-align-middle w-50"> Текст </th>
+            <th scope="col" class="text-center vertical-align-middle w-25"> Контакты </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let feedback of feedbacks" (click)="toggleSelection(feedback.id)">
+            <td class="d-flex justify-content-center border-0 mt-3"><input type="checkbox" [checked]="selectedIds.indexOf(feedback.id) > -1"></td>
+            <td class="text-break text-center vertical-align-middle">{{feedback.createdAt | dateToLocale: 'ru'}}</td>
+            <td class="text-center vertical-align-middle">{{feedback.feedbackText}}</td>
+            <td class="text-center vertical-align-middle">{{feedback.feedbackContacts}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <hr />
+  <div class="row">
+    <div class="col-12 offset-0 col-sm-4 offset-sm-8 mt-2 mt-sm-0 d-flex align-items-center justify-content-center">
+      <button type="button" class="btn btn-primary" [disabled]="selectedIds.length < 1" (click)="deleteFeedbacks()"><span class="small"> Удалить </span></button>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary" (click)="activeModal.close()"> Закрыть </button>
+</div>

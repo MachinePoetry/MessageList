@@ -5,6 +5,7 @@ import { User } from './../../shared/models/user';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivityHistoryModal } from './../../shared/modals/activity-history/activity-history.modal';
 import { UserManagementModal } from './../../shared/modals/user-management/user-management.modal';
+import { FeedbackModal } from './../../shared/modals/feedback/feedback.modal';
 import { ChangeMessagesToLoadParams } from './../../shared/models/params/changeMessagesToLoadParams';
 import { ChangePasswordKeyParams } from './../../shared/models/params/changePasswordKeyParams';
 import { HttpService } from './../../shared/services/http-service/http.service';
@@ -100,7 +101,9 @@ export class ProfileComponent implements OnInit, AfterViewInit {
   }
 
   public openFeedbackModal(): void {
-
+    let modalRef = this._modalService.open(FeedbackModal, { centered: true, size: 'lg' });
+    modalRef.result.then((result) => { }, (reason) => { });
+    modalRef.componentInstance.authUserId = this.authUserInfo.id;
   }
 
   public showProgressBar(value: number): void {

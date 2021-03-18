@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace MessageList.Controllers
         }
 
         [HttpGet("get")]
-        public async Task<JsonResult> GetReportsAsync()
+        public async Task<JsonResult> GetFeedbackAsync()
         {
             List<Feedback> reports = await _db.Feedbacks.ToListAsync();
             return Json(reports);         
@@ -30,12 +31,27 @@ namespace MessageList.Controllers
 
         [HttpPost("create")]
         [AllowAnonymous]
-        public async Task<JsonResult> CreateReportAsync([FromBody] Feedback param)
+        public async Task<JsonResult> CreateFeedbackAsync([FromBody] Feedback feedback)
         {
-            Feedback report = new Feedback(feedbackText: param.FeedbackText, feedbackContacts: param.FeedbackContacts);
+            Feedback report = new Feedback(feedbackText: feedback.FeedbackText, feedbackContacts: feedback.FeedbackContacts);
             await _db.Feedbacks.AddAsync(report);
             int res = await _db.SaveChangesAsync();
             ResultInfo result = ResultInfo.CreateResultInfo(res, "FeedbackCreated", "Информация успешно передана", "FeedbackCreationFailed", "Произошла ошибка при создании сообщения");
+            return Json(result);
+        }
+
+        [HttpPost("delete")]
+        [AllowAnonymous]
+        public async Task<JsonResult> DeleteFeedbackssync([FromBody] Identificators ids)
+        {
+            int res = 0;
+            List<Feedback> feedbacksToDelete = _db.Feedbacks.Where(u => ids.Ids.Contains(u.Id)).ToList();
+            foreach (var feedbackToDelete in feedbacksToDelete)
+            {
+                _db.Feedbacks.Remove(feedbackToDelete);
+            }
+            res = await _db.SaveChangesAsync();
+            ResultInfo result = ResultInfo.CreateResultInfo(res, "FeedbacksDeleted", "Обратная связь успешно удалена", "FeedbacksDeletionFailed", "Произошла ошибка при удалении обратной связи");
             return Json(result);
         }
     }

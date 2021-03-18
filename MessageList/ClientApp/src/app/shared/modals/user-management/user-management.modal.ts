@@ -79,7 +79,6 @@ export class UserManagementModal implements OnInit {
     } else {
       this._toastService.showDanger('Не выбраны пользователи для удаления');
     }
-
   }
 
   ngOnInit() {
