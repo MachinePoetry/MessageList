@@ -29,7 +29,18 @@ namespace MessageList.Models
         public int UserId { get; set; }
 
 
-
+        public UserRequestInfo()
+        {
+            Ip = "Данные не получены";
+            Country = "Данные не получены";
+            RegionName = "Данные не получены";
+            City = "Данные не получены";
+            Provider = "Данные не получены";
+            Timezone = "Данные не получены";
+            IsMobile = false;
+            RequestDate = DateTime.Now;
+            UserId = 0;
+        }
         public UserRequestInfo(string ip, string country, string regionName, string city, string provider, string timezone, bool isMobile, int userId)
         {
             Ip = ip;

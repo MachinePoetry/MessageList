@@ -75,6 +75,9 @@ namespace MessageList.Controllers
                 int res = await _db.SaveChangesAsync();
                 await HttpContext.SignOutAsync();
                 await Authenticate(acc.Email);
+                User justCreatedUser = await _db.Users.FirstOrDefaultAsync(u => u.Email == acc.Email);
+                UserActivityTracker activityHelper = new UserActivityTracker(_configuration);
+                await activityHelper.LogUserRequestAsync(Request.HttpContext, justCreatedUser.Id);
                 result = ResultInfo.CreateResultInfo(res, "UserCreated", "Регистрация прошла успешно", "UserCreationFailed", "Ошибка при попытке регистрации");
             }
 

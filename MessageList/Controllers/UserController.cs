@@ -178,7 +178,9 @@ namespace MessageList.Controllers
         [HttpGet("getLastUserActivity")]
         public JsonResult GetLastUserActivity([FromQuery] int authUserId)
         {
-            UserRequestInfo lastUserRequest = _db.UserRequestsHistory.Where(r => r.UserId == authUserId).OrderBy(req => req.Id).Last();
+            UserRequestInfo lastUserRequest = null;
+            List<UserRequestInfo> userRequests = _db.UserRequestsHistory.Where(r => r.UserId == authUserId).OrderBy(req => req.Id).ToList();
+            lastUserRequest = userRequests.Count > 0 ? userRequests.Last() : lastUserRequest = new UserRequestInfo();
             return Json(lastUserRequest);
         }
     }

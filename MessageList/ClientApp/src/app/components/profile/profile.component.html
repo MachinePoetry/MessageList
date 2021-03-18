@@ -74,8 +74,12 @@
             <p class="mt-3 ml-sm-2 ml-md-5"> Последняя активность: </p>
           </div>
           <div class="col-7 col-sm-5" id=" lastRequestBlock">
-            <span class="mt-3 text-success"> {{lastUserRequest.requestDate | dateToLocale: 'ru'}} </span>
-            <span class="mt-3 ml-1 text-success"> ( {{lastUserRequest.country}}, {{lastUserRequest.city}} ) </span>
+            <span class="mt-3 text-success">
+              {{(lastUserRequest.ip !== 'Данные не получены' && lastUserRequest.country !== 'Данные не получены') ? (lastUserRequest.requestDate | dateToLocale: 'ru') : 'Данные не получены'}}
+            </span>
+            <span *ngIf="lastUserRequest.ip !== 'Данные не получены' && lastUserRequest.country !== 'Данные не получены'" class="mt-3 ml-1 text-success">
+              ( {{lastUserRequest.country}}, {{lastUserRequest.city}} )
+            </span>
           </div>
         </div>
         <div class="row align-items-center">
