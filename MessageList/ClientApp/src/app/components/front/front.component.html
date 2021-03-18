@@ -137,30 +137,30 @@
   <div class="container">
     <div class="row mt-2 mt-md-5 small-shadow footer">
       <div class="col-md-8 offset-md-2 col-lg-6 offset-lg-3 mt-2 mt-md-4">
-        <form #bugReportForm="ngForm" id="bugReportForm" autocomplete="off" (ngSubmit)="onSubmit(bugReportForm)" novalidate>
+        <form #feedbackForm="ngForm" id="feedbackForm" autocomplete="off" (ngSubmit)="onSubmit(feedbackForm)" novalidate>
           <div class="form-group">
 
-            <span id="bugReportLabel" class="footer-text">По любым вопросам и предложениям:</span>
-            <textarea #bugReportText="ngModel" class="form-control mt-1 mt-md-3" [ngClass]="{'submit-error': bugReportForm.submitted}" name="bugReportText" id="bugReportText" rows="3"
-                      [(ngModel)]="params.reportText" required pattern="^(.|\n){0,4001}$" maxlength="4010"></textarea>
-            <div *ngIf="bugReportText.invalid && (bugReportText.touched || bugReportText.dirty ||bugReportForm.submitted)">
-              <div *ngIf="bugReportText.errors?.required">
+            <span id="feedbackLabel" class="footer-text">По любым вопросам и предложениям:</span>
+            <textarea #feedbackText="ngModel" class="form-control mt-1 mt-md-3" [ngClass]="{'submit-error': feedbackForm.submitted}" name="feedbackText" id="feedbackText" rows="3"
+                      [(ngModel)]="params.feedbackText" required pattern="^(.|\n){0,4001}$" maxlength="4010"></textarea>
+            <div *ngIf="feedbackText.invalid && (feedbackText.touched || feedbackText.dirty ||feedbackForm.submitted)">
+              <div *ngIf="feedbackText.errors?.required">
                 <span class="text-danger">Введите текст сообщения</span>
               </div>
-              <div *ngIf="bugReportText.errors?.pattern">
+              <div *ngIf="feedbackText.errors?.pattern">
                 <span class="text-danger">Допустимая длина текста не более 4000 символов</span>
               </div>
             </div>
 
-            <span id="reportContactsLabel" class="footer-text d-block mt-3">Ваш Email или другие контакты для связи с вами (можете оставить это поле пустым):</span>
-            <input #bugReportContacts="ngModel" type="text" class="form-control mt-1 mt-md-3" [ngClass]="{'submit-error': bugReportForm.submitted}" name="reportContacts"
-                   id="reportContacts" [(ngModel)]="params.reportContacts" pattern="^(.|\n){0,401}$" maxlength="410">
-            <div *ngIf="bugReportContacts.errors?.pattern">
+            <span id="feedbackContactsLabel" class="footer-text d-block mt-3">Ваш Email или другие контакты для связи с вами (можете оставить это поле пустым):</span>
+            <input #feedbackContacts="ngModel" type="text" class="form-control mt-1 mt-md-3" [ngClass]="{'submit-error': feedbackForm.submitted}" name="feedbackContacts"
+                   id="feedbackContacts" [(ngModel)]="params.feedbackContacts" pattern="^(.|\n){0,401}$" maxlength="410">
+            <div *ngIf="feedbackContacts.errors?.pattern">
               <span class="text-danger">Допустимая длина текста не более 400 символов</span>
             </div>
 
           </div>
-          <button type="submit" class="btn login-button col-md-4 offset-md-8 col-lg-3 offset-lg-9 d-flex justify-content-center align-items-center" id="reportButton"
+          <button type="submit" class="btn login-button col-md-4 offset-md-8 col-lg-3 offset-lg-9 d-flex justify-content-center align-items-center" id="feedbackButton"
                   [disabled]="isDisabled">
             <span class="text-light"> Отправить </span> &nbsp;
             <div *ngIf="isSpinnerShow" class="d-flex justify-content-center align-items-center">

@@ -9,7 +9,7 @@ namespace MessageList.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Message> Messages { get; set; } 
         public DbSet<MessageGroup> MessageGroups { get; set; }
-        public DbSet<BugReport> BugReports { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<FileCollection> FileCollections { get; set; }
         public DbSet<UrlPreview> UrlPreviews { get; set; }
         public DbSet<ImageFile> Images { get; set; }

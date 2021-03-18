@@ -4,27 +4,27 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MessageList.Models
 {
-    [Table("bug_reports")]
-    public class BugReport
+    [Table("feedbacks")]
+    public class Feedback
     {
         [Column("id")]
         public int Id { get; set; }
-        [Column("report_text")]
+        [Column("feedback_text")]
         [Required]
         [MaxLength(4000)]
-        public string ReportText { get; set; }
-        [Column("report_contacts")]
+        public string FeedbackText { get; set; }
+        [Column("feedback_contacts")]
         [MaxLength(400)]
-        public string ReportContacts { get; set; }
+        public string FeedbackContacts { get; set; }
         [Column("created_at")]
         [Required]
         public DateTime CreatedAt { get; set; }
 
-        public BugReport() { }
-        public BugReport (string bugReportText, string bugReportContacts)
+        public Feedback() { }
+        public Feedback (string feedbackText, string feedbackContacts)
         {
-            ReportText = bugReportText;
-            ReportContacts = bugReportContacts;
+            FeedbackText = feedbackText;
+            FeedbackContacts = feedbackContacts;
             CreatedAt = DateTime.Now;
         }
     }

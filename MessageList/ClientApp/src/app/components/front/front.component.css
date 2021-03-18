@@ -38,28 +38,28 @@ textarea.ng-invalid.ng-touched {
   color: #939597;
 }
 
-#bugReportText::-webkit-scrollbar { /* chrome based */
+#feedbackText::-webkit-scrollbar { /* chrome based */
   width: 0px;
   background: transparent;
 }
 
-#bugReportText {
+#feedbackText {
   -ms-overflow-style: none; /* IE 10+ */
   scrollbar-width: none; /* Firefox */
 }
 
-#bugReportText::-webkit-scrollbar { /* chrome based */
+#feedbackText::-webkit-scrollbar { /* chrome based */
   width: 0px;
   background: transparent;
 }
 
-#bugReportText {
+#feedbackText {
   -ms-overflow-style: none; /* IE 10+ */
   scrollbar-width: none; /* Firefox */
 }
 
-#reportContacts,
-#bugReportText {
+#feedbackContacts,
+#feedbackText {
   background-color: transparent;
   overflow: auto;
   color: #F6F6F6;

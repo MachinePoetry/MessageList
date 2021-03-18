@@ -1,5 +1,5 @@
 import { FrontComponent } from './front.component';
-import { ReportParams } from './../../shared/models/params/reportParams';
+import { FeedbackParams } from './../../shared/models/params/feedbackParams';
 import { ResultInfo } from './../../shared/models/resultInfo';
 import { NgForm, FormsModule, AbstractControl } from '@angular/forms';
 import { HttpService } from './../../shared/services/http-service/http.service';
@@ -20,7 +20,7 @@ class ToastsContainerComponentStub {
 describe('FrontComponent', () => {
   let component: FrontComponent;
   let fixture: ComponentFixture<FrontComponent>;
-  let ngForm: NgForm, reportTextControl: AbstractControl, contactsControl: AbstractControl, form: HTMLFormElement, params: ReportParams, result: ResultInfo;
+  let ngForm: NgForm, reportTextControl: AbstractControl, contactsControl: AbstractControl, form: HTMLFormElement, params: FeedbackParams, result: ResultInfo;
   let mockHttpService = {
     post: jasmine.createSpy('post').and.returnValue(of(result)),
     get: jasmine.createSpy('get').and.returnValue(of('report created'))
@@ -46,11 +46,11 @@ describe('FrontComponent', () => {
 
     fixture.detectChanges();
     await fixture.whenStable();
-    ngForm = component.bugReportForm;
+    ngForm = component.feedbackForm;
     reportTextControl = ngForm.form.controls['bugReportText'];
     contactsControl = ngForm.form.controls['reportContacts'];
     form = fixture.nativeElement.querySelector('#bugReportForm');
-    params = new ReportParams();
+    params = new FeedbackParams();
     result = new ResultInfo();
     result.status = 'ReportCreated';
     result.info = 'Success info';
@@ -86,7 +86,7 @@ describe('FrontComponent', () => {
     let textarea: HTMLInputElement = fixture.nativeElement.querySelector('#bugReportText');
     textarea.value = 'some text value';
     textarea.dispatchEvent(new Event('input'));
-    let model: string = component.params.reportText;
+    let model: string = component.params.feedbackText;
     expect(model).toBe('some text value');
   })
 
@@ -138,7 +138,7 @@ describe('FrontComponent', () => {
     let input: HTMLInputElement = fixture.nativeElement.querySelector('#reportContacts');
     input.value = 'contact';
     input.dispatchEvent(new Event('input'));
-    let model: string = component.params.reportContacts;
+    let model: string = component.params.feedbackContacts;
     expect(model).toBe('contact');
   })
 
@@ -182,8 +182,8 @@ describe('FrontComponent', () => {
   it('should call http post inside \'onSubmit\' method correct times and with correct params on submit form event', () => {
     reportTextControl.setValue('some report text');
     contactsControl.setValue('contact');
-    params.reportText = 'some report text';
-    params.reportContacts = 'contact';
+    params.feedbackText = 'some report text';
+    params.feedbackContacts = 'contact';
     form.dispatchEvent(new Event('submit'));
     expect(mockHttpService.post).toHaveBeenCalled();
     //expect(mockHttpService.post).toHaveBeenCalledWith('/api/bugReport/create', params);
