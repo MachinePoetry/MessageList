@@ -28,7 +28,6 @@ export class FeedbackModal implements OnInit {
 
   private _getFeedbackInfo() {
     this._httpService.get('api/feedback/get').subscribe((data: FeedbackParams[]) => {
-      console.log(data);
       this.feedbacks = data;
     })
   }
