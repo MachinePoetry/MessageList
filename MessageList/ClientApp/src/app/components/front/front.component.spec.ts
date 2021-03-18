@@ -20,10 +20,10 @@ class ToastsContainerComponentStub {
 describe('FrontComponent', () => {
   let component: FrontComponent;
   let fixture: ComponentFixture<FrontComponent>;
-  let ngForm: NgForm, reportTextControl: AbstractControl, contactsControl: AbstractControl, form: HTMLFormElement, params: FeedbackParams, result: ResultInfo;
+  let ngForm: NgForm, feedbackTextControl: AbstractControl, contactsControl: AbstractControl, form: HTMLFormElement, params: FeedbackParams, result: ResultInfo;
   let mockHttpService = {
     post: jasmine.createSpy('post').and.returnValue(of(result)),
-    get: jasmine.createSpy('get').and.returnValue(of('report created'))
+    get: jasmine.createSpy('get').and.returnValue(of('Feedback created'))
   };
   let mockToastService = { showSuccess: jasmine.createSpy('showSuccess'), showDanger: jasmine.createSpy('showSuccess') };
 
@@ -47,12 +47,12 @@ describe('FrontComponent', () => {
     fixture.detectChanges();
     await fixture.whenStable();
     ngForm = component.feedbackForm;
-    reportTextControl = ngForm.form.controls['bugReportText'];
-    contactsControl = ngForm.form.controls['reportContacts'];
-    form = fixture.nativeElement.querySelector('#bugReportForm');
+    feedbackTextControl = ngForm.form.controls['feedbackText'];
+    contactsControl = ngForm.form.controls['feedbackContacts'];
+    form = fixture.nativeElement.querySelector('#feedbackForm');
     params = new FeedbackParams();
     result = new ResultInfo();
-    result.status = 'ReportCreated';
+    result.status = 'FeedbackCreated';
     result.info = 'Success info';
     mockHttpService.post.and.returnValue(of(result));
   });
@@ -77,65 +77,64 @@ describe('FrontComponent', () => {
     expect(blocks.length).toBe(6);
   })
 
-  it('should render bug report form', () => {
-    let form: HTMLElement = fixture.nativeElement.querySelectorAll('#bugReportForm');
+  it('should render bug feedback form', () => {
+    let form: HTMLElement = fixture.nativeElement.querySelectorAll('#bugfeedbackForm');
     expect(form).toBeTruthy();
   })
 
-  it('should transfer report text value from input to model', () => {
-    let textarea: HTMLInputElement = fixture.nativeElement.querySelector('#bugReportText');
+  it('should transfer feedback text value from input to model', () => {
+    let textarea: HTMLInputElement = fixture.nativeElement.querySelector('#feedbackText');
     textarea.value = 'some text value';
     textarea.dispatchEvent(new Event('input'));
     let model: string = component.params.feedbackText;
     expect(model).toBe('some text value');
   })
 
-  it('should have no errors at report text model if textarea was touched and text was set', () => {
-    reportTextControl.setValue('some text value');
-    reportTextControl.markAsTouched();
-    expect(reportTextControl.hasError('required')).toBe(false);
-    expect(reportTextControl.hasError('pattern')).toBe(false);
+  it('should have no errors at feedback text model if textarea was touched and text was set', () => {
+    feedbackTextControl.setValue('some text value');
+    feedbackTextControl.markAsTouched();
+    expect(feedbackTextControl.hasError('required')).toBe(false);
+    expect(feedbackTextControl.hasError('pattern')).toBe(false);
   })
 
-  it('should set required error at report text model if textarea was touched and no text was set', () => {
-    reportTextControl.setValue('');
-    reportTextControl.markAsTouched();
-    expect(reportTextControl.hasError('required')).toBe(true);
+  it('should set required error at feedback text model if textarea was touched and no text was set', () => {
+    feedbackTextControl.setValue('');
+    feedbackTextControl.markAsTouched();
+    expect(feedbackTextControl.hasError('required')).toBe(true);
   })
 
-  it('should set pattern error at report text model if input was touched and report text is too long', () => {
+  it('should set pattern error at feedback text model if input was touched and feedback text is too long', () => {
     let veryLongString = new Array(4100).join();
-    reportTextControl.setValue(veryLongString);
-    reportTextControl.markAsTouched();
-    expect(reportTextControl.hasError('pattern')).toBe(true);
+    feedbackTextControl.setValue(veryLongString);
+    feedbackTextControl.markAsTouched();
+    expect(feedbackTextControl.hasError('pattern')).toBe(true);
   })
 
-  //it('should have no errors at report text model if form was submitted and correct text was set', () => {
-  //  reportTextControl.setValue('some text value');
-  //  let textarea: HTMLInputElement = fixture.nativeElement.querySelector('#bugReportText');
+  //it('should have no errors at feedback text model if form was submitted and correct text was set', () => {
+  //  feedbackTextControl.setValue('some text value');
+  //  let textarea: HTMLInputElement = fixture.nativeElement.querySelector('#feedbackText');
   //  textarea.value = 'some text value';
-  //  params.reportText = 'some report text';
+  //  params.feedbackText = 'some feedback text';
   //  form.dispatchEvent(new Event('submit'));
-  //  console.log(reportTextControl);
-  //  expect(reportTextControl.hasError('required')).toBe(false);
-  //  expect(reportTextControl.hasError('pattern')).toBe(false);
+  //  expect(feedbackTextControl.hasError('required')).toBe(false);
+  //  expect(feedbackTextControl.hasError('pattern')).toBe(false);
   //})
 
-  it('should set required error at report text model if form was submitted and no text was set', () => {
-    reportTextControl.setValue('');
+  it('should set required error at feedback text model if form was submitted and no text was set', () => {
+    feedbackTextControl.setValue('');
     form.dispatchEvent(new Event('submit'));
-    expect(reportTextControl.hasError('required')).toBe(true);
+    expect(feedbackTextControl.hasError('required')).toBe(true);
   })
 
-  it('should set pattern error at report text model if form was submitted and and report text is too long', () => {
+  it('should set pattern error at feedback text model if form was submitted and and feedback text is too long', () => {
     let veryLongString = new Array(4100).join();
-    reportTextControl.setValue(veryLongString);
+    feedbackTextControl.setValue(veryLongString);
     form.dispatchEvent(new Event('submit'));
-    expect(reportTextControl.hasError('pattern')).toBe(true);
+    expect(feedbackTextControl.hasError('pattern')).toBe(true);
   })
 
   it('should transfer contacts value from input to model', () => {
-    let input: HTMLInputElement = fixture.nativeElement.querySelector('#reportContacts');
+    let input: HTMLInputElement = fixture.nativeElement.querySelector('#feedbackContacts');
     input.value = 'contact';
     input.dispatchEvent(new Event('input'));
     let model: string = component.params.feedbackContacts;
@@ -170,34 +169,34 @@ describe('FrontComponent', () => {
     expect(contactsControl.hasError('pattern')).toBe(true);
   })
 
-  it('should call http post inside \'onSubmit\' method on submit form event when send report button was clicked', () => {
-    reportTextControl.setValue('qwerty@q.ru');
+  it('should call http post inside \'onSubmit\' method on submit form event when send feedback button was clicked', () => {
+    feedbackTextControl.setValue('qwerty@q.ru');
     contactsControl.setValue('contact');
-    let button = fixture.nativeElement.querySelector('#reportButton');
+    let button = fixture.nativeElement.querySelector('#feedbackButton');
     button.click();
     expect(mockHttpService.post).toHaveBeenCalled();
     expect(mockHttpService.post).toHaveBeenCalledTimes(1);
   })
 
   it('should call http post inside \'onSubmit\' method correct times and with correct params on submit form event', () => {
-    reportTextControl.setValue('some report text');
+    feedbackTextControl.setValue('some feedback text');
     contactsControl.setValue('contact');
-    params.feedbackText = 'some report text';
+    params.feedbackText = 'some feedback text';
     params.feedbackContacts = 'contact';
     form.dispatchEvent(new Event('submit'));
     expect(mockHttpService.post).toHaveBeenCalled();
-    //expect(mockHttpService.post).toHaveBeenCalledWith('/api/bugReport/create', params);
+    //expect(mockHttpService.post).toHaveBeenCalledWith('/api/feedback/create', params);
   })
 
-  it('should call http post inside \'onSubmit\' method when only report text is set', () => {
-    reportTextControl.setValue('some report text');
+  it('should call http post inside \'onSubmit\' method when only feedback text is set', () => {
+    feedbackTextControl.setValue('some feedback text');
     contactsControl.setValue('');
     form.dispatchEvent(new Event('submit'));
     expect(mockHttpService.post).toHaveBeenCalled();
   })
 
   it('should show success toast with response text', () => {
-    reportTextControl.setValue('some report text');
+    feedbackTextControl.setValue('some feedback text');
     contactsControl.setValue('contact');
     form.dispatchEvent(new Event('submit'));
     expect(mockToastService.showSuccess).toHaveBeenCalled();
@@ -206,9 +205,9 @@ describe('FrontComponent', () => {
   })
 
   it('should show danger toast with response text', () => {
-    result.status = 'Report not created';
+    result.status = 'feedback not created';
     result.info = 'Danger info';
-    reportTextControl.setValue('some report text');
+    feedbackTextControl.setValue('some feedback text');
     contactsControl.setValue('contact');
     form.dispatchEvent(new Event('submit'));
     expect(mockToastService.showDanger).toHaveBeenCalled();
