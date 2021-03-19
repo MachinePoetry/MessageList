@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Configuration;
 using MessageList.Data;
 using MessageList.Models;
+using MessageList.Models.Roles;
 using MessageList.Models.Extensions;
 using MessageList.Models.Middleware;
 
@@ -73,11 +74,13 @@ namespace MessageList.Controllers
                 newUser.MessageGroups.Add(mg);
                 await _db.Users.AddAsync(newUser);
                 int res = await _db.SaveChangesAsync();
+                RolesToUsers newUserRole = new RolesToUsers(userId: newUser.Id, roleId: 1);  // roleId: 1 - это Id роли "User".
+                _db.RolesToUsers.Add(newUserRole);
+                res = await _db.SaveChangesAsync();
                 await HttpContext.SignOutAsync();
                 await Authenticate(acc.Email);
-                User justCreatedUser = await _db.Users.FirstOrDefaultAsync(u => u.Email == acc.Email);
                 UserActivityTracker activityHelper = new UserActivityTracker(_configuration);
-                await activityHelper.LogUserRequestAsync(Request.HttpContext, justCreatedUser.Id);
+                await activityHelper.LogUserRequestAsync(Request.HttpContext, newUser.Id);
                 result = ResultInfo.CreateResultInfo(res, "UserCreated", "Регистрация прошла успешно", "UserCreationFailed", "Ошибка при попытке регистрации");
             }
 

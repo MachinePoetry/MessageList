@@ -1,8 +1,10 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations.Schema;
-using Newtonsoft.Json;
+using System.Linq;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
+using MessageList.Models.Roles;
 
 namespace MessageList.Models
 {
@@ -33,20 +35,25 @@ namespace MessageList.Models
         public bool IsGreeted { get; set; }
         [Column("messages_to_load_amount")]
         public int MessagesToLoadAmount { get; set; } = 20;
-        [Column("is_admin")]
-        public bool IsAdmin { get; set; }
+        [JsonIgnore]
+        public List<RolesToUsers> RolesToUsers { get; set; }
+        [NotMapped]
+        [JsonProperty("roles")]
+        public List<string> RolesNames { get ; set; }
         public List<MessageGroup> MessageGroups { get; set; }
 
 
 
+        public User() { }
         public User(string email, string password, int messagesToLoadAmount)
         {
             Email = email;
             Password = password;
             CreatedAt = DateTime.Now;
             MessagesToLoadAmount = messagesToLoadAmount;
-            IsAdmin = false;
             MessageGroups = new List<MessageGroup>();
+            RolesToUsers = new List<RolesToUsers>();
+            RolesNames = new List<string>();
         }
     }
 }

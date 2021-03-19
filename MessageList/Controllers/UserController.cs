@@ -29,7 +29,12 @@ namespace MessageList.Controllers
         [AllowAnonymous]
         public async Task<JsonResult> GetAuthUserInfo()
         {
-            User user = await _db.Users.Where(u => u.Email.Equals(User.Identity.Name)).FirstOrDefaultAsync();
+            User user = await _db.Users.Where(u => u.Email.Equals(User.Identity.Name)).Include(u => u.RolesToUsers).FirstOrDefaultAsync();
+            if (user != null && user.RolesToUsers.Count > 0)
+            {
+                IEnumerable<int> userRolesIds = user.RolesToUsers.Select(r => r.RoleId);
+                user.RolesNames = await _db.Roles.Where(r => userRolesIds.Contains(r.Id)).Select(role => role.Name).ToListAsync();
+            }
             return Json(user);
         }
 

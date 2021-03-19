@@ -47,7 +47,6 @@ namespace MessageList.Controllers
                 {
 
                     User newUser = new User(userInfo.Email, userInfo.Password.GetCustomAlgoHashCode(SHA256.Create()), userInfo.MessagesToLoadAmount);
-                    newUser.IsAdmin = userInfo.IsAdmin;
                     if (userInfo.ChangePasswordKey != null)
                     {
                         newUser.Key = userInfo.ChangePasswordKey;
@@ -71,7 +70,6 @@ namespace MessageList.Controllers
             if (userInfo != null)
             {
                 User newUser = _db.Users.Find(userInfo.Id);
-                newUser.IsAdmin = userInfo.IsAdmin;
                 if (!String.IsNullOrEmpty(userInfo.Password))
                 {
                     newUser.Password = userInfo.Password.GetCustomAlgoHashCode(SHA256.Create());
