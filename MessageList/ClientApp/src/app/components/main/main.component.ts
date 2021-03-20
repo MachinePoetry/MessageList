@@ -396,6 +396,11 @@ export class MainComponent implements OnInit, AfterViewInit {
     setTimeout(() => { !this.isFileMenuActive ? tooltip.close() : null }, 70)
   }
 
+  public toggleMenuByClick(tooltip: NgbTooltip): void {
+    this.isFileMenuActive = !this.isFileMenuActive;
+    this.isFileMenuActive ? tooltip.close() : tooltip.open();
+  }
+
   private _scrollToBottom(block: ElementRef): void {
     block.nativeElement.scrollTop = block.nativeElement.scrollHeight;
   }
