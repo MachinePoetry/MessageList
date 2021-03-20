@@ -32,7 +32,8 @@ export class UserManagementModal implements OnInit {
     this._httpService.get('api/admin/getUsers').subscribe((data: User[]) => {
       this.users = data;
       this.users = this.users.filter(user => user.id !== this.authUserId);
-    })
+    },
+      error => this.activeModal.dismiss(error))
   }
 
   private _showToast(firstStringToCheck: string, secondStringToCheck: string, report: ResultInfo) {

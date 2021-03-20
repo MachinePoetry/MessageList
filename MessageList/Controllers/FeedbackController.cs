@@ -7,12 +7,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using MessageList.Data;
 using MessageList.Models;
+using MessageList.Models.Filters;
 
 namespace MessageList.Controllers
 {
     [Route("api/feedback")]
     [ApiController]
     [Authorize]
+    [AdminOnly]
     [RequireHttps]
     public class FeedbackController : Controller
     {

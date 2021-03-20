@@ -11,12 +11,14 @@ using MessageList.Models;
 using MessageList.Models.Extensions;
 using MessageList.Models.Roles;
 using MessageList.Models.QueryModels;
+using MessageList.Models.Filters;
 
 namespace MessageList.Controllers
 {
     [Route("api/admin")]
     [ApiController]
     [Authorize]
+    [AdminOnly]
     [RequireHttps]
     // учетка админа: admin@admin.com / admin. Если зайти под ним, в профиле будут 2 дополнительные кнопки: 'Управление пользователями' и 'Просмотр обратной связи'.
     public class AdminController : Controller  

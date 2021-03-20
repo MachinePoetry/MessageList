@@ -29,7 +29,8 @@ export class FeedbackModal implements OnInit {
   private _getFeedbackInfo() {
     this._httpService.get('api/feedback/get').subscribe((data: FeedbackParams[]) => {
       this.feedbacks = data;
-    })
+    },
+      error => this.activeModal.dismiss(error))
   }
 
   public deleteFeedbacks(): void {
