@@ -27,7 +27,7 @@ namespace MessageList.Controllers
 
         [HttpGet("getAuthUserInfo")]
         [AllowAnonymous]
-        public async Task<JsonResult> GetAuthUserInfo()
+        public async Task<JsonResult> GetAuthUserInfo()  // эте шткуа повторяется еще и в AdminController GetUsers()
         {
             User user = await _db.Users.Where(u => u.Email.Equals(User.Identity.Name)).Include(u => u.RolesToUsers).FirstOrDefaultAsync();
             if (user != null && user.RolesToUsers.Count > 0)

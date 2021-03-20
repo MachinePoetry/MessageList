@@ -10,6 +10,11 @@
 #password.ng-invalid.submit-error,
 #confirmPassword.ng-invalid.ng-dirty,
 #confirmPassword.ng-invalid.ng-touched,
-#confirmPassword.ng-invalid.submit-error {
+#confirmPassword.ng-invalid.submit-error,
+ng-select.ng-invalid.ng-touched,
+ng-select.ng-invalid.ng-dirty,
+ng-select.invalid.ng-touched,
+ng-select.invalid.ng-dirty {
   border: 2px solid #DC143C;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 3px #fde6e8;
 }

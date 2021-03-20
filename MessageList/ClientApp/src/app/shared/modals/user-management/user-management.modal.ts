@@ -66,6 +66,7 @@ export class UserManagementModal implements OnInit {
       let modalRef = this._modalService.open(ConfirmModal);
       modalRef.result.then((result) => {
         if (result instanceof Observable) {
+          this.selectedIds = [];
           result.subscribe((data: ResultInfo) => {
             const report: ResultInfo = data;
             this._showToast('UsersDeleted', 'UsersDeleted', report);

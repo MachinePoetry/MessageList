@@ -19,13 +19,15 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let user of users user-info" (click)="toggleSelection(user.id)">
-            <td class="d-flex justify-content-center border-0 mt-3"><input type="checkbox" [checked]="selectedIds.indexOf(user.id) > -1"></td>
+          <tr *ngFor="let user of users" (click)="toggleSelection(user.id)">
+            <td class="vertical-align-middle text-center"><input type="checkbox" [checked]="selectedIds.indexOf(user.id) > -1"></td>
             <td class="text-break text-center vertical-align-middle">{{user.email}}</td>
             <td class="text-center vertical-align-middle">{{user.createdAt | dateToLocale: 'ru'}}</td>
             <td class="text-center vertical-align-middle">{{user.messagesToLoadAmount === 0 ? 'Все' : user.messagesToLoadAmount}}</td>
             <td class="text-center vertical-align-middle">{{user.isChangePasswordKeySet ? 'Задан' : 'Не задан'}}</td>
-            <td class="text-center vertical-align-middle" [ngClass]="user.isAdmin ? 'text-success' : 'text-danger'">{{(user.isAdmin ? 'Да' : 'Нет') || 'Загрузка...'}}</td>
+            <td class="text-center vertical-align-middle" [ngClass]="user.roles.indexOf('Administrator') !== -1 ? 'text-danger' : 'text-success'">
+              {{(user.roles.indexOf('Administrator') !== -1 ? 'Да' : 'Нет') || 'Загрузка...'}}
+            </td>
           </tr>
         </tbody>
       </table>

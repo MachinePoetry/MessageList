@@ -20,6 +20,8 @@ export class TextService {
                                 '<li class="ml-1 mt-1"> После регистрации автоматически создается одна группа. Можете ее удалить или переименовать, а также создавать новые. </li>' +
                                 '<li class="ml-1 mt-1"><b>ВАЖНО!!</b> При удалении всех групп сохранять информацию будет некуда, так что как минимум одна группа все-равно необходима. </li>';
 
+  public rolesTranslation = { 'User': 'Пользователь', 'Administrator': 'Администратор' };
+
   public getUrlsFromText(text: string): string[] {
     let matches: string[] = [];
     if (text.length) {

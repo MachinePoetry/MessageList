@@ -80,10 +80,26 @@
         </div>
         <div class="form-row mt-2">
           <div class="col-5 d-flex align-items-center">
-            <span> Выдать права администратора: </span>
+            <span> Роли: </span>
           </div>
           <div class="col-7 d-flex justify-content-start align-items-center pl-0">
-            <input type="checkbox" #isAdmin="ngModel" id="isAdmin" name="isAdmin" [(ngModel)]="userInfo.isAdmin">
+            <!--https://github.com/ng-select/ng-select-->
+            <ng-select #selectRole="ngModel" [multiple]="true" [(ngModel)]="userInfo.rolesIds" name="selectRole" id="selectRole"
+                       [ngClass]="{'invalid': !userInfo.rolesIds.includes(1)}" required>
+              <ng-option *ngFor="let role of roles" [value]="role.id">{{textService.rolesTranslation[role.name]}}</ng-option>
+            </ng-select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="col-7 offset-5 pl-0">
+            <div *ngIf="selectRole.invalid && (selectRole.touched || selectRole.dirty || userInfoForm.submitted)">
+              <div *ngIf="selectRole.errors?.required">
+                <span class="alert-text small"> Выберите роль </span>
+              </div>
+            </div>
+            <div *ngIf="!userInfo.rolesIds.includes(1) && (selectRole.touched || selectRole.dirty || userInfoForm.submitted)">
+              <span class="alert-text small"> Роль 'Пользователь' должна быть обязательно </span>
+            </div>
           </div>
         </div>
         <div class="form-row mt-2">

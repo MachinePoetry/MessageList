@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace MessageList.Models.QueryModels
 {
@@ -9,7 +10,7 @@ namespace MessageList.Models.QueryModels
         public int MessagesToLoadAmount { get; set; }
         public string ChangePasswordKey { get; set; }
         public string Password { get; set; }
-        public bool IsAdmin { get; set; }
+        public List<int> RolesIds { get; set; }
 
     }
 }
