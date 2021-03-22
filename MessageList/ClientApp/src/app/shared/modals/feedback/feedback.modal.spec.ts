@@ -33,7 +33,6 @@ describe('FeedbackModal', () => {
     });
     fixture = TestBed.createComponent(FeedbackModal);
     component = fixture.componentInstance;
-    component.authUserId = 1;
     let feedback1: FeedbackParams = new FeedbackParams();
     let feedback2: FeedbackParams = new FeedbackParams();
     let feedbacksArr: FeedbackParams[] = [feedback1, feedback2];

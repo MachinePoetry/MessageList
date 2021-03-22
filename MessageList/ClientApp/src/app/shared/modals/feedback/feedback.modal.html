@@ -30,7 +30,9 @@
   <hr />
   <div class="row">
     <div class="col-12 offset-0 col-sm-4 offset-sm-8 mt-2 mt-sm-0 d-flex align-items-center justify-content-center">
-      <button type="button" class="btn btn-primary" [disabled]="selectedIds.length < 1" (click)="deleteFeedbacks()"><span class="small"> Удалить </span></button>
+      <button type="button" class="btn btn-primary" [disabled]="selectedIds.length < 1 || feedbacks.length === 0" (click)="deleteFeedbacks()">
+        <span class="small"> Удалить </span>
+      </button>
     </div>
   </div>
 </div>

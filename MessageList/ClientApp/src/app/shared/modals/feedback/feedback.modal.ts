@@ -17,7 +17,6 @@ import { ConfirmModalParams } from './../../models/params/confirmModalParams';
 export class FeedbackModal implements OnInit {
   constructor(private _modalService: NgbModal, public activeModal: NgbActiveModal, private _httpService: HttpService, private _toastService: ToastService) { }
 
-  public authUserId: number | null = null;
   public feedbacks: FeedbackParams[] = [];
   public selectedIds: number[] = [];
 
@@ -46,6 +45,7 @@ export class FeedbackModal implements OnInit {
             } else {
               this._toastService.showDanger(report.info);
             }
+            this.selectedIds = [];
           },
             error => this._toastService.showDanger(error.message)
           );

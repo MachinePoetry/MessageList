@@ -14,7 +14,6 @@ namespace MessageList.Controllers
     [Route("api/feedback")]
     [ApiController]
     [Authorize]
-    [AdminOnly]
     [RequireHttps]
     public class FeedbackController : Controller
     {
@@ -25,34 +24,31 @@ namespace MessageList.Controllers
         }
 
         [HttpGet("get")]
-        public async Task<JsonResult> GetFeedbackAsync()
+        [AdminOnly]
+        public async Task<IActionResult> GetFeedbacksAsync()
         {
-            List<Feedback> reports = await _db.Feedbacks.ToListAsync();
-            return Json(reports);         
+            List<Feedback> feedbacks = await _db.Feedbacks.ToListAsync();
+            return Json(feedbacks);         
         }
 
         [HttpPost("create")]
         [AllowAnonymous]
-        public async Task<JsonResult> CreateFeedbackAsync([FromBody] Feedback feedback)
+        public async Task<IActionResult> CreateFeedbackAsync([FromBody] Feedback feedback)
         {
-            Feedback report = new Feedback(feedbackText: feedback.FeedbackText, feedbackContacts: feedback.FeedbackContacts);
-            await _db.Feedbacks.AddAsync(report);
+            Feedback newFeedback = new Feedback(feedbackText: feedback.FeedbackText, feedbackContacts: feedback.FeedbackContacts);
+            await _db.Feedbacks.AddAsync(newFeedback);
             int res = await _db.SaveChangesAsync();
             ResultInfo result = ResultInfo.CreateResultInfo(res, "FeedbackCreated", "Информация успешно передана", "FeedbackCreationFailed", "Произошла ошибка при создании сообщения");
             return Json(result);
         }
 
         [HttpPost("delete")]
-        [AllowAnonymous]
-        public async Task<JsonResult> DeleteFeedbackssync([FromBody] Identificators ids)
+        [AdminOnly]
+        public async Task<IActionResult> DeleteFeedbacksAsync([FromBody] Identificators ids)
         {
-            int res = 0;
             List<Feedback> feedbacksToDelete = _db.Feedbacks.Where(u => ids.Ids.Contains(u.Id)).ToList();
-            foreach (var feedbackToDelete in feedbacksToDelete)
-            {
-                _db.Feedbacks.Remove(feedbackToDelete);
-            }
-            res = await _db.SaveChangesAsync();
+            _db.Feedbacks.RemoveRange(feedbacksToDelete);
+            int res = await _db.SaveChangesAsync();
             ResultInfo result = ResultInfo.CreateResultInfo(res, "FeedbacksDeleted", "Обратная связь успешно удалена", "FeedbacksDeletionFailed", "Произошла ошибка при удалении обратной связи");
             return Json(result);
         }

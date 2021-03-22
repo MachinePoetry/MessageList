@@ -19,7 +19,11 @@ namespace MessageList.Models.Filters
             ApplicationDbContext db = new ApplicationDbContext(optionsBuilder.Options);
             User authenticatedUser = db.Users.FirstOrDefault(u => u.Email.Equals(context.HttpContext.User.Identity.Name));
 
-            if (authenticatedUser != null)
+            if (authenticatedUser == null)
+            {
+                context.Result = new StatusCodeResult(403);
+            }
+            else
             {
                 List<int> authenticatedUserRolesIds = db.RolesToUsers.Where(r => r.UserId == authenticatedUser.Id).Select(role => role.RoleId).ToList();
                 int adminRoleId = db.Roles.FirstOrDefault(r => r.Name.Equals("Administrator")).Id;
