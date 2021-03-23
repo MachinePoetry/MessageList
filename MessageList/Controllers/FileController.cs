@@ -19,7 +19,7 @@ namespace MessageList.Controllers
         }
 
         [HttpGet("fileData")]
-        public IActionResult GetAudio([FromQuery] int fileId, string fileType)
+        public IActionResult GetFileData([FromQuery] int fileId, string fileType)
         {
             dynamic file = null;
 
