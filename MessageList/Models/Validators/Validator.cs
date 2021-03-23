@@ -25,7 +25,7 @@ namespace MessageList.Models.Validators
 
         public static bool IsMessagesToLoadAmountValid(int amount) => (amount >= FileHelper.MessagesToLoadAmountMin && amount <= FileHelper.MessagesToLoadAmountMax) || (amount == 0);
 
-        public static bool IsChangePasswordKeyValid(string key) => key.Length >= 1 && key.Length <= 10000;
+        public static bool IsChangePasswordKeyValid(string key) => !String.IsNullOrEmpty(key) ? key.Length >= 1 && key.Length <= 30 : false;
 
         public static void ValidateUserInfo(QueryUserInfo userInfo, User user)
         {
@@ -49,7 +49,7 @@ namespace MessageList.Models.Validators
             {
                 user.Key = userInfo.ChangePasswordKey;
             }
-            else if (!IsChangePasswordKeyValid(userInfo.ChangePasswordKey) && !String.IsNullOrEmpty(userInfo.ChangePasswordKey))
+            else if (!String.IsNullOrEmpty(userInfo.ChangePasswordKey) && userInfo.ChangePasswordKey.Length > 30)
             {
                 throw new ArgumentException("Неправильный формат ключа смены пароля");
             }

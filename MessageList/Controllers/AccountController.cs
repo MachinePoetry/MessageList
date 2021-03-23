@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -11,7 +12,8 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Configuration;
 using MessageList.Data;
 using MessageList.Models;
-using MessageList.Models.Roles;
+using MessageList.Models.Helpers;
+using MessageList.Models.QueryModels;
 using MessageList.Models.Extensions;
 using MessageList.Models.Middleware;
 
@@ -34,31 +36,32 @@ namespace MessageList.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<JsonResult> LoginAsync([FromBody] Account acc)
+        public async Task<IActionResult> LoginAsync([FromBody] Account acc)
         {
             ResultInfo result = new ResultInfo();
-            User user = await _db.Users.FirstOrDefaultAsync(u => u.Email == acc.Email && u.Password == acc.Password.GetCustomAlgoHashCode(SHA256.Create()));
+            User user = await _db.Users.FirstOrDefaultAsync(u => u.Email.Equals(acc.Email) && u.Password.Equals(acc.Password.GetCustomAlgoHashCode(SHA256.Create())));
 
             if (user != null)
             {
                 await HttpContext.SignOutAsync();
-                await Authenticate(acc.Email);
+                await AuthenticateAsync(acc.Email);
                 UserActivityTracker activityHelper = new UserActivityTracker(_configuration);
-                await activityHelper.LogUserRequestAsync(Request.HttpContext, user.Id);
+                activityHelper.LogUserRequestAsync(Request.HttpContext, user.Id);
                 result = new ResultInfo(status: "AuthSuccess", info: "Доступ предоставлен");
             }
             else
             {
-                result = new ResultInfo(status: "AuthFailed", info: "Пользователь с таким email не найден"); // ModelState.AddModelError("", "Email или пароль введены неправильно");
+                result = new ResultInfo(status: "AuthFailed", info: "Ошибка при вводе логина или пароля");
             }
             return Json(result);
         }
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<JsonResult> RegisterAsync([FromBody] Account acc)
+        public async Task<IActionResult> RegisterAsync([FromBody] Account acc)
         {
             User user = await _db.Users.FirstOrDefaultAsync(u => u.Email == acc.Email);
+            QueryUserInfo userInfo = new QueryUserInfo(acc.Email, acc.Password);
             ResultInfo result = new ResultInfo();
 
             if (user != null)
@@ -67,21 +70,25 @@ namespace MessageList.Controllers
             }
             else
             {
-                //TODO: Нужна валидация email перед редактированием и созданием пользователя
-                MessageGroup mg = new MessageGroup();
-                mg.Name = "Default group";
-                User newUser = new User(email: acc.Email, password: acc.Password.GetCustomAlgoHashCode(SHA256.Create()), 20);
-                newUser.MessageGroups.Add(mg);
-                await _db.Users.AddAsync(newUser);
-                int res = await _db.SaveChangesAsync();
-                RolesToUsers newUserRole = new RolesToUsers(userId: newUser.Id, roleId: 1);  // roleId: 1 - это Id роли "User".
-                _db.RolesToUsers.Add(newUserRole);
-                res = await _db.SaveChangesAsync();
-                await HttpContext.SignOutAsync();
-                await Authenticate(acc.Email);
-                UserActivityTracker activityHelper = new UserActivityTracker(_configuration);
-                await activityHelper.LogUserRequestAsync(Request.HttpContext, newUser.Id);
-                result = ResultInfo.CreateResultInfo(res, "UserCreated", "Регистрация прошла успешно", "UserCreationFailed", "Ошибка при попытке регистрации");
+                try
+                {
+                    User newUser = await UserHelper.CreateUserAsync(userInfo, _db);
+                    _db.Users.Add(newUser);
+                    int res = await _db.SaveChangesAsync();
+                    result = ResultInfo.CreateResultInfo(res, "UserCreated", "Новый пользователь успешно создан", "UserCreationFailed", "Произошла ошибка при создании пользователя");
+                    int userRoleId = _db.Roles.FirstOrDefault(r => r.Name.Equals("User")).Id;
+                    int rolesRes = await RoleHelper.AddRolesToUser(new List<int> { userRoleId }, newUser.Id, _db);
+                    result = ResultInfo.CreateResultInfo(rolesRes, "UserCreated", "Новый пользователь успешно создан", "UserCreationFailed", "Произошла ошибка при добавлении ролей пользователю");
+
+                    await HttpContext.SignOutAsync();
+                    await AuthenticateAsync(acc.Email);
+                    UserActivityTracker activityHelper = new UserActivityTracker(_configuration);
+                    await activityHelper.LogUserRequestAsync(Request.HttpContext, newUser.Id);
+                }
+                catch (Exception ex)
+                {
+                    result = new ResultInfo("UserCreationFailed", ex.Message);
+                }
             }
 
             return Json(result);
@@ -93,16 +100,16 @@ namespace MessageList.Controllers
             await HttpContext.SignOutAsync();
         }
 
-        private async Task Authenticate(string userName)
+        private async Task AuthenticateAsync(string userName)
         {
             IList<Claim> claims = new List<Claim>()
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, userName)
             };
 
-            // TO DO: Change this below. In browser cookies it is .AspNetCore.Cookies
+            // TODO: Change this below. In browser cookies are called .AspNetCore.Cookies
             ClaimsIdentity id = new ClaimsIdentity(claims, "ApplicationCookie", ClaimsIdentity.DefaultNameClaimType, ClaimsIdentity.DefaultRoleClaimType); 
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id)); // needs using Microsoft.AspNetCore.Authentication (extensions for HttpContext)
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
         }
     }
 }
