@@ -96,7 +96,11 @@ export class ProfileComponent implements OnInit, AfterViewInit {
 
   public openUserManagementModal(): void {
     let modalRef = this._modalService.open(UserManagementModal, { centered: true, size: 'lg' });
-    modalRef.result.then((result) => { }, (reason) => reason.status === 403 ? this._toastService.showDanger('Доступ запрещен!') : this._toastService.showDanger(reason.message));
+    modalRef.result.then((result) => { }, (reason) => {
+      if (reason.status) {
+        reason.status === 403 ? this._toastService.showDanger('Доступ запрещен!') : this._toastService.showDanger(reason.message);
+      }
+    });
     modalRef.componentInstance.authUserId = this.authUserInfo.id;
   }
 

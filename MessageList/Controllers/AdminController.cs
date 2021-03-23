@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using MessageList.Data;
 using MessageList.Models;
-using MessageList.Models.Extensions;
+using MessageList.Models.Helpers;
 using MessageList.Models.Roles;
 using MessageList.Models.QueryModels;
 using MessageList.Models.Filters;
@@ -30,132 +29,74 @@ namespace MessageList.Controllers
         }
 
         [HttpGet("getUsers")]
-        //TODO: Создать и дать атрибут [AdminOnly]
-        public async Task<JsonResult> GetUsers()  // эта шткуа повторяется еще и в UserController GetUserInfo()
+        public async Task<IActionResult> GetUsersAsync()
         {
             IEnumerable<User> users = _db.Users.Include(u => u.RolesToUsers);
             IEnumerable<Role> roles = await _db.Roles.ToListAsync();
             foreach (var user in users)
             {
-                if (user.RolesToUsers.Count() > 0)
-                {
-                    IEnumerable<int> userRolesIds = user.RolesToUsers.Select(r => r.RoleId);
-                    user.RolesNames = roles.Where(r => userRolesIds.Contains(r.Id)).Select(role => role.Name).ToList();
-                }
+                user.RolesNames = RoleHelper.GetUserRolesNames(user, roles).ToList();
             }
             return Json(users);
         }
 
         [HttpGet("getRoles")]
-        //TODO: Создать и дать атрибут [AdminOnly]
-        public async Task<JsonResult> GetRoles()
+        public async Task<IActionResult> GetRolesAsync()
         {
             return Json(await _db.Roles.ToListAsync());
         }
 
         [HttpPost("createUser")]
-        public async Task<JsonResult> CreateUserAsync([FromBody] QueryUserInfo userInfo)
+        public async Task<IActionResult> CreateUserAsync([FromBody] QueryUserInfo userInfo)
         {
-            User user = await _db.Users.FirstOrDefaultAsync(u => u.Email == userInfo.Email);
             ResultInfo result = new ResultInfo();
-            if (user != null)
+            try
             {
-                result = new ResultInfo(status: "UserExists", info: "Пользователь с таким email уже существует");
+                User newUser = await UserHelper.CreateUserAsync(userInfo, _db);
+                _db.Users.Add(newUser);
+                int res = await _db.SaveChangesAsync();
+                result = ResultInfo.CreateResultInfo(res, "UserCreated", "Новый пользователь успешно создан", "UserCreationFailed", "Произошла ошибка при создании пользователя");
+                RoleHelper.CheckThatRoleUserIsIn(userInfo.RolesIds, _db.Roles);
+                int roleRes = await RoleHelper.AddRolesToUser(userInfo.RolesIds, newUser.Id, _db);
+                result = ResultInfo.CreateResultInfo(roleRes, "UserCreated", "Новый пользователь успешно создан", "UserCreationFailed", "Произошла ошибка при добавлении ролей пользователю");
             }
-            else
+            catch (Exception ex)
             {
-                if (userInfo != null)
-                {
-
-                    User newUser = new User(userInfo.Email, userInfo.Password.GetCustomAlgoHashCode(SHA256.Create()), userInfo.MessagesToLoadAmount);
-                    if (userInfo.ChangePasswordKey != null)
-                    {
-                        newUser.Key = userInfo.ChangePasswordKey;
-                    }
-                    _db.Users.Add(newUser);
-                    int res = await _db.SaveChangesAsync();
-                    IEnumerable<int> uniqueRolesIds = userInfo.RolesIds.Distinct();
-                    foreach (var id in uniqueRolesIds)
-                    {
-                        RolesToUsers newUserRole = new RolesToUsers(userId: newUser.Id, roleId: id);
-                        _db.RolesToUsers.Add(newUserRole);
-                    }
-                    res = await _db.SaveChangesAsync();
-                    result = ResultInfo.CreateResultInfo(res, "UserCreated", "Новый пользователь успешно создан", "UserCreationFailed", "Произошла ошибка при создании пользователя");
-                }
-                else
-                {
-                    result = new ResultInfo(status: "UserCreationFailed", info: "Ошибка при получении данных для создания пользователя");
-                }
+                result = new ResultInfo("UserCreationFailed", ex.Message);
             }
             return Json(result);
         }
 
         [HttpPost("updateUser")]
-        public async Task<JsonResult> UpdateUserAsync([FromBody] QueryUserInfo userInfo)
+        public async Task<IActionResult> UpdateUserAsync([FromBody] QueryUserInfo userInfo)
         {
             ResultInfo result = new ResultInfo();
-            if (userInfo != null)
+            try
             {
                 User user = _db.Users.Find(userInfo.Id);
-                if (!String.IsNullOrEmpty(userInfo.Password))
-                {
-                    user.Password = userInfo.Password.GetCustomAlgoHashCode(SHA256.Create());
-                }
-                if (userInfo.ChangePasswordKey != null)
-                {
-                    user.Key = userInfo.ChangePasswordKey;
-                }
-
-                int userRoleId = _db.Roles.Where(r => r.Name.Equals("User")).Select(role => role.Id).FirstOrDefault();  // метод GetUnique Role Ids in Helper ?
-                if (!userInfo.RolesIds.Contains(userRoleId))
-                {
-                    userInfo.RolesIds.Add(userRoleId);
-                }
-                IEnumerable<int> uniqueRolesIds = userInfo.RolesIds.Distinct();
-                IEnumerable<RolesToUsers> existingUserRoles = _db.RolesToUsers.Where(r => r.UserId == user.Id).ToList();
-                if (uniqueRolesIds.Count() < existingUserRoles.Count()) // можно написать большой обобщенный метод тупо Filter все, что угодно. В данном случае <RolesToUsers, int>
-                {
-                    IEnumerable<RolesToUsers> rolesToRemove = existingUserRoles.Where(r => !uniqueRolesIds.Contains(r.RoleId));
-                    foreach (var role in rolesToRemove)
-                    {
-                        _db.RolesToUsers.Remove(role);
-                    }
-                }
-                else
-                {
-                    IEnumerable<int> existingUserRolesIds = existingUserRoles.Select(r => r.RoleId);  // TODO: написать комментарии, что тут вообще происходит.
-                    IEnumerable<int> rolesIdsToAdd = uniqueRolesIds.Except(existingUserRolesIds);
-                    foreach (var id in rolesIdsToAdd)
-                    {
-                        RolesToUsers newUserRole = new RolesToUsers(userId: user.Id, roleId: id);
-                        _db.RolesToUsers.Add(newUserRole);
-                    }
-                }
-
+                await UserHelper.UpdateUserInfo(userInfo, user, _db);
+                RoleHelper.CheckThatRoleUserIsIn(userInfo.RolesIds, _db.Roles);
+                RoleHelper.ChangeUserRoles(userInfo.RolesIds, user, _db.RolesToUsers);
                 _db.Users.Update(user);
                 int res = await _db.SaveChangesAsync();
                 result = ResultInfo.CreateResultInfo(res, "UserUpdated", "Данные пользователя успешно обновлены", "UserUpdateFailed", "Произошла ошибка при обновлении данных пользователя");
             }
-            else
+            catch (Exception ex)
             {
-                result = new ResultInfo(status: "UserUpdateFailed", info: "Ошибка при получении данных для редактирования пользователя");
+                result = new ResultInfo(status:"UserUpdateFailed", info: ex.Message);
             }
+
             return Json(result);
         }
 
         [HttpPost("deleteUsers")]
-        public async Task<JsonResult> DeleteUserAsync([FromBody] Identificators ids)
+        public async Task<IActionResult> DeleteUserAsync([FromBody] Identificators ids)
         {
-            // убрать это в Валидатор. Из массива пришедших Id надо отфильтровать Id самого юзера, чтоб он сам себя не удалил.
             User authenticatedUser = await _db.Users.FirstOrDefaultAsync(u => u.Email.Equals(User.Identity.Name));
-            int res = 0;
             List<int> filteredIds = ids.Ids.Where(id => id != authenticatedUser.Id).ToList();
             List<User> usersToDelete = _db.Users.Where(u => filteredIds.Contains(u.Id)).ToList();
-            foreach (var userToDelete in usersToDelete)
-            {
-                _db.Users.Remove(userToDelete);
-            }
+            int res = 0;
+            _db.Users.RemoveRange(usersToDelete);
             res = await _db.SaveChangesAsync();
             ResultInfo result = ResultInfo.CreateResultInfo(res, "UsersDeleted", "Пользователи успешно удалены", "UsersDeletionFailed", "Произошла ошибка при удалении пользователей");
             return Json(result);

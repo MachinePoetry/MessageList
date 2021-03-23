@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using MessageList.Models;
 using MessageList.Models.Extensions;
+using MessageList.Models.Helpers;
+using MessageList.Models.Roles;
 using MessageList.Models.QueryModels;
 using MessageList.Data;
 
@@ -27,13 +29,13 @@ namespace MessageList.Controllers
 
         [HttpGet("getAuthUserInfo")]
         [AllowAnonymous]
-        public async Task<JsonResult> GetAuthUserInfo()  // эте шткуа повторяется еще и в AdminController GetUsers()
+        public async Task<IActionResult> GetAuthUserInfo()
         {
-            User user = await _db.Users.Where(u => u.Email.Equals(User.Identity.Name)).Include(u => u.RolesToUsers).FirstOrDefaultAsync();
-            if (user != null && user.RolesToUsers.Count > 0)
+            User user = await _db.Users.Where(u => u.Email.Equals(User.Identity.Name)).AsNoTracking().Include(u => u.RolesToUsers).FirstOrDefaultAsync();
+            IEnumerable<Role> roles = await _db.Roles.ToListAsync();
+            if (user != null)
             {
-                IEnumerable<int> userRolesIds = user.RolesToUsers.Select(r => r.RoleId);
-                user.RolesNames = await _db.Roles.Where(r => userRolesIds.Contains(r.Id)).Select(role => role.Name).ToListAsync();
+                user.RolesNames = RoleHelper.GetUserRolesNames(user, roles).ToList();
             }
             return Json(user);
         }
@@ -59,7 +61,6 @@ namespace MessageList.Controllers
             if (user != null)
             {
                 user.Key = keyInfo.Key.GetCustomAlgoHashCode(SHA256.Create());
-                user.isChangePasswordKeySet = true;
                 _db.Users.Update(user);
                 res = await _db.SaveChangesAsync();
                 result = ResultInfo.CreateResultInfo(res, "KeySaved", "Ключ успешно сохранен", "KeyChangeFailed", "Произошла ошибка при сохранении ключа");

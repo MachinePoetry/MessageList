@@ -48,7 +48,7 @@
             <span class="col-2 col-sm-1 mdi mdi-lock mdi-24px mt-4 dark-color-text border-bottom-dark"
                   [ngClass]="{'submit-error': password.invalid && (loginForm.submitted || password.dirty || password.touched)}"></span>
             <input #password="ngModel" class="col-10 mt-4 border-bottom-dark" [ngClass]="{'submit-error': loginForm.submitted}" type="password" name="password" id="loginPassword"
-                   placeholder="Введите пароль" [(ngModel)]="params.password" required pattern="^.{1,20}$" (keydown.enter)="onSubmit(loginForm)" maxlength="21" />
+                   placeholder="Введите пароль" [(ngModel)]="params.password" required pattern="^.{4,20}$" (keydown.enter)="onSubmit(loginForm)" maxlength="21" />
             <label for="loginPassword" [ngClass]="{'alert-text': password.invalid && (loginForm.submitted || password.dirty || password.touched)}"> Пароль </label>
           </div>
           <div class="form-row justify-content-center">
@@ -57,7 +57,7 @@
                 <span class="alert-text">Введите пароль</span>
               </div>
               <div *ngIf="password.errors?.pattern">
-                <span class="alert-text">Допустимая длина пароля не более 20 символов</span>
+                <span class="alert-text">Допустимая длина пароля от 4 до 20 символов</span>
               </div>
             </div>
           </div>

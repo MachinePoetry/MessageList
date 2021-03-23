@@ -27,14 +27,14 @@ namespace MessageList.Models
         [JsonIgnore]
         public string Key { get; set; }
         [NotMapped]
-        public bool isChangePasswordKeySet { get { return Key?.Length > 0; } set { } }
+        public bool isChangePasswordKeySet { get => !String.IsNullOrEmpty(Key); }
         [Column("created_at")]
         [Required]
         public DateTime CreatedAt { get; set; }
         [Column("is_greeted")]
         public bool IsGreeted { get; set; }
         [Column("messages_to_load_amount")]
-        public int MessagesToLoadAmount { get; set; } = 20;
+        public int MessagesToLoadAmount { get; set; }
         [JsonIgnore]
         public List<RolesToUsers> RolesToUsers { get; set; }
         [NotMapped]
@@ -44,13 +44,22 @@ namespace MessageList.Models
 
 
 
-        public User() { }
+        public User() 
+        {
+            CreatedAt = DateTime.Now;
+            MessagesToLoadAmount = 20;
+            IsGreeted = false;
+            MessageGroups = new List<MessageGroup>();
+            RolesToUsers = new List<RolesToUsers>();
+            RolesNames = new List<string>();
+        }
         public User(string email, string password, int messagesToLoadAmount)
         {
             Email = email;
             Password = password;
             CreatedAt = DateTime.Now;
             MessagesToLoadAmount = messagesToLoadAmount;
+            IsGreeted = false;
             MessageGroups = new List<MessageGroup>();
             RolesToUsers = new List<RolesToUsers>();
             RolesNames = new List<string>();
