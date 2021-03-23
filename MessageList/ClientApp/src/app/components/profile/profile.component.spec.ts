@@ -46,12 +46,7 @@ describe('ProfileComponent', () => {
     });
     fixture = TestBed.createComponent(ProfileComponent);
     component = fixture.componentInstance;
-    mockHttpService.get.calls.reset();
-    mockHttpService.post.calls.reset();
-    mockToastService.showSuccess.calls.reset();
-    mockToastService.showDanger.calls.reset();
 
-    user = new User();
     messagesToLoadForm = fixture.nativeElement.querySelector('#messagesToLoadForm');
     messagesToLoadAmountInput = fixture.nativeElement.querySelector('#messagesToLoadAmount');
     messagesToLoadAmountInput.value = '30';
@@ -60,9 +55,11 @@ describe('ProfileComponent', () => {
     changeKeyInput = fixture.nativeElement.querySelector('#changePasswordKey');
     changeKeyInput.value = '123';
     component.keyForPasswordChange = '123';
+    user = new User();
     user.email = 'some@mail.com';
     user.createdAt = '1970-01-01T00:00:00.294611';
     user.messagesToLoadAmount = 22;
+    user.roles = ['User', 'Administrator'];
     component.authUserInfo = user;
     result = new ResultInfo();
     result.status = 'AmountOfLoadedMessagesChanged';
@@ -73,6 +70,11 @@ describe('ProfileComponent', () => {
     component.ngAfterViewInit();
 
     fixture.detectChanges();
+
+    mockHttpService.get.calls.reset();
+    mockHttpService.post.calls.reset();
+    mockToastService.showSuccess.calls.reset();
+    mockToastService.showDanger.calls.reset();
   });
 
   it('should create the Profile component', () => {

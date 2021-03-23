@@ -27,7 +27,7 @@
           <div class="col-5 col-sm-7"><p class="mt-5 ml-sm-2 ml-md-5" id="serverUptimeLabel"> Аптайм сервера: </p></div>
           <div class="col-7 col-sm-5"><p class="mt-5 text-success" id="serverUptime"> {{uptime | secondsToTime: 'uptime' || 'Загрузка...'}} </p></div>
         </div>
-        <div *ngIf="authUserInfo.roles.indexOf('Administrator') !== -1" class="row align-items-center">
+        <div *ngIf="authUserInfo.roles?.indexOf('Administrator') !== -1" class="row align-items-center">
           <div class="col-12 col-md-6 d-flex align-items-center justify-content-center admin-button-container">
             <button type="button" class="btn btn-primary mt-5 w-50" (click)="openUserManagementModal()"><span> Редактирование пользователей </span></button>
           </div>
