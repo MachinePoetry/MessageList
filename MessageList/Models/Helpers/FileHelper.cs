@@ -12,6 +12,8 @@ namespace MessageList.Models.Helpers
 {
     public static class FileHelper
     {
+        public static int MessagesToLoadAmountMin = 20;
+        public static int MessagesToLoadAmountMax = 10000;
         public static byte[] getFileData(IFormFile file)
         {
             byte[] fileData;
