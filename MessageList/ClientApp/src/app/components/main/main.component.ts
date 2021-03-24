@@ -259,6 +259,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     let modalRef = this._modalService.open(ConfirmModal);
     modalRef.result.then((result) => {
       if (result instanceof Observable) {
+        this._toggleInlineSpinner(true);
         result.subscribe(data => {
           this._refreshGroupsAndMessages({ id: this.authUserInfo.id },
             () => {
@@ -268,7 +269,6 @@ export class MainComponent implements OnInit, AfterViewInit {
                 this._isMessagesIterable = true;
               }
               this._toggleInlineSpinner(false);
-              this.enterMessageField.nativeElement.focus();
             }
           );
         }, error => { this._toastService.showDanger(error.message) })
@@ -281,7 +281,7 @@ export class MainComponent implements OnInit, AfterViewInit {
       modalRef.componentInstance.modalWindowParams = new ConfirmModalParams(requesetMethod, header, body, this.authUserInfo, entityId, url,
         { authUserId: this.authUserInfo.id, selectedGroupId: entityId });
     }
-    modalRef.hidden.subscribe(() => { this._toggleInlineSpinner(true), this.enterMessageField.nativeElement.focus() });
+    modalRef.hidden.subscribe(() => { this.enterMessageField.nativeElement.focus() });
   }
 
   public attachFileModalOpen(modalType: string, header: string, entity: string): void {
