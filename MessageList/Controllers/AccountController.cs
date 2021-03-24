@@ -83,7 +83,7 @@ namespace MessageList.Controllers
                     await HttpContext.SignOutAsync();
                     await AuthenticateAsync(acc.Email);
                     UserActivityTracker activityHelper = new UserActivityTracker(_configuration);
-                    await activityHelper.LogUserRequestAsync(Request.HttpContext, newUser.Id);
+                    activityHelper.LogUserRequestAsync(Request.HttpContext, newUser.Id);
                 }
                 catch (Exception ex)
                 {
