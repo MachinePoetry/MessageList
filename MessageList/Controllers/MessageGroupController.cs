@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
 using MessageList.Data;
 using MessageList.Models;
+using MessageList.Models.Helpers;
 using MessageList.Models.QueryModels;
 
 namespace MessageList.Controllers
@@ -22,43 +22,49 @@ namespace MessageList.Controllers
         }
 
         [HttpPost("create")]
-        public async Task<JsonResult> CreateMessageGroupAsync([FromBody] MessageGroup mg)
+        public async Task<IActionResult> CreateMessageGroupAsync([FromBody] QueryMessageGroup mg)
         {
-            ResultInfo result;
-            MessageGroup messageGroup = new MessageGroup(name: mg.Name, userId: mg.UserId);
-            await _db.MessageGroups.AddAsync(messageGroup);
-            int res = await _db.SaveChangesAsync();
-            result = ResultInfo.CreateResultInfo(res, "MessageGroupCreated", "Группа сообщений успешно создана", "MessageGroupCreationFailed", "Произошла ошибка при создании группы сообщений");
+            ResultInfo result = new ResultInfo();
+            if (await UserHelper.IsAuthenticatedUserAsync(mg.AuthUserId, User.Identity.Name, _db))
+            {
+                result = await MessageHepler.ApplyActionToMessageGroup(mg, _db, "create");
+            }
+            else
+            {
+                return StatusCode(403);
+            }
             return Json(result);
         }
 
         [HttpPost("update")]
-        public async Task<JsonResult> UpdateMessageGroup([FromBody] MessageGroup mg)
+        public async Task<IActionResult> UpdateMessageGroupAsync([FromBody] QueryMessageGroup mg)
         {
-            int res = 0;
-            MessageGroup messageGroup = await _db.MessageGroups.FirstOrDefaultAsync(mesgr => mesgr.Id == mg.Id);
-            User user = await _db.Users.FirstOrDefaultAsync(u => u.Id == mg.UserId);
-            if (messageGroup != null && user != null && user.Email.Equals(User.Identity.Name))
+            ResultInfo result = new ResultInfo();
+            if (await UserHelper.IsAuthenticatedUserAsync(mg.AuthUserId, User.Identity.Name, _db))
             {
-                messageGroup.Name = mg.Name;
-                res = await _db.SaveChangesAsync();
+                result = await MessageHepler.ApplyActionToMessageGroup(mg, _db, "update");
             }
-            ResultInfo result = ResultInfo.CreateResultInfo(res, "MessageGroupUpdated", "Группа сообщений успешно отредактирована", "MessageGroupUpdateFailed", "Произошла ошибка при редактировании группы сообщений");
+            else
+            {
+                return StatusCode(403);
+            }
+
             return Json(result);
         }
 
         [HttpPost("delete")]
-        public async Task<JsonResult> DeleteMessageGroup([FromBody] QueryMessageGroup mg)
+        public async Task<IActionResult> DeleteMessageGroupAsync([FromBody] QueryMessageGroup mg)
         {
-            int res = 0;
-            MessageGroup messageGroup = await _db.MessageGroups.FirstOrDefaultAsync(mGroup => mGroup.Id == mg.SelectedGroupId);
-            User user = await _db.Users.FirstOrDefaultAsync(u => u.Id == mg.AuthUserId);
-            if (messageGroup != null && user != null && user.Email.Equals(User.Identity.Name))
+            ResultInfo result = new ResultInfo();
+            if (await UserHelper.IsAuthenticatedUserAsync(mg.AuthUserId, User.Identity.Name, _db))
             {
-                _db.MessageGroups.Remove(messageGroup);
-                res = await _db.SaveChangesAsync();
+                result = await MessageHepler.ApplyActionToMessageGroup(mg, _db, "delete");
             }
-            ResultInfo result = ResultInfo.CreateResultInfo(res, "MessageGroupDeleted", "Группа сообщений успешно удалена", "MessageGroupDeletionFailed", "Произошла ошибка при удалении группы сообщений");
+            else
+            {
+                return StatusCode(403);
+            }
+
             return Json(result);
         }
     }

@@ -14,7 +14,7 @@ namespace MessageList.Models
         [Column("name")]
         [Required]
         [MaxLength(50)]
-        public string Name { get; set; } = "DefaultName";
+        public string Name { get; set; }
         public List<Message> Messages { get; set; }
         [Column("related_user_id")]
         [Required]
@@ -22,7 +22,9 @@ namespace MessageList.Models
         [JsonIgnore]
         public User User { get; set; }
 
-        public MessageGroup() { }
+        public MessageGroup() {
+            Name = "DefaultName";
+        }
         public MessageGroup(string name, int userId)
         {
             Name = name;
