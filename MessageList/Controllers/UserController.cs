@@ -42,14 +42,16 @@ namespace MessageList.Controllers
         }
 
         [HttpPost("setMessagesToLoadCounter")]
-        public async Task<IActionResult> SetMessagesToLoadCounterAsync([FromBody] QueryMessagesToLoadAmount messagesToLoadAmountInfo)
+        public async Task<IActionResult> SetMessagesToLoadCounterAsync([FromBody] QueryMessagesToLoadAmount amountInfo)
         {
             ResultInfo result = new ResultInfo();
             ResultInfo successResult = new ResultInfo(status: "AmountOfLoadedMessagesChanged", info: "Данные успешно обновлены");
             ResultInfo failResult = new ResultInfo(status: "AmountOfLoadedMessagesFailed", info: "Произошла ошибка при обновлении данных");
-            if (await UserHelper.IsAuthenticatedUserAsync(messagesToLoadAmountInfo.AuthUserId, User.Identity.Name, _db))
+            if (await UserHelper.IsAuthenticatedUserAsync(amountInfo.AuthUserId, User.Identity.Name, _db))
             {
-                result = await UserHelper.ChangeUserPropertyAsync<int>(messagesToLoadAmountInfo.AuthUserId, "MessagesToLoadAmount", messagesToLoadAmountInfo.MessagesToLoadAmount, _db, successResult, failResult);
+                result = Validator.IsMessagesToLoadAmountValid(amountInfo.MessagesToLoadAmount) ?
+                         await UserHelper.ChangeUserPropertyAsync<int>(amountInfo.AuthUserId, "MessagesToLoadAmount", amountInfo.MessagesToLoadAmount, _db, successResult, failResult) :
+                         new ResultInfo(status: "AmountOfLoadedMessagesFailed", "Недопустимое количество загружаемых сообщений");
             }
             else
             {
@@ -66,7 +68,9 @@ namespace MessageList.Controllers
             ResultInfo failResult = new ResultInfo(status: "KeyChangeFailed", info: "Произошла ошибка при сохранении ключа");
             if (await UserHelper.IsAuthenticatedUserAsync(keyInfo.AuthUserId, User.Identity.Name, _db))
             {
-                result = await UserHelper.ChangeUserPropertyAsync<string>(keyInfo.AuthUserId, "Key", keyInfo.Key.GetCustomAlgoHashCode(SHA256.Create()), _db, successResult, failResult);
+                result = Validator.IsChangePasswordKeyValid(keyInfo.Key) ? 
+                         await UserHelper.ChangeUserPropertyAsync<string>(keyInfo.AuthUserId, "Key", keyInfo.Key.GetCustomAlgoHashCode(SHA256.Create()), _db, successResult, failResult) :
+                         new ResultInfo(status: "KeyChangeFailed", "Недопустимый формат ключа");
             }
             else
             {
@@ -81,9 +85,9 @@ namespace MessageList.Controllers
         {
             User user = await _db.Users.FirstOrDefaultAsync(u => u.Email.Equals(keyInfo.Email));
             ResultInfo result = new ResultInfo();
-            if (user != null && (String.IsNullOrEmpty(user.Key) || !user.Key.Equals(keyInfo.Key.GetCustomAlgoHashCode(SHA256.Create()))))
+            if (user != null && (Validator.IsChangePasswordKeyValid(user.Key) || !user.Key.Equals(keyInfo.Key.GetCustomAlgoHashCode(SHA256.Create()))))
             {
-                result = new ResultInfo("InvalidKey", "Неверный ключ восстановления пароля");
+                result = new ResultInfo("InvalidKey", "Неверный ключ восстановления пароля или недопустимый формат ключа");
             }
             else if (user != null && user.Key.Equals(keyInfo.Key.GetCustomAlgoHashCode(SHA256.Create())))
             {

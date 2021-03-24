@@ -15,6 +15,7 @@ using MessageList.Models;
 using MessageList.Models.Helpers;
 using MessageList.Models.QueryModels;
 using MessageList.Models.Extensions;
+using MessageList.Models.Validators;
 using MessageList.Models.Middleware;
 
 
@@ -41,7 +42,7 @@ namespace MessageList.Controllers
             ResultInfo result = new ResultInfo();
             User user = await _db.Users.FirstOrDefaultAsync(u => u.Email.Equals(acc.Email) && u.Password.Equals(acc.Password.GetCustomAlgoHashCode(SHA256.Create())));
 
-            if (user != null)
+            if (user != null && Validator.IsEmailValid(acc.Email) && Validator.IsPasswordValid(acc.Password))
             {
                 await HttpContext.SignOutAsync();
                 await AuthenticateAsync(acc.Email);

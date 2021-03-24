@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using MessageList.Data;
 using MessageList.Models;
 using MessageList.Models.Filters;
+using MessageList.Models.QueryModels;
 
 namespace MessageList.Controllers
 {
@@ -33,12 +34,20 @@ namespace MessageList.Controllers
 
         [HttpPost("create")]
         [AllowAnonymous]
-        public async Task<IActionResult> CreateFeedbackAsync([FromBody] Feedback feedback)
+        public async Task<IActionResult> CreateFeedbackAsync([FromBody] QueryFeedback feedback)
         {
-            Feedback newFeedback = new Feedback(feedbackText: feedback.FeedbackText, feedbackContacts: feedback.FeedbackContacts);
-            await _db.Feedbacks.AddAsync(newFeedback);
-            int res = await _db.SaveChangesAsync();
-            ResultInfo result = ResultInfo.CreateResultInfo(res, "FeedbackCreated", "Информация успешно передана", "FeedbackCreationFailed", "Произошла ошибка при создании сообщения");
+            ResultInfo result = new ResultInfo();
+            if (feedback.FeedbackText.Length <= 4000 && feedback.FeedbackContacts.Length <= 400)
+            {
+                Feedback newFeedback = new Feedback(feedbackText: feedback.FeedbackText, feedbackContacts: feedback.FeedbackContacts);
+                await _db.Feedbacks.AddAsync(newFeedback);
+                int res = await _db.SaveChangesAsync();
+                result = ResultInfo.CreateResultInfo(res, "FeedbackCreated", "Информация успешно передана", "FeedbackCreationFailed", "Произошла ошибка при создании сообщения");
+            }
+            else
+            {
+                result = new ResultInfo("FeedbackCreationFailed", "Слишком длинный текст сообщения или контактов");
+            }
             return Json(result);
         }
 
