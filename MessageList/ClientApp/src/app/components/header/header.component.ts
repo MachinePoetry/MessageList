@@ -14,6 +14,7 @@ export class HeaderComponent {
   @Input() public authUserInfo: User;
 
   public signOut(): void {
+    sessionStorage.setItem("isGreeted", 'false');
     this._httpService.get('api/account/signOut').subscribe((data: User) => {
       this.authUserInfo = new User();
     });
