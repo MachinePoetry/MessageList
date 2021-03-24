@@ -4,7 +4,7 @@ namespace MessageList.Models.QueryModels
 {
     public class QueryChangePassword
     {
-        public int? AuthUserId { get; set; }
+        public int AuthUserId { get; set; }
         public string OldPassword { get; set; }
         public string NewPassword { get; set; }
         public string Mode { get; set; }

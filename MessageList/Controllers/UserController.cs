@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using MessageList.Models;
 using MessageList.Models.Extensions;
 using MessageList.Models.Helpers;
+using MessageList.Models.Validators;
 using MessageList.Models.Roles;
 using MessageList.Models.QueryModels;
 using MessageList.Data;
@@ -29,7 +30,7 @@ namespace MessageList.Controllers
 
         [HttpGet("getAuthUserInfo")]
         [AllowAnonymous]
-        public async Task<IActionResult> GetAuthUserInfo()
+        public async Task<IActionResult> GetAuthUserInfoAsync()
         {
             User user = await _db.Users.Where(u => u.Email.Equals(User.Identity.Name)).AsNoTracking().Include(u => u.RolesToUsers).FirstOrDefaultAsync();
             IEnumerable<Role> roles = await _db.Roles.ToListAsync();
@@ -41,42 +42,44 @@ namespace MessageList.Controllers
         }
 
         [HttpPost("setMessagesToLoadCounter")]
-        public async Task<JsonResult> SetMessagesToLoadCounterAsync([FromBody] QueryMessagesToLoadAmount mes)
+        public async Task<IActionResult> SetMessagesToLoadCounterAsync([FromBody] QueryMessagesToLoadAmount messagesToLoadAmountInfo)
         {
-            User user = await _db.Users.Where(u => u.Id == mes.AuthUserId).FirstOrDefaultAsync();
-            user.MessagesToLoadAmount = mes.MessagesToLoadAmount;
-            int res = 0;
-            _db.Users.Update(user);
-            res = await _db.SaveChangesAsync();
-            ResultInfo result = ResultInfo.CreateResultInfo(res, "AmountOfLoadedMessagesChanged", "Данные успешно обновлены", "AmountOfLoadedMessagesFailed", "Произошла ошибка при обновлении даныых");
+            ResultInfo result = new ResultInfo();
+            ResultInfo successResult = new ResultInfo(status: "AmountOfLoadedMessagesChanged", info: "Данные успешно обновлены");
+            ResultInfo failResult = new ResultInfo(status: "AmountOfLoadedMessagesFailed", info: "Произошла ошибка при обновлении данных");
+            if (await UserHelper.IsAuthenticatedUserAsync(messagesToLoadAmountInfo.AuthUserId, User.Identity.Name, _db))
+            {
+                result = await UserHelper.ChangeUserPropertyAsync<int>(messagesToLoadAmountInfo.AuthUserId, "MessagesToLoadAmount", messagesToLoadAmountInfo.MessagesToLoadAmount, _db, successResult, failResult);
+            }
+            else
+            {
+                return StatusCode(403);
+            }
             return Json(result);
         }
 
         [HttpPost("setChangePasswordKey")]
-        public async Task<JsonResult> SetChangePasswordKeyAsync([FromBody] QuerySetKey keyInfo)
+        public async Task<IActionResult> SetChangePasswordKeyAsync([FromBody] QuerySetKey keyInfo)
         {
-            User user = _db.Users.Find(keyInfo.AuthUserId);    // Method Find()
-            int res = 0;
             ResultInfo result = new ResultInfo();
-            if (user != null)
+            ResultInfo successResult = new ResultInfo(status: "KeySaved", info: "Ключ успешно сохранен");
+            ResultInfo failResult = new ResultInfo(status: "KeyChangeFailed", info: "Произошла ошибка при сохранении ключа");
+            if (await UserHelper.IsAuthenticatedUserAsync(keyInfo.AuthUserId, User.Identity.Name, _db))
             {
-                user.Key = keyInfo.Key.GetCustomAlgoHashCode(SHA256.Create());
-                _db.Users.Update(user);
-                res = await _db.SaveChangesAsync();
-                result = ResultInfo.CreateResultInfo(res, "KeySaved", "Ключ успешно сохранен", "KeyChangeFailed", "Произошла ошибка при сохранении ключа");
+                result = await UserHelper.ChangeUserPropertyAsync<string>(keyInfo.AuthUserId, "Key", keyInfo.Key.GetCustomAlgoHashCode(SHA256.Create()), _db, successResult, failResult);
             }
-            else 
+            else
             {
-                result = new ResultInfo("UserNotFound", "Пользователь не найден");
+                return StatusCode(403);
             }
             return Json(result);
         }
 
         [HttpPost("validateChangePasswordKey")]
         [AllowAnonymous]
-        public async Task<JsonResult> ValidateChangePasswordKeyAsync([FromBody] QueryValidateKey keyInfo)
+        public async Task<IActionResult> ValidateChangePasswordKeyAsync([FromBody] QueryValidateKey keyInfo)
         {
-            User user = await _db.Users.Where(u => u.Email.Equals(keyInfo.Email)).FirstOrDefaultAsync();
+            User user = await _db.Users.FirstOrDefaultAsync(u => u.Email.Equals(keyInfo.Email));
             ResultInfo result = new ResultInfo();
             if (user != null && (String.IsNullOrEmpty(user.Key) || !user.Key.Equals(keyInfo.Key.GetCustomAlgoHashCode(SHA256.Create()))))
             {
@@ -95,98 +98,104 @@ namespace MessageList.Controllers
 
         [HttpPost("changePassword")]
         [AllowAnonymous]
-        public async Task<JsonResult> ChangePasswordAsync([FromBody] QueryChangePassword newPasswordInfo)
+        public async Task<IActionResult> ChangePasswordAsync([FromBody] QueryChangePassword newPasswordInfo)
         {
-            User user = await _db.Users.Where(u => u.Id == newPasswordInfo.AuthUserId).FirstOrDefaultAsync();
+            User user = await _db.Users.FirstOrDefaultAsync(u => u.Id == newPasswordInfo.AuthUserId);
             ResultInfo result = new ResultInfo();
-            int res = 0;
-            if (user == null)
+            try
             {
-                result = new ResultInfo("UserNotFound", "Пользователь не найден");
-            }
-            else         
-            {
-                if (newPasswordInfo.Mode.Equals("profile") && !String.IsNullOrEmpty(newPasswordInfo.OldPassword) && !String.IsNullOrEmpty(newPasswordInfo.NewPassword))
+                if (user == null)
                 {
-                    if (!user.Password.Equals(newPasswordInfo.OldPassword.GetCustomAlgoHashCode(SHA256.Create())))
+                    throw new Exception("Пользователь для смены пароля не найден");
+                }
+                else
+                {
+                    if (newPasswordInfo.Mode.Equals("profile") && await UserHelper.IsAuthenticatedUserAsync(newPasswordInfo.AuthUserId, User.Identity.Name, _db))
                     {
-                        result = new ResultInfo("OldPasswordMismatch", "Старый пароль указан неверно");
+                        if (Validator.IsPasswordValid(newPasswordInfo.OldPassword) && Validator.IsPasswordValid(newPasswordInfo.NewPassword))
+                        {
+                            if (!user.Password.Equals(newPasswordInfo.OldPassword.GetCustomAlgoHashCode(SHA256.Create())))
+                            {
+                                throw new Exception("Старый пароль указан неверно");
+                            }
+                            else
+                            {
+                                result = await UserHelper.ChangePasswordAsync(newPasswordInfo.NewPassword, user, _db);
+                            }
+                        }
+                        else
+                        {
+                            throw new ArgumentException("Неверный формат пароля");
+                        }
                     }
-                    else
+                    else if (newPasswordInfo.Mode.Equals("restore"))
                     {
-                        user.Password = newPasswordInfo.NewPassword.GetCustomAlgoHashCode(SHA256.Create());
-                        _db.Users.Update(user);
-                        var us = user;
-                        res = await _db.SaveChangesAsync();
-                        result = ResultInfo.CreateResultInfo(res, "PasswordChanged", "Пароль обновлен", "PasswordChangeFailed", "Произошла ошибка при обновлении пароля");
+                        if (Validator.IsPasswordValid(newPasswordInfo.NewPassword))
+                        {
+                            result = await UserHelper.ChangePasswordAsync(newPasswordInfo.NewPassword, user, _db);
+                        }
+                        else
+                        {
+                            throw new ArgumentException("Неверный формат пароля");
+                        }
                     }
                 }
-                else if (newPasswordInfo.Mode.Equals("restore") && !String.IsNullOrEmpty(newPasswordInfo.NewPassword))
-                {
-                    user.Password = newPasswordInfo.NewPassword.GetCustomAlgoHashCode(SHA256.Create());
-                    _db.Users.Update(user);
-                    var us = user;
-                    res = await _db.SaveChangesAsync();
-                    result = ResultInfo.CreateResultInfo(res, "PasswordChanged", "Пароль обновлен", "PasswordChangeFailed", "Произошла ошибка при обновлении пароля");
-                }
-
-            } 
-            return Json(result);
-        }
-
-        [HttpPost("update")]
-        public async Task<JsonResult> UpdateUserAsync([FromBody] Account acc)
-        {
-            User user = await _db.Users.FirstOrDefaultAsync(userId => userId.Id == acc.Id);
-            int res = 0;
-            //TODO: Нужна валидация email и пароля перед редактированием и созданием пользователя
-
-            if (user != null && !String.IsNullOrEmpty(acc.Password))
-            {
-                if (!String.IsNullOrEmpty(acc.Email))
-                {
-                    user.Email = acc.Email;
-                }
-                if (!String.IsNullOrEmpty(acc.Password))
-                {
-                    user.Password = acc.Password.GetCustomAlgoHashCode(SHA256.Create());
-                }
-
-                res = await _db.SaveChangesAsync();
             }
-            ResultInfo result = ResultInfo.CreateResultInfo(res, "UserUpdated", "Данные успешно обновлены", "UserUpdateFailed", "Произошла ошибка при обновлении даныых");
-            return Json(result);
+            catch (Exception ex)
+            {
+                result = new ResultInfo(status: "PasswordChangeFailed", info:ex.Message);
+            }
 
+            return Json(result);
         }
 
         [HttpPost("greeting")]
-        public async Task<JsonResult> GreetUserAsync([FromBody] Identificator idContainer)
+        public async Task<IActionResult> GreetUserAsync([FromBody] Identificator idContainer)
         {
             User user = await _db.Users.FirstOrDefaultAsync(userId => userId.Id == idContainer.Id);
-            int res = 0;
-
+            ResultInfo result = new ResultInfo();
             if (user != null)
             {
                 user.IsGreeted = true;
-                res = await _db.SaveChangesAsync();
+                _db.Users.Update(user);
+                int res = await _db.SaveChangesAsync();
+                result = ResultInfo.CreateResultInfo(res, "UserGreeted", "Приветственное сообщение отключено", "GreetingFailed", "Произошла ошибка при отключении приветственного сообщения");
             }
-            return Json("Приветственное модальное окно отключено");
-
+            else
+            {
+                result = new ResultInfo(status: "GreetingFailed", info: "Пользователь не найден");
+            }
+            return Json(result);
         }
 
         [HttpGet("getUserActivityHistory")]
-        public async Task<JsonResult> GetUserActivityHistoryAsync([FromQuery] int authUserId)
+        public async Task<IActionResult> GetUserActivityHistoryAsync([FromQuery] int authUserId)
         {
-            List<UserRequestInfo> requests = await _db.UserRequestsHistory.Where(r => r.UserId == authUserId).OrderByDescending(req => req.Id).Take(20).ToListAsync();
+            IEnumerable<UserRequestInfo> requests = new List<UserRequestInfo>();
+            if (await UserHelper.IsAuthenticatedUserAsync(authUserId, User.Identity.Name, _db))
+            {
+                requests = await _db.UserRequestsHistory.Where(r => r.UserId == authUserId).OrderByDescending(req => req.Id).Take(20).ToListAsync();
+            }
+            else
+            {
+                return StatusCode(403);
+            }
             return Json(requests);
         }
 
         [HttpGet("getLastUserActivity")]
-        public JsonResult GetLastUserActivity([FromQuery] int authUserId)
+        public async Task<IActionResult> GetLastUserActivityAsync([FromQuery] int authUserId)
         {
-            UserRequestInfo lastUserRequest = null;
-            List<UserRequestInfo> userRequests = _db.UserRequestsHistory.Where(r => r.UserId == authUserId).OrderBy(req => req.Id).ToList();
-            lastUserRequest = userRequests.Count > 0 ? userRequests.Last() : lastUserRequest = new UserRequestInfo();
+            UserRequestInfo lastUserRequest = new UserRequestInfo();
+            if (await UserHelper.IsAuthenticatedUserAsync(authUserId, User.Identity.Name, _db))
+            {
+                List<UserRequestInfo> userRequests = _db.UserRequestsHistory.Where(r => r.UserId == authUserId).OrderBy(req => req.Id).ToList();
+                lastUserRequest = userRequests.Count > 0 ? userRequests.Last() : new UserRequestInfo();
+            }
+            else
+            {
+                return StatusCode(403);
+            }
             return Json(lastUserRequest);
         }
     }
