@@ -2,11 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
+using MessageList.Models.Interfaces;
 
 namespace MessageList.Models
 {
     [Table("files")]
-    public class OtherFile : File
+    public class OtherFile : File, IDataFile
     {
         [Column("data")]
         [MaxLength(10500000)]
@@ -14,6 +15,7 @@ namespace MessageList.Models
         [Required]
         public byte[] Data { get; set; }
 
+        public OtherFile() { }
         public OtherFile(string contentType, string fileName, long length, byte[] data) : base(contentType, fileName, length)
         {
             Data = data;

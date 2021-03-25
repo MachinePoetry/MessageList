@@ -5,11 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json.Linq;
 using MessageList.Data;
 using MessageList.Models;
 using MessageList.Models.QueryModels;
 using MessageList.Models.Helpers;
+using MessageList.Models.Validators;
 
 namespace MessageList.Controllers
 {
@@ -26,207 +26,164 @@ namespace MessageList.Controllers
         }
 
         [HttpGet("getGroupesAndMessages")]
-        public async Task<JsonResult> GetGroupesAndMessagesAsync([FromQuery] int id, int? counter, int? groupId)
+        public async Task<IActionResult> GetGroupesAndMessagesAsync([FromQuery] int id, int? counter, int? groupId)
         {
-            // Application returns only 20 messages for every group for the first load. More messages are uploaded manualy by 'counter' and 'group' params
-
-            User user = _db.Users.Find(id);
-            List<MessageGroup> messageGroups = await _db.MessageGroups.Where(mg => mg.UserId == id).AsNoTracking().AsSplitQuery().Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Images)
-                                                                                                                                 .Include(m => m.Messages).ThenInclude(mes => mes.UrlPreviews).ToListAsync();
-            foreach (var mg in messageGroups)
+            // messages are uploaded by parts (not all at once. 'user.MessagesToLoadAmount' is default amount). Incoming 'counter' tells that user wants to upload more messages.
+            if (await UserHelper.IsAuthenticatedUserAsync(id, User.Identity.Name, _db))
             {
-                foreach (var m in mg.Messages)
+                User user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
+                List<MessageGroup> messageGroups = await MessageHepler.GetMessageGroups(id, _db).Take(Validator.IsMessagesToLoadAmountValid(user.MessagesToLoadAmount) &&
+                                                                                                 user.MessagesToLoadAmount != 0 ? user.MessagesToLoadAmount : int.MaxValue).ToListAsync();
+                foreach (var mg in messageGroups)
                 {
-                    m.FileCollection.Video = await _db.Video.Where(video => video.FileCollectionId == m.FileCollection.Id).Select(v => new VideoFile(v.Id, v.ContentType, v.FileName, v.Length, v.FileCollectionId, null)).ToListAsync();
-                    m.FileCollection.Audio = await _db.Audio.Where(audio => audio.FileCollectionId == m.FileCollection.Id).Select(a => new AudioFile(a.Id, a.ContentType, a.FileName, a.Length, a.FileCollectionId, null)).ToListAsync();
-                    m.FileCollection.Files = await _db.Files.Where(file => file.FileCollectionId == m.FileCollection.Id).Select(f => new OtherFile(f.Id, f.ContentType, f.FileName, f.Length, f.FileCollectionId, null)).ToListAsync();
+                    await MessageHepler.FillMessagesWithFilesAsync(mg.Messages, _db);
                 }
-            }
 
-            if (user.MessagesToLoadAmount != 0)
-            { 
-                messageGroups.ForEach(mg => mg.Messages = mg.Messages.AsEnumerable().Reverse().Take(user.MessagesToLoadAmount).Reverse().ToList());
+                if (counter != null && groupId != null)
+                {
+                    List<Message> messages = await MessageHepler.GetMessages((int)groupId, _db).OrderBy(m => m.CreatedAt).Reverse().Take((int)counter).Reverse().ToListAsync();
+                    await MessageHepler.FillMessagesWithFilesAsync(messages, _db);
+                    messageGroups.FirstOrDefault(mg => mg.Id == groupId).Messages = messages;
+                }
+                return Json(messageGroups);
             }
-
-            if (counter != null && groupId != null)
+            else
             {
-                List<Message> messages = await _db.Messages.Where(mes => mes.MessageGroupId == groupId).Include(m => m.FileCollection.Images)
-                                                                                                        .Include(m => m.FileCollection.Video)
-                                                                                                        .Include(m => m.FileCollection.Audio)
-                                                                                                        .Include(m => m.FileCollection.Files)
-                                                                                                        .Include(m => m.UrlPreviews)
-                                                                                                        .OrderBy(m => m.CreatedAt).Reverse().Take((int)counter).Reverse().ToListAsync();
-                messageGroups.FirstOrDefault(m => m.Id == groupId).Messages = messages;
+                return StatusCode(403);
             }
-            return Json(messageGroups);
         }
 
         [HttpPost("search")]
-        public async Task<JsonResult> GetSearchedMessagesAsync(SearchParams sp)
+        public async Task<IActionResult> GetSearchedMessagesAsync(SearchParams sp)
         {
-            List<MessageGroup> messageGroups = await _db.MessageGroups.Where(mg => mg.UserId == sp.AuthUserId)
-                                                                                            .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Images)
-                                                                                            .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Video)
-                                                                                            .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Audio)
-                                                                                            .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Files)
-                                                                                            .Include(m => m.Messages).ThenInclude(mes => mes.UrlPreviews).ToListAsync();
-            if (!String.IsNullOrEmpty(sp.StringToSearch) && sp.DateToSearch == null)
+            if (await UserHelper.IsAuthenticatedUserAsync(sp.AuthUserId, User.Identity.Name, _db))
             {
+                List<MessageGroup> messageGroups = await MessageHepler.GetMessageGroups(sp.AuthUserId, _db).ToListAsync();
                 foreach (var mg in messageGroups)
                 {
-                    if (mg.Id == sp.GroupId)
-                    {
-                        mg.Messages = mg.Messages.Where(m => m.Text != null ? m.Text.Contains(sp.StringToSearch) : false).ToList();
-                    }
-                }
-            }
-            else if (sp.DateToSearch != null)
-            {
-                DateTime date = new DateTime(sp.DateToSearch.Year, sp.DateToSearch.Month, sp.DateToSearch.Day);
-                foreach (var mg in messageGroups)
-                {
-                    if (mg.Id == sp.GroupId)
-                    {
-                        mg.Messages = mg.Messages.Where(m => m.CreatedAt.Date == date.Date).ToList();
-                    }
+                    await MessageHepler.FillMessagesWithFilesAsync(mg.Messages, _db);
                 }
 
+                if (!String.IsNullOrEmpty(sp.StringToSearch) && sp.DateToSearch == null)
+                {
+                    MessageHepler.FilterMessagesByExpression(messageGroups, sp.GroupId, m => m.Text != null ? m.Text.Contains(sp.StringToSearch) : false);
+                }
+                else if (sp.DateToSearch != null)
+                {
+                    DateTime date = new DateTime(sp.DateToSearch.Year, sp.DateToSearch.Month, sp.DateToSearch.Day);
+                    MessageHepler.FilterMessagesByExpression(messageGroups, sp.GroupId, m => m.CreatedAt.Date == date.Date);
+
+                }
+                return Json(messageGroups);
             }
-            return Json(messageGroups);
+            else
+            {
+                return StatusCode(403);
+            }
         }
 
         [HttpPost("create")]
-        public async Task<JsonResult> CreateMessageAsync([FromForm] QueryMessage mes)
+        public async Task<IActionResult> CreateMessageAsync([FromForm] QueryMessage mes)
         {
-            int reqAuthUserId, reqMessageGroupId;
-            bool authUserIdResult = Int32.TryParse(mes.AuthUserId, out reqAuthUserId);
-            bool messageGroupIdResult = Int32.TryParse(mes.MessageGroupId, out reqMessageGroupId);
+            int authUserId, messageGroupId;
+            bool authUserIdResult = Int32.TryParse(mes.AuthUserId, out authUserId);
+            bool messageGroupIdResult = Int32.TryParse(mes.MessageGroupId, out messageGroupId);
             bool isMessageWithFiles = FileHelper.isMessageWithFiles(mes);
             bool isMessageWithUrlPreviews = FileHelper.isMessageWithUrlPreviews(mes);
 
-            int res = 0;
-            ResultInfo result = new ResultInfo();
-            Message message = new Message();
-            message.MessageGroupId = reqMessageGroupId;
+            if (authUserIdResult && messageGroupIdResult && await UserHelper.IsAuthenticatedUserAsync(authUserId, User.Identity.Name, _db))
+            {
+                ResultInfo result = new ResultInfo();
 
-            if (String.IsNullOrEmpty(mes.Text) && !isMessageWithFiles && !isMessageWithUrlPreviews)
-            {
-                result = new ResultInfo(status: "MessageCreationFailed", info: "Отсутствуют данные для создания сообщения");
-            }
-            else 
-            {
-                if (authUserIdResult && messageGroupIdResult && !String.IsNullOrEmpty(mes.Text))
+                if (!Validator.IsMessageTextValid(mes.Text) && !isMessageWithFiles && !isMessageWithUrlPreviews)
                 {
-                    message.Text = mes.Text;
+                    result = new ResultInfo(status: "MessageCreationFailed", info: "Отсутствуют данные для создания сообщения");
                 }
-                if (authUserIdResult && messageGroupIdResult && isMessageWithFiles)
+                else if (!Validator.IsMessageTextValid(mes.Text))
                 {
-                    List<ImageFile> images = mes.Images.Select(i => new ImageFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
-                    List<VideoFile> video = mes.Video.Select(i => new VideoFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
-                    List<AudioFile> audio = mes.Audio.Select(i => new AudioFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
-                    List<OtherFile> files = mes.Files.Select(i => new OtherFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
-                    message.FileCollection = new FileCollection(images, video, audio, files);
+                    result = new ResultInfo(status: "MessageCreationFailed", info: "Недопустимая длина текста сообщения");
                 }
-                if (authUserIdResult && messageGroupIdResult && isMessageWithUrlPreviews)
+                else
                 {
-                    foreach (var jStr in mes.UrlPreviews)
+                    Message message = new Message(mes.Text ?? String.Empty, messageGroupId);
+                    if (isMessageWithFiles)
                     {
-                        JObject jObj = JObject.Parse(jStr);
-                        if (jObj != null && jObj.HasValues)
-                        {
-                            string title = jObj.Property("title").Value.ToString();
-                            string description = jObj.Property("description").Value.ToString();
-                            string image = jObj.Property("image").Value.ToString();
-                            string url = jObj.Property("url").Value.ToString();
-                            UrlPreview preview = new UrlPreview(title, description, image, url);
-                            message.UrlPreviews.Add(preview);
-                        }
+                        List<ImageFile> images = mes.Images.Select(i => new ImageFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
+                        List<VideoFile> video = mes.Video.Select(i => new VideoFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
+                        List<AudioFile> audio = mes.Audio.Select(i => new AudioFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
+                        List<OtherFile> files = mes.Files.Select(i => new OtherFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
+                        message.FileCollection = new FileCollection(images, video, audio, files);
                     }
+                    if (isMessageWithUrlPreviews)
+                    {
+                        MessageHepler.AddUrlPreviewsToMessage(mes.UrlPreviews, message);
+                    }
+                    await _db.Messages.AddAsync(message);
+                    int res = await _db.SaveChangesAsync();
+                    result = ResultInfo.CreateResultInfo(res, "MessageCreated", "Сообщение успешно сохранено", "MessageCreationFailed", "Произошла ошибка при создании сообщения");
                 }
-                await _db.Messages.AddAsync(message);
-                res = await _db.SaveChangesAsync();
+                return Json(result);
             }
-                            result = ResultInfo.CreateResultInfo(res, "MessageCreated", "Сообщение успешно сохранено", "MessageCreationFailed", "Произошла ошибка при создании сообщения");
-            return Json(result);
+            else
+            {
+                return StatusCode(403);
+            }
         }
 
         [HttpPost("update")]
-        public async Task<JsonResult> UpdateMessage([FromForm] QueryMessage mes)
-        {
-            int selectedMessageId;
-            bool selectedMessageIdResult = Int32.TryParse(mes.SelectedMessageId, out selectedMessageId);
-            int res = 0;
-            if (selectedMessageIdResult)
-            {
-                Message message = await _db.Messages.Where(m => m.Id == selectedMessageId).Include(mes => mes.FileCollection).Include(mes => mes.UrlPreviews).FirstOrDefaultAsync();
-
-                if (message != null)
-                {
-                    message.Text = mes.Text;
-                    message.UrlPreviews = message.UrlPreviews.Where(p => mes.UrlPreviewIds.Contains(p.Id)).ToList();
-                    foreach (var jStr in mes.UrlPreviews)
-                    {
-                        JObject jObj = JObject.Parse(jStr);
-                        if (jObj != null && jObj.HasValues)
-                        {
-                            string title = jObj.Property("title").Value.ToString();
-                            string description = jObj.Property("description").Value.ToString();
-                            string image = jObj.Property("image").Value.ToString();
-                            string url = jObj.Property("url").Value.ToString();
-                            UrlPreview preview = new UrlPreview(title, description, image, url);
-                            message.UrlPreviews.Add(preview);
-                        }
-                    }
-                    message.FileCollection.Images = await _db.Images.Where(i => i.FileCollectionId == message.FileCollection.Id).ToListAsync();
-                    message.FileCollection.Images = message.FileCollection.Images.Where(i => mes.ImagesIds.Contains(i.Id)).ToList();
-                    List<ImageFile> newImages = mes.Images.Select(i => new ImageFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
-                    message.FileCollection.Images.AddRange(newImages);
-
-                    message.FileCollection.Video = await _db.Video.Where(v => v.FileCollectionId == message.FileCollection.Id).ToListAsync();
-                    message.FileCollection.Video = message.FileCollection.Video.Where(v => mes.VideoIds.Contains(v.Id)).ToList();
-                    List<VideoFile> newVideo = mes.Video.Select(v => new VideoFile(v.ContentType, v.FileName, v.Length, FileHelper.getFileData(v))).ToList();
-                    message.FileCollection.Video.AddRange(newVideo);
-
-                    message.FileCollection.Audio = await _db.Audio.Where(a => a.FileCollectionId == message.FileCollection.Id).ToListAsync();
-                    message.FileCollection.Audio = message.FileCollection.Audio.Where(a => mes.AudioIds.Contains(a.Id)).ToList();
-                    List<AudioFile> newAudio = mes.Audio.Select(a => new AudioFile(a.ContentType, a.FileName, a.Length, FileHelper.getFileData(a))).ToList();
-                    message.FileCollection.Audio.AddRange(newAudio);
-
-                    message.FileCollection.Files = await _db.Files.Where(f => f.FileCollectionId == message.FileCollection.Id).ToListAsync();
-                    message.FileCollection.Files = message.FileCollection.Files.Where(f => mes.FilesIds.Contains(f.Id)).ToList();
-                    List<OtherFile> newFiles = mes.Files.Select(f => new OtherFile(f.ContentType, f.FileName, f.Length, FileHelper.getFileData(f))).ToList();
-                    message.FileCollection.Files.AddRange(newFiles);
-
-                    _db.Messages.Update(message);
-                    res = await _db.SaveChangesAsync();
-                }
-            }
-            ResultInfo result = ResultInfo.CreateResultInfo(res, "MessageUpdates", "Сообщение успешно изменено", "MessageUpdateFailed", "Произошла ошибка при изменении сообщения");
-            return Json(result);
-        }
-
-        [HttpPost("delete")]
-        public async Task<JsonResult> DeleteExistingMessage([FromBody] QueryMessage mes)
+        public async Task<IActionResult> UpdateMessageAsync([FromForm] QueryMessage mes)
         {
             int authUserId, selectedMessageId;
             bool authUserIdResult = Int32.TryParse(mes.AuthUserId, out authUserId);
             bool selectedMessageIdResult = Int32.TryParse(mes.SelectedMessageId, out selectedMessageId);
 
-            int res = 0;
-
-            if (authUserIdResult && selectedMessageIdResult)
+            if (authUserIdResult && selectedMessageIdResult && await UserHelper.IsAuthenticatedUserAsync(authUserId, User.Identity.Name, _db))
             {
-                Message message = await _db.Messages.FirstOrDefaultAsync(m => m.Id == selectedMessageId);
-                User user = await _db.Users.FirstOrDefaultAsync(u => u.Id == authUserId);
+                ResultInfo result = new ResultInfo();
+                Message message = await _db.Messages.Where(m => m.Id == selectedMessageId).Include(mes => mes.FileCollection).Include(mes => mes.UrlPreviews).FirstOrDefaultAsync();
 
-                if (message != null && user != null && user.Email.Equals(User.Identity.Name))
+                if (message != null)
                 {
-                    _db.Messages.Remove(message);
-                    res = await _db.SaveChangesAsync();
+                    message.Text = mes.Text ?? String.Empty;
+                    message.UrlPreviews = message.UrlPreviews.Where(p => mes.UrlPreviewIds.Contains(p.Id)).ToList();
+                    MessageHepler.AddUrlPreviewsToMessage(mes.UrlPreviews, message);
+
+                    message.FileCollection.Images = MessageHepler.UpdateFileCollection<ImageFile>(message.FileCollection.Images, message.FileCollection.Id, _db.Images, mes.Images, mes.ImagesIds, _db).ToList();
+                    message.FileCollection.Video = MessageHepler.UpdateFileCollection<VideoFile>(message.FileCollection.Video, message.FileCollection.Id, _db.Video, mes.Video, mes.VideoIds, _db).ToList();
+                    message.FileCollection.Audio = MessageHepler.UpdateFileCollection<AudioFile>(message.FileCollection.Audio, message.FileCollection.Id, _db.Audio, mes.Audio, mes.AudioIds, _db).ToList();
+                    message.FileCollection.Files = MessageHepler.UpdateFileCollection<OtherFile>(message.FileCollection.Files, message.FileCollection.Id, _db.Files, mes.Files, mes.FilesIds, _db).ToList();
+
+                    _db.Messages.Update(message);
+                    int res = await _db.SaveChangesAsync();
+                    result = ResultInfo.CreateResultInfo(res, "MessageUpdated", "Сообщение успешно изменено", "MessageUpdateFailed", "Произошла ошибка при изменении сообщения");
                 }
+                else
+                {
+                    result = new ResultInfo("MessageUpdateFailed", "Сообщение не найдено");
+                }
+                return Json(result);
             }
-            ResultInfo result = ResultInfo.CreateResultInfo(res, "MessageDeleted", "Сообщение успешно удалено", "MessageDeletionFailed", "Произошла ошибка при удалении сообщения");
-            return Json(result);
+            else
+            {
+                return StatusCode(403);
+            }
+        }
+
+        [HttpPost("delete")]
+        public async Task<IActionResult> DeleteMessageAsync([FromBody] QueryDeleteMessage mes)
+        {
+            if (await UserHelper.IsAuthenticatedUserAsync(mes.AuthUserId, User.Identity.Name, _db))
+            {
+                Message message = await _db.Messages.FirstOrDefaultAsync(m => m.Id == mes.SelectedMessageId);
+                _db.Messages.Remove(message);
+                int res = await _db.SaveChangesAsync();
+                ResultInfo result = ResultInfo.CreateResultInfo(res, "MessageDeleted", "Сообщение успешно удалено", "MessageDeletionFailed", "Произошла ошибка при удалении сообщения");
+                return Json(result);
+            }
+            else
+            {
+                return StatusCode(403);
+            }
         }
     }
 }

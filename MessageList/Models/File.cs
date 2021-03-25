@@ -24,6 +24,7 @@ namespace MessageList.Models
         [JsonIgnore]
         public FileCollection FileCollection { get; set; }
 
+        public File() { }
         public File(string contentType, string fileName, long length)
         {
             ContentType = contentType;

@@ -2,11 +2,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
+using MessageList.Models.Interfaces;
 
 namespace MessageList.Models
 {
     [Table("audio")]
-    public class AudioFile : File
+    public class AudioFile : File, IDataFile
     {
         [Column("data")]
         [MaxLength(20500000)]
@@ -14,6 +15,7 @@ namespace MessageList.Models
         [Required]
         public byte[] Data { get; set; }
 
+        public AudioFile() { }
         public AudioFile(string contentType, string fileName, long length, byte[] data) : base(contentType, fileName, length)
         {
             Data = data;
