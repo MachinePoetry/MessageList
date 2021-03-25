@@ -24,7 +24,7 @@ export class TextService {
 
   public getUrlsFromText(text: string): string[] {
     let matches: string[] = [];
-    if (text.length) {
+    if (text && text.length) {
       matches = text.match(/(https?: \/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/g);
     }
     return matches ? matches : [];
