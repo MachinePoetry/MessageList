@@ -24,7 +24,6 @@ span {
 .image-block {
   display: inline-block;
   position: relative;
-  height: 8vh;
   overflow: hidden;
 }
 
