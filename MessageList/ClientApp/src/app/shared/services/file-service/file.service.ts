@@ -128,9 +128,7 @@ export class FileService {
   }
 
   public getFileCollectionClone(collection: FileCollection): FileCollection {
-    let collectionClone: FileCollection = {
-      images: [], video: [], audio: [], files: []
-    };
+    let collectionClone: FileCollection = new FileCollection();
     collectionClone.images = collection.images.slice();
     collectionClone.video = collection.video.slice();
     collectionClone.audio = collection.audio.slice();

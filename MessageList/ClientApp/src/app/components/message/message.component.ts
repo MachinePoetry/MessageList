@@ -13,7 +13,7 @@ import { Message } from './../../shared/models/message';
 export class MessageComponent {
   constructor(public fileService: FileService) { };
 
-  @Input() message: Message;
+  @Input() message: Message = new Message();
   @Output() editMessage = new EventEmitter<Message>();
   @Output() deleteMessage = new EventEmitter<Message>();
   public filePreviewMode = FilePreviewMode;
