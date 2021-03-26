@@ -191,7 +191,7 @@ export class MainComponent implements OnInit, AfterViewInit {
     this.enterMessageField.nativeElement.value = value;
     this.newMessage.text = value;
     if (files) {
-      this.newMessage.fileCollection = files;
+      this.newMessage.fileCollection = this._fileService.getFileCollectionClone(files);
     }
     if (urls) {
       this.newMessage.urlPreviews = urls;
@@ -295,7 +295,7 @@ export class MainComponent implements OnInit, AfterViewInit {
           return;
         } else {
           for (let file of result) {
-            let reader = new FileReader();
+            let reader: FileReader = new FileReader();
             reader.readAsDataURL(file);
             reader.onload = function (e) {
               file.src = e.target.result;
@@ -378,8 +378,7 @@ export class MainComponent implements OnInit, AfterViewInit {
   }
 
   public setChangedFilesCollection(files: FileCollection): void {
-    let fileCollectionClone: FileCollection = this._fileService.getFileCollectionClone(files);
-    this.newMessage.fileCollection = fileCollectionClone;
+    this.newMessage.fileCollection = this._fileService.getFileCollectionClone(files);
     this._setMessageBlockHeight();
     this._scrollToBottom(this.messageBlock);
     this.enterMessageField.nativeElement.focus();
