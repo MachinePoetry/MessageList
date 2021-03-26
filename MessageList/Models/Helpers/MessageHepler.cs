@@ -45,16 +45,26 @@ namespace MessageList.Models.Helpers
             return result;
         }
 
-        public static IQueryable<MessageGroup> GetMessageGroups(int authUserId, ApplicationDbContext db)
+        public static async Task<List<MessageGroup>> GetMessageGroups(User user, ApplicationDbContext db)
         {
             // message groups are filled only by images and url previews, because they are lightweight. Other files are uploaded to message later in controller without blob data. 
-            return db.MessageGroups.Where(mg => mg.UserId == authUserId).AsNoTracking().AsSplitQuery().Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Images)
-                                                                                                      .Include(m => m.Messages).ThenInclude(mes => mes.UrlPreviews);
+            List<MessageGroup> messageGroups = db.MessageGroups.Where(mg => mg.UserId == user.Id).AsNoTracking().AsSplitQuery()
+                                                                                                    .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Images)
+                                                                                                    .Include(m => m.Messages).ThenInclude(mes => mes.UrlPreviews).ToList();
+            foreach (var mg in messageGroups)
+            {
+                mg.Messages = mg.Messages.AsEnumerable().Reverse().Take(Validator.IsMessagesToLoadAmountValid(user.MessagesToLoadAmount) && user.MessagesToLoadAmount != 0 ? 
+                                                                                                              user.MessagesToLoadAmount : int.MaxValue).Reverse().ToList();
+                await FillMessagesWithFilesAsync(mg.Messages, db);
+            }
+            return messageGroups;
         }
 
-        public static IQueryable<Message> GetMessages(int groupId, ApplicationDbContext db)
+        public static async Task<List<Message>> GetMessages(int groupId, int counter, ApplicationDbContext db)
         {
-            return db.Messages.Where(mes => mes.MessageGroupId == groupId).Include(m => m.FileCollection.Images).Include(m => m.UrlPreviews);
+            IList<Message> messages = db.Messages.Where(mes => mes.MessageGroupId == groupId).Include(m => m.FileCollection.Images).Include(m => m.UrlPreviews).ToList();
+            await FillMessagesWithFilesAsync(messages, db);
+            return messages.OrderBy(m => m.CreatedAt).Reverse().Take(counter).Reverse().ToList();
         }
 
         public static async Task FillMessagesWithFilesAsync(IEnumerable<Message> messages, ApplicationDbContext db)

@@ -32,16 +32,11 @@ namespace MessageList.Controllers
             if (await UserHelper.IsAuthenticatedUserAsync(id, User.Identity.Name, _db))
             {
                 User user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
-                List<MessageGroup> messageGroups = await MessageHepler.GetMessageGroups(id, _db).Take(Validator.IsMessagesToLoadAmountValid(user.MessagesToLoadAmount) &&
-                                                                                                 user.MessagesToLoadAmount != 0 ? user.MessagesToLoadAmount : int.MaxValue).ToListAsync();
-                foreach (var mg in messageGroups)
-                {
-                    await MessageHepler.FillMessagesWithFilesAsync(mg.Messages, _db);
-                }
+                List<MessageGroup> messageGroups = await MessageHepler.GetMessageGroups(user, _db);
 
                 if (counter != null && groupId != null)
                 {
-                    List<Message> messages = await MessageHepler.GetMessages((int)groupId, _db).OrderBy(m => m.CreatedAt).Reverse().Take((int)counter).Reverse().ToListAsync();
+                    List<Message> messages = await MessageHepler.GetMessages((int)groupId, (int)counter, _db);
                     await MessageHepler.FillMessagesWithFilesAsync(messages, _db);
                     messageGroups.FirstOrDefault(mg => mg.Id == groupId).Messages = messages;
                 }
@@ -58,11 +53,8 @@ namespace MessageList.Controllers
         {
             if (await UserHelper.IsAuthenticatedUserAsync(sp.AuthUserId, User.Identity.Name, _db))
             {
-                List<MessageGroup> messageGroups = await MessageHepler.GetMessageGroups(sp.AuthUserId, _db).ToListAsync();
-                foreach (var mg in messageGroups)
-                {
-                    await MessageHepler.FillMessagesWithFilesAsync(mg.Messages, _db);
-                }
+                User user = await _db.Users.FirstOrDefaultAsync(u => u.Id == sp.AuthUserId);
+                List<MessageGroup> messageGroups = await MessageHepler.GetMessageGroups(user, _db);
 
                 if (!String.IsNullOrEmpty(sp.StringToSearch) && sp.DateToSearch == null)
                 {
@@ -97,27 +89,19 @@ namespace MessageList.Controllers
 
                 if (!Validator.IsMessageTextValid(mes.Text) && !isMessageWithFiles && !isMessageWithUrlPreviews)
                 {
-                    result = new ResultInfo(status: "MessageCreationFailed", info: "Отсутствуют данные для создания сообщения");
-                }
-                else if (!Validator.IsMessageTextValid(mes.Text))
-                {
-                    result = new ResultInfo(status: "MessageCreationFailed", info: "Недопустимая длина текста сообщения");
+                    result = new ResultInfo(status: "MessageCreationFailed", info: "Недопустимый формат сообщения (отсутствуют файлы или недопустимая длина текста)");
                 }
                 else
                 {
                     Message message = new Message(mes.Text ?? String.Empty, messageGroupId);
-                    if (isMessageWithFiles)
-                    {
-                        List<ImageFile> images = mes.Images.Select(i => new ImageFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
-                        List<VideoFile> video = mes.Video.Select(i => new VideoFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
-                        List<AudioFile> audio = mes.Audio.Select(i => new AudioFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
-                        List<OtherFile> files = mes.Files.Select(i => new OtherFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
-                        message.FileCollection = new FileCollection(images, video, audio, files);
-                    }
-                    if (isMessageWithUrlPreviews)
-                    {
-                        MessageHepler.AddUrlPreviewsToMessage(mes.UrlPreviews, message);
-                    }
+
+                    List<ImageFile> images = mes.Images.Select(i => new ImageFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
+                    List<VideoFile> video = mes.Video.Select(i => new VideoFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
+                    List<AudioFile> audio = mes.Audio.Select(i => new AudioFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
+                    List<OtherFile> files = mes.Files.Select(i => new OtherFile(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
+                    message.FileCollection = new FileCollection(images, video, audio, files);
+
+                    MessageHepler.AddUrlPreviewsToMessage(mes.UrlPreviews, message);
                     await _db.Messages.AddAsync(message);
                     int res = await _db.SaveChangesAsync();
                     result = ResultInfo.CreateResultInfo(res, "MessageCreated", "Сообщение успешно сохранено", "MessageCreationFailed", "Произошла ошибка при создании сообщения");

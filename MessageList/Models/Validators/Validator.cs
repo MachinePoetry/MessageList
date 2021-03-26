@@ -28,7 +28,7 @@ namespace MessageList.Models.Validators
 
         public static bool IsChangePasswordKeyValid(string key) => !String.IsNullOrEmpty(key) ? key.Length >= 1 && key.Length <= 30 : false;
         public static bool IsMessageGroupNameValid(string name) => !String.IsNullOrEmpty(name) && name.Length >= 1 && name.Length <= 20 && Regex.IsMatch(name, _notOnlySpaceBar);
-        public static bool IsMessageTextValid(string text) => text.Length <= 5001 && Regex.IsMatch(text, _notOnlySpaceBar);
+        public static bool IsMessageTextValid(string text) => String.IsNullOrEmpty(text) ? false : text.Length <= 5001 && Regex.IsMatch(text, _notOnlySpaceBar);
 
         public static void ValidateUserInfo(QueryUserInfo userInfo, User user)
         {
