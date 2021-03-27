@@ -279,6 +279,56 @@ namespace MessageList.ModelsTests.Validators.Tests
         }
 
         [Fact]
+        public void ItShould_return_true_if_feedback_has_text_and_contacts()
+        {
+            bool actual = Validator.IsFeedbackValid("some feedback text", "some feedback contacts");
+
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void ItShould_return_true_if_feedback_has_text_but_no_contacts()
+        {
+            bool actual = Validator.IsFeedbackValid("some feedback text", "");
+
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public void ItShould_return_false_if_feedback_text_is_null()
+        {
+            bool actual = Validator.IsFeedbackValid(null, "some feedback contacts");
+
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void ItShould_return_false_if_feedback_text_is_empty()
+        {
+            bool actual = Validator.IsFeedbackValid("", "some feedback contacts");
+
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void ItShould_return_false_if_feedback_text_is_too_long()
+        {
+            string longText = String.Join(",",new string[5000]);
+            bool actual = Validator.IsFeedbackValid(longText, "some feedback contacts");
+
+            Assert.False(actual);
+        }
+
+        [Fact]
+        public void ItShould_return_false_if_feedback_contacts_are_too_long()
+        {
+            string longContacts = String.Join(",", new string[500]);
+            bool actual = Validator.IsFeedbackValid("some feedback text", longContacts);
+
+            Assert.False(actual);
+        }
+
+        [Fact]
         public void ItShould_throw_exception_if_email_in_userInfo_is_invalid()
         {
             QueryUserInfo userInfo = new QueryUserInfo("invalid@email", "password");
