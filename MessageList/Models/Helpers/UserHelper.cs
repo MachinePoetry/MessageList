@@ -3,8 +3,9 @@ using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using MessageList.Data;
 using MessageList.Models.Extensions;
+using MessageList.Models.Interfaces;
+using MessageList.Data;
 using MessageList.Models.QueryModels;
 using MessageList.Models.Validators;
 
@@ -62,26 +63,27 @@ namespace MessageList.Models.Helpers
             return ResultInfo.CreateResultInfo(res, "PasswordChanged", "Пароль обновлен", "PasswordChangeFailed", "Произошла ошибка при обновлении пароля");
         }
 
-        public static async Task<User> CreateUserAsync(QueryUserInfo userInfo, ApplicationDbContext db)
+        public static async Task<int> CreateUserAsync(QueryUserInfo userInfo, IRepository repository)
         {
-            User user = await db.Users.FirstOrDefaultAsync(u => u.Email.Equals(userInfo.Email));
-            User newUser = new User();
+            User user = await repository.GetUserByEmailAsync(userInfo.Email);
             if (user != null)
             {
                 throw new Exception("Пользователь с таким email уже существует");
             }
 
+            User newUser = new User();
             Validator.ValidateUserInfo(userInfo, newUser);
             Validator.ValidateUserPassword(userInfo.Password, newUser);
             MessageGroup mg = new MessageGroup();
             mg.Name = "Default group";
             newUser.MessageGroups.Add(mg);
-            return newUser;
+            await repository.SaveUserToDatabaseAsync(newUser);
+            return newUser.Id;
         }
 
-        public static async Task UpdateUserInfo(QueryUserInfo userInfo, User userToUpdate, ApplicationDbContext db)
+        public static async Task UpdateUserInfo(QueryUserInfo userInfo, User userToUpdate, IRepository repository)
         {
-            User user = await db.Users.FirstOrDefaultAsync(u => u.Email.Equals(userInfo.Email));
+            User user = await repository.GetUserByEmailAsync(userInfo.Email);
             if (user != null && user.Id != userInfo.Id)
             {
                 throw new Exception("Пользователь с таким email уже существует");

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using MessageList.Data;
+using MessageList.Models.Interfaces;
 using MessageList.Models.Roles;
 
 namespace MessageList.Models.Helpers
@@ -21,11 +21,12 @@ namespace MessageList.Models.Helpers
             return result;
         }
 
-        public static void CheckThatRoleUserIsIn(IEnumerable<int> rolesIds, DbSet<Role> dbSet)
+        public static async Task CheckThatRoleUserIsIn(IEnumerable<int> rolesIds, IRepository repository)
         {
             if (rolesIds.ToList().Count > 0)
             {
-                int userRoleId = dbSet.FirstOrDefault(r => r.Name.Equals("User")).Id;
+                Role userRole = await repository.GetRoleByNameAsync("User");
+                int userRoleId = userRole.Id;
                 if (!rolesIds.Contains(userRoleId))
                 {
                     rolesIds.ToList().Add(userRoleId);
@@ -37,47 +38,37 @@ namespace MessageList.Models.Helpers
             }
         }
 
-        public static async Task<int> AddRolesToUser(IEnumerable<int> rolesIds, int newUserId, ApplicationDbContext db)
+        public static async Task<int> AddRolesToUser(IEnumerable<int> rolesIds, int newUserId, IRepository repository)
         {
             IEnumerable<int> uniqueRolesIds = rolesIds.Distinct();
-            foreach (var id in uniqueRolesIds)
-            {
-                RolesToUsers newUserRole = new RolesToUsers(userId: newUserId, roleId: id);
-                db.RolesToUsers.Add(newUserRole);
-            }
-            int res = await db.SaveChangesAsync();
-            return res;
+            IEnumerable<RolesToUsers> rolesToAdd = uniqueRolesIds.Select(r => new RolesToUsers(userId: newUserId, roleId: r));
+            return await repository.SaveUserRolesToDatabaseAsync(rolesToAdd);
         }
 
-        public static void ChangeUserRoles(IEnumerable<int> rolesIds, User user, DbSet<RolesToUsers> dbSet)
+        public static async Task<int> ChangeUserRoles(IEnumerable<int> rolesIds, User user, IRepository repository)
         {
+            int res = 0;
             if (rolesIds.ToList().Count > 0)
             {
                 IEnumerable<int> uniqueRolesIds = rolesIds.Distinct();
-                IEnumerable<RolesToUsers> existingUserRoles = dbSet.Where(r => r.UserId == user.Id).ToList();
+                IEnumerable<RolesToUsers> existingUserRoles = await repository.GetUserRolesAsync(user.Id);
                 if (uniqueRolesIds.Count() < existingUserRoles.Count())
                 {
                     IEnumerable<RolesToUsers> rolesToRemove = existingUserRoles.Where(r => !uniqueRolesIds.Contains(r.RoleId));
-                    foreach (var role in rolesToRemove)
-                    {
-                        dbSet.Remove(role);
-                    }
+                    res = await repository.RemoveUserRolesAsync(rolesToRemove);
                 }
                 else
                 {
                     IEnumerable<int> existingUserRolesIds = existingUserRoles.Select(r => r.RoleId);
                     IEnumerable<int> rolesIdsToAdd = uniqueRolesIds.Except(existingUserRolesIds);
-                    foreach (var id in rolesIdsToAdd)
-                    {
-                        RolesToUsers newUserRole = new RolesToUsers(userId: user.Id, roleId: id);
-                        dbSet.Add(newUserRole);
-                    }
+                    res = await AddRolesToUser(rolesIdsToAdd, user.Id, repository);
                 }
             }
             else
             {
                 throw new ArgumentException("Не указаны роли для пользователя");
             }
+            return res;
         }
     }
 }

@@ -1,20 +1,17 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.Configuration;
-using MessageList.Data;
 using MessageList.Models;
 using MessageList.Models.Helpers;
+using MessageList.Models.Roles;
 using MessageList.Models.QueryModels;
-using MessageList.Models.Extensions;
+using MessageList.Models.Interfaces;
 using MessageList.Models.Validators;
 using MessageList.Models.Middleware;
 
@@ -27,11 +24,11 @@ namespace MessageList.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        private ApplicationDbContext _db;
+        private IRepository _repository;
         private IConfiguration _configuration { get; }
-        public AccountController(ApplicationDbContext db, IConfiguration configuration)
+        public AccountController(IRepository repository, IConfiguration configuration)
         {
-            _db = db;
+            _repository = repository;
             _configuration = configuration;
         }
 
@@ -40,7 +37,7 @@ namespace MessageList.Controllers
         public async Task<IActionResult> LoginAsync([FromBody] Account acc)
         {
             ResultInfo result = new ResultInfo();
-            User user = await _db.Users.FirstOrDefaultAsync(u => u.Email.Equals(acc.Email) && u.Password.Equals(acc.Password.GetCustomAlgoHashCode(SHA256.Create())));
+            User user = await _repository.GetUserByCredentialsAsync(acc.Email, acc.Password);
 
             if (user != null && Validator.IsEmailValid(acc.Email) && Validator.IsPasswordValid(acc.Password))
             {
@@ -61,7 +58,7 @@ namespace MessageList.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> RegisterAsync([FromBody] Account acc)
         {
-            User user = await _db.Users.FirstOrDefaultAsync(u => u.Email == acc.Email);
+            User user = await _repository.GetUserByEmailAsync(acc.Email);
             QueryUserInfo userInfo = new QueryUserInfo(acc.Email, acc.Password);
             ResultInfo result = new ResultInfo();
 
@@ -73,18 +70,16 @@ namespace MessageList.Controllers
             {
                 try
                 {
-                    User newUser = await UserHelper.CreateUserAsync(userInfo, _db);
-                    _db.Users.Add(newUser);
-                    int res = await _db.SaveChangesAsync();
-                    result = ResultInfo.CreateResultInfo(res, "UserCreated", "Новый пользователь успешно создан", "UserCreationFailed", "Произошла ошибка при создании пользователя");
-                    int userRoleId = _db.Roles.FirstOrDefault(r => r.Name.Equals("User")).Id;
-                    int rolesRes = await RoleHelper.AddRolesToUser(new List<int> { userRoleId }, newUser.Id, _db);
-                    result = ResultInfo.CreateResultInfo(rolesRes, "UserCreated", "Новый пользователь успешно создан", "UserCreationFailed", "Произошла ошибка при добавлении ролей пользователю");
+                    int newUserId = await UserHelper.CreateUserAsync(userInfo, _repository);
+                    Role userRole = await _repository.GetRoleByNameAsync("User");
+                    int userRoleId = userRole.Id;
+                    int res = await RoleHelper.AddRolesToUser(new List<int> { userRoleId }, newUserId, _repository);
+                    result = ResultInfo.CreateResultInfo(res, "UserCreated", "Новый пользователь успешно создан", "UserCreationFailed", "Произошла ошибка при добавлении ролей пользователю");
 
                     await HttpContext.SignOutAsync();
                     await AuthenticateAsync(acc.Email);
                     UserActivityTracker activityHelper = new UserActivityTracker(_configuration);
-                    activityHelper.LogUserRequestAsync(Request.HttpContext, newUser.Id);
+                    activityHelper.LogUserRequestAsync(Request.HttpContext, newUserId);
                 }
                 catch (Exception ex)
                 {

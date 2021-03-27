@@ -18,9 +18,6 @@ namespace MessageList.Controllers
         }
 
         [HttpGet("getUptime")]
-        public long GetUptime()
-        {
-            return _uptime.GetUptime();
-        }
+        public long GetUptime() => _uptime.GetUptime();
     }
 }
