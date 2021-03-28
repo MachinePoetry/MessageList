@@ -23,4 +23,8 @@
     <ProjectReference Include="..\MessageList\MessageList.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Infrastructure\Classes\" />
+  </ItemGroup>
+
 </Project>

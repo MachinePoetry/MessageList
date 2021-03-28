@@ -4,7 +4,7 @@ using MessageList.Models;
 using MessageList.Models.QueryModels;
 using MessageList.Models.Validators;
 
-namespace MessageList.ModelsTests.Validators.Tests
+namespace MessageList.Tests.UnitTests.ModelsTests.Validators
 {
     public class ValidatorTests
     {
