@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.IO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using MessageList.Data;
+using MessageList.Models.Interfaces;
 
 namespace MessageList.Controllers
 {
@@ -12,35 +13,16 @@ namespace MessageList.Controllers
     [RequireHttps]
     public class FileController : Controller
     {
-        private ApplicationDbContext _db;
-        public FileController(ApplicationDbContext db)
+        private IRepository _repository;
+        public FileController(IRepository repository)
         {
-            _db = db;
+            _repository = repository;
         }
 
         [HttpGet("fileData")]
-        public IActionResult GetFileData([FromQuery] int fileId, string fileType)
+        public async Task<IActionResult> GetFileData([FromQuery] int fileId, string fileType)
         {
-            dynamic file = null;
-
-            switch(fileType)
-            {
-                case "image":
-                    file = _db.Images.Find(fileId);
-                    break;
-                case "video":
-                    file = _db.Video.Find(fileId);
-                    break;
-                case "audio":
-                    file = _db.Audio.Find(fileId);
-                    break;
-                case "file":
-                    file = _db.Files.Find(fileId);
-                    break;
-                default:
-                    file = null;
-                    break;
-            }
+            IDataFile file = await _repository.GetFileAsync(fileId, fileType);
 
             byte[] blob = file?.Data ?? new byte[0];
             MemoryStream ms = new MemoryStream();

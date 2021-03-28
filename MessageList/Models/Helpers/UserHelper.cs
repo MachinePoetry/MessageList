@@ -2,10 +2,8 @@
 using System.Threading.Tasks;
 using System.Security.Cryptography;
 using System.Reflection;
-using Microsoft.EntityFrameworkCore;
 using MessageList.Models.Extensions;
 using MessageList.Models.Interfaces;
-using MessageList.Data;
 using MessageList.Models.QueryModels;
 using MessageList.Models.Validators;
 
@@ -13,13 +11,13 @@ namespace MessageList.Models.Helpers
 {
     public static class UserHelper
     {
-        public static async Task<bool> IsAuthenticatedUserAsync(int userFromRequestId, string authUserEmailEmail, ApplicationDbContext db)
+        public static async Task<bool> IsAuthenticatedUserAsync(int userFromRequestId, string authUserEmail, IRepository repository)
         {
             bool result = false;
             try
             {
-                User userFromRequest = db.Users.Find(userFromRequestId);
-                User authenticatedUser = await db.Users.FirstOrDefaultAsync(u => u.Email.Equals(authUserEmailEmail));
+                User userFromRequest = await repository.GetUserByIdAsync(userFromRequestId);
+                User authenticatedUser = await repository.GetUserByEmailAsync(authUserEmail);
                 result = userFromRequest.Id == authenticatedUser.Id;
             }
             catch(Exception ex)
@@ -29,12 +27,12 @@ namespace MessageList.Models.Helpers
             return result;
         }
 
-        public static async Task<ResultInfo> ChangeUserPropertyAsync<T>(int authUserId, string propertyToChange, T valueToSet, ApplicationDbContext db, ResultInfo successResult, ResultInfo failResult)
+        public static async Task<ResultInfo> ChangeUserPropertyAsync<T>(int authUserId, string propertyToChange, T valueToSet, IRepository repository, ResultInfo successResult, ResultInfo failResult)
         {
             ResultInfo result = new ResultInfo();
             try
             {
-                User user = db.Users.Find(authUserId);
+                User user = await repository.GetUserByIdAsync(authUserId);
                 PropertyInfo propInfo = user.GetType().GetProperty(propertyToChange);
                 if (propInfo != null)
                 {
@@ -44,8 +42,7 @@ namespace MessageList.Models.Helpers
                 {
                     throw new Exception("Ошибка при сохранении нового значения свойства");
                 }
-                db.Users.Update(user);
-                int res = await db.SaveChangesAsync();
+                int res = await repository.UpdateUserInDatabaseAsync(user);
                 result = ResultInfo.CreateResultInfo(res, successResult.Status, successResult.Info, failResult.Status, failResult.Info);
             }
             catch (Exception ex)
@@ -55,11 +52,10 @@ namespace MessageList.Models.Helpers
             return result;
         }
 
-        public static async Task<ResultInfo> ChangePasswordAsync(string password, User user, ApplicationDbContext db)
+        public static async Task<ResultInfo> ChangePasswordAsync(string password, User user, IRepository repository)
         {
             user.Password = password.GetCustomAlgoHashCode(SHA256.Create());
-            db.Users.Update(user);
-            int res = await db.SaveChangesAsync();
+            int res = await repository.UpdateUserInDatabaseAsync(user);
             return ResultInfo.CreateResultInfo(res, "PasswordChanged", "Пароль обновлен", "PasswordChangeFailed", "Произошла ошибка при обновлении пароля");
         }
 

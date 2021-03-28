@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using MessageList.Data;
 using MessageList.Models;
 using MessageList.Models.Helpers;
+using MessageList.Models.Interfaces;
 using MessageList.Models.QueryModels;
 
 namespace MessageList.Controllers
@@ -15,19 +15,19 @@ namespace MessageList.Controllers
     [RequireHttps]
     public class MessageGroupController : Controller
     {
-        private ApplicationDbContext _db;
-        public MessageGroupController(ApplicationDbContext db)
+        private IRepository _repository;
+        public MessageGroupController(IRepository repository)
         {
-            _db = db;
+            _repository = repository;
         }
 
         [HttpPost("create")]
         public async Task<IActionResult> CreateMessageGroupAsync([FromBody] QueryMessageGroup mg)
         {
             ResultInfo result = new ResultInfo();
-            if (await UserHelper.IsAuthenticatedUserAsync(mg.AuthUserId, User.Identity.Name, _db))
+            if (await UserHelper.IsAuthenticatedUserAsync(mg.AuthUserId, User.Identity.Name, _repository))
             {
-                result = await MessageHepler.ApplyActionToMessageGroup(mg, _db, "create");
+                result = await MessageHepler.ApplyActionToMessageGroup(mg, _repository, "create");
             }
             else
             {
@@ -40,9 +40,9 @@ namespace MessageList.Controllers
         public async Task<IActionResult> UpdateMessageGroupAsync([FromBody] QueryMessageGroup mg)
         {
             ResultInfo result = new ResultInfo();
-            if (await UserHelper.IsAuthenticatedUserAsync(mg.AuthUserId, User.Identity.Name, _db))
+            if (await UserHelper.IsAuthenticatedUserAsync(mg.AuthUserId, User.Identity.Name, _repository))
             {
-                result = await MessageHepler.ApplyActionToMessageGroup(mg, _db, "update");
+                result = await MessageHepler.ApplyActionToMessageGroup(mg, _repository, "update");
             }
             else
             {
@@ -56,9 +56,9 @@ namespace MessageList.Controllers
         public async Task<IActionResult> DeleteMessageGroupAsync([FromBody] QueryMessageGroup mg)
         {
             ResultInfo result = new ResultInfo();
-            if (await UserHelper.IsAuthenticatedUserAsync(mg.AuthUserId, User.Identity.Name, _db))
+            if (await UserHelper.IsAuthenticatedUserAsync(mg.AuthUserId, User.Identity.Name, _repository))
             {
-                result = await MessageHepler.ApplyActionToMessageGroup(mg, _db, "delete");
+                result = await MessageHepler.ApplyActionToMessageGroup(mg, _repository, "delete");
             }
             else
             {

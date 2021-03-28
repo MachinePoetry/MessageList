@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
-using MessageList.Data;
 using MessageList.Models.QueryModels;
 using MessageList.Models.Validators;
 using MessageList.Models.Interfaces;
@@ -14,27 +13,15 @@ namespace MessageList.Models.Helpers
 {
     public static class MessageHepler
     {
-        public static async Task<ResultInfo> ApplyActionToMessageGroup(QueryMessageGroup mg, ApplicationDbContext db, string mode)
+        public static async Task<ResultInfo> ApplyActionToMessageGroup(QueryMessageGroup mg, IRepository repository, string mode)
         {
             ResultInfo result = new ResultInfo();
             if (mode.Equals("delete") || Validator.IsMessageGroupNameValid(mg.Name))
             {
-                MessageGroup messageGroup = mode.Equals("create") ? new MessageGroup(name: mg.Name, userId: mg.AuthUserId) : 
-                                                                    await db.MessageGroups.FirstOrDefaultAsync(mGroup => mGroup.Id == mg.SelectedGroupId);
-                switch (mode)
-                {
-                    case "create":
-                        db.MessageGroups.Add(messageGroup);
-                        break;
-                    case "update":
-                        messageGroup.Name = mg.Name;
-                        db.MessageGroups.Update(messageGroup);
-                        break;
-                    case "delete":
-                        db.MessageGroups.Remove(messageGroup);
-                        break;
-                }
-                int res = await db.SaveChangesAsync();
+                MessageGroup messageGroup = mode.Equals("create") ? new MessageGroup(name: mg.Name, userId: mg.AuthUserId) :
+                                                                    await repository.GetMessageGroupByIdAsync((int)mg.SelectedGroupId);
+
+                int res = await repository.ApplyActionToMessageGroup(messageGroup, mg, mode);
                 result = ResultInfo.CreateResultInfo(res, "ActionApplied", "Действие завершено успешно", "ActionFailed", "Произошла ошибка при выполнении действия");
             }
             else
@@ -45,35 +32,36 @@ namespace MessageList.Models.Helpers
             return result;
         }
 
-        public static async Task<List<MessageGroup>> GetMessageGroups(User user, ApplicationDbContext db)
+        public static async Task<IEnumerable<MessageGroup>> GetMessageGroups(User user, IRepository repository)
         {
             // message groups are filled only by images and url previews, because they are lightweight. Other files are uploaded to message later in controller without blob data. 
-            List<MessageGroup> messageGroups = db.MessageGroups.Where(mg => mg.UserId == user.Id).AsNoTracking().AsSplitQuery()
-                                                                                                    .Include(m => m.Messages).ThenInclude(mes => mes.FileCollection.Images)
-                                                                                                    .Include(m => m.Messages).ThenInclude(mes => mes.UrlPreviews).ToList();
+            IEnumerable<MessageGroup> messageGroups = await repository.GetMessageGroupsAsync(user.Id);
             foreach (var mg in messageGroups)
             {
                 mg.Messages = mg.Messages.AsEnumerable().Reverse().Take(Validator.IsMessagesToLoadAmountValid(user.MessagesToLoadAmount) && user.MessagesToLoadAmount != 0 ? 
                                                                                                               user.MessagesToLoadAmount : int.MaxValue).Reverse().ToList();
-                await FillMessagesWithFilesAsync(mg.Messages, db);
+                await FillMessagesWithFilesAsync(mg.Messages, repository);
             }
             return messageGroups;
         }
 
-        public static async Task<List<Message>> GetMessages(int groupId, int counter, ApplicationDbContext db)
+        public static async Task<List<Message>> GetMessages(int groupId, int counter, IRepository repository)
         {
-            IList<Message> messages = db.Messages.Where(mes => mes.MessageGroupId == groupId).Include(m => m.FileCollection.Images).Include(m => m.UrlPreviews).ToList();
-            await FillMessagesWithFilesAsync(messages, db);
+            IEnumerable<Message> messages = await repository.GetMessages(groupId);
+            await FillMessagesWithFilesAsync(messages, repository);
             return messages.OrderBy(m => m.CreatedAt).Reverse().Take(counter).Reverse().ToList();
         }
 
-        public static async Task FillMessagesWithFilesAsync(IEnumerable<Message> messages, ApplicationDbContext db)
+        public static async Task FillMessagesWithFilesAsync(IEnumerable<Message> messages, IRepository repository)
         {
             foreach (var m in messages)
             {
-                m.FileCollection.Video = await db.Video.Where(video => video.FileCollectionId == m.FileCollection.Id).Select(v => new VideoFile(v.Id, v.ContentType, v.FileName, v.Length, v.FileCollectionId, null)).ToListAsync();
-                m.FileCollection.Audio = await db.Audio.Where(audio => audio.FileCollectionId == m.FileCollection.Id).Select(a => new AudioFile(a.Id, a.ContentType, a.FileName, a.Length, a.FileCollectionId, null)).ToListAsync();
-                m.FileCollection.Files = await db.Files.Where(file => file.FileCollectionId == m.FileCollection.Id).Select(f => new OtherFile(f.Id, f.ContentType, f.FileName, f.Length, f.FileCollectionId, null)).ToListAsync();
+                IQueryable<VideoFile> video = repository.GetVideoFiles(m.FileCollection.Id);
+                m.FileCollection.Video = await video.ToListAsync();
+                IQueryable<AudioFile> audio = repository.GetAudioFiles(m.FileCollection.Id);
+                m.FileCollection.Audio = await audio.ToListAsync();
+                IQueryable<OtherFile> files = repository.GetOtherFiles(m.FileCollection.Id);
+                m.FileCollection.Files = await files.ToListAsync();
             }
         }
 
@@ -88,10 +76,9 @@ namespace MessageList.Models.Helpers
             }
         }
 
-        public static IList<T> UpdateFileCollection<T>(IList<T> fileCollection, int fileCollectionId, DbSet<T> dbSet, IEnumerable<IFormFile> files, IEnumerable<int> filesIds, ApplicationDbContext db) where T : File, IDataFile, new()
+        public static IList<T> UpdateFileCollection<T>(IList<T> fileCollection, int fileCollectionId, IEnumerable<IFormFile> files, IEnumerable<int> filesIds, IRepository repository) where T : File, IDataFile, new()
         {
-            fileCollection = dbSet.Where(i => i.FileCollectionId == fileCollectionId).ToList();
-            fileCollection = fileCollection.Where(i => filesIds.Contains(i.Id)).ToList();
+            fileCollection = repository.GetSpecifiedFiles<T>(fileCollectionId, filesIds).ToList();
             //List<T> newFiles = files.Select(i => new T(i.ContentType, i.FileName, i.Length, FileHelper.getFileData(i))).ToList();
             foreach (var file in files)
             {

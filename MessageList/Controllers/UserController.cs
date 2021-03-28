@@ -5,14 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
 using MessageList.Models;
 using MessageList.Models.Extensions;
 using MessageList.Models.Helpers;
 using MessageList.Models.Validators;
 using MessageList.Models.Roles;
 using MessageList.Models.QueryModels;
-using MessageList.Data;
+using MessageList.Models.Interfaces;
 
 namespace MessageList.Controllers
 {
@@ -22,18 +21,18 @@ namespace MessageList.Controllers
     [RequireHttps]
     public class UserController : Controller
     {
-        private ApplicationDbContext _db;
-        public UserController(ApplicationDbContext db)
+        private IRepository _repository;
+        public UserController(IRepository repository)
         {
-            _db = db;
+            _repository = repository;
         }
 
         [HttpGet("getAuthUserInfo")]
         [AllowAnonymous]
         public async Task<IActionResult> GetAuthUserInfoAsync()
         {
-            User user = await _db.Users.Where(u => u.Email.Equals(User.Identity.Name)).AsNoTracking().Include(u => u.RolesToUsers).FirstOrDefaultAsync();
-            IEnumerable<Role> roles = await _db.Roles.ToListAsync();
+            User user = await _repository.GetAuthenticatedUserAsync(User.Identity.Name);
+            IEnumerable<Role> roles = await _repository.GetRolesAsync();
             if (user != null)
             {
                 user.RolesNames = RoleHelper.GetUserRolesNames(user, roles).ToList();
@@ -47,10 +46,10 @@ namespace MessageList.Controllers
             ResultInfo result = new ResultInfo();
             ResultInfo successResult = new ResultInfo(status: "AmountOfLoadedMessagesChanged", info: "Данные успешно обновлены");
             ResultInfo failResult = new ResultInfo(status: "AmountOfLoadedMessagesFailed", info: "Произошла ошибка при обновлении данных");
-            if (await UserHelper.IsAuthenticatedUserAsync(amountInfo.AuthUserId, User.Identity.Name, _db))
+            if (await UserHelper.IsAuthenticatedUserAsync(amountInfo.AuthUserId, User.Identity.Name, _repository))
             {
                 result = Validator.IsMessagesToLoadAmountValid(amountInfo.MessagesToLoadAmount) ?
-                         await UserHelper.ChangeUserPropertyAsync<int>(amountInfo.AuthUserId, "MessagesToLoadAmount", amountInfo.MessagesToLoadAmount, _db, successResult, failResult) :
+                         await UserHelper.ChangeUserPropertyAsync<int>(amountInfo.AuthUserId, "MessagesToLoadAmount", amountInfo.MessagesToLoadAmount, _repository, successResult, failResult) :
                          new ResultInfo(status: "AmountOfLoadedMessagesFailed", "Недопустимое количество загружаемых сообщений");
             }
             else
@@ -66,10 +65,10 @@ namespace MessageList.Controllers
             ResultInfo result = new ResultInfo();
             ResultInfo successResult = new ResultInfo(status: "KeySaved", info: "Ключ успешно сохранен");
             ResultInfo failResult = new ResultInfo(status: "KeyChangeFailed", info: "Произошла ошибка при сохранении ключа");
-            if (await UserHelper.IsAuthenticatedUserAsync(keyInfo.AuthUserId, User.Identity.Name, _db))
+            if (await UserHelper.IsAuthenticatedUserAsync(keyInfo.AuthUserId, User.Identity.Name, _repository))
             {
                 result = Validator.IsChangePasswordKeyValid(keyInfo.Key) ? 
-                         await UserHelper.ChangeUserPropertyAsync<string>(keyInfo.AuthUserId, "Key", keyInfo.Key.GetCustomAlgoHashCode(SHA256.Create()), _db, successResult, failResult) :
+                         await UserHelper.ChangeUserPropertyAsync<string>(keyInfo.AuthUserId, "Key", keyInfo.Key.GetCustomAlgoHashCode(SHA256.Create()), _repository, successResult, failResult) :
                          new ResultInfo(status: "KeyChangeFailed", "Недопустимый формат ключа");
             }
             else
@@ -83,7 +82,7 @@ namespace MessageList.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ValidateChangePasswordKeyAsync([FromBody] QueryValidateKey keyInfo)
         {
-            User user = await _db.Users.FirstOrDefaultAsync(u => u.Email.Equals(keyInfo.Email));
+            User user = await _repository.GetUserByEmailAsync(keyInfo.Email);
             ResultInfo result = new ResultInfo();
             if (user != null && (Validator.IsChangePasswordKeyValid(user.Key) || !user.Key.Equals(keyInfo.Key.GetCustomAlgoHashCode(SHA256.Create()))))
             {
@@ -104,7 +103,7 @@ namespace MessageList.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ChangePasswordAsync([FromBody] QueryChangePassword newPasswordInfo)
         {
-            User user = await _db.Users.FirstOrDefaultAsync(u => u.Id == newPasswordInfo.AuthUserId);
+            User user = await _repository.GetUserByIdAsync(newPasswordInfo.AuthUserId);
             ResultInfo result = new ResultInfo();
             try
             {
@@ -114,7 +113,7 @@ namespace MessageList.Controllers
                 }
                 else
                 {
-                    if (newPasswordInfo.Mode.Equals("profile") && await UserHelper.IsAuthenticatedUserAsync(newPasswordInfo.AuthUserId, User.Identity.Name, _db))
+                    if (newPasswordInfo.Mode.Equals("profile") && await UserHelper.IsAuthenticatedUserAsync(newPasswordInfo.AuthUserId, User.Identity.Name, _repository))
                     {
                         if (Validator.IsPasswordValid(newPasswordInfo.OldPassword) && Validator.IsPasswordValid(newPasswordInfo.NewPassword))
                         {
@@ -124,7 +123,7 @@ namespace MessageList.Controllers
                             }
                             else
                             {
-                                result = await UserHelper.ChangePasswordAsync(newPasswordInfo.NewPassword, user, _db);
+                                result = await UserHelper.ChangePasswordAsync(newPasswordInfo.NewPassword, user, _repository);
                             }
                         }
                         else
@@ -136,7 +135,7 @@ namespace MessageList.Controllers
                     {
                         if (Validator.IsPasswordValid(newPasswordInfo.NewPassword))
                         {
-                            result = await UserHelper.ChangePasswordAsync(newPasswordInfo.NewPassword, user, _db);
+                            result = await UserHelper.ChangePasswordAsync(newPasswordInfo.NewPassword, user, _repository);
                         }
                         else
                         {
@@ -156,13 +155,12 @@ namespace MessageList.Controllers
         [HttpPost("greeting")]
         public async Task<IActionResult> GreetUserAsync([FromBody] Identificator idContainer)
         {
-            User user = await _db.Users.FirstOrDefaultAsync(userId => userId.Id == idContainer.Id);
+            User user = await _repository.GetUserByIdAsync(idContainer.Id);
             ResultInfo result = new ResultInfo();
             if (user != null)
             {
                 user.IsGreeted = true;
-                _db.Users.Update(user);
-                int res = await _db.SaveChangesAsync();
+                int res = await _repository.UpdateUserInDatabaseAsync(user);
                 result = ResultInfo.CreateResultInfo(res, "UserGreeted", "Приветственное сообщение отключено", "GreetingFailed", "Произошла ошибка при отключении приветственного сообщения");
             }
             else
@@ -176,9 +174,9 @@ namespace MessageList.Controllers
         public async Task<IActionResult> GetUserActivityHistoryAsync([FromQuery] int authUserId)
         {
             IEnumerable<UserRequestInfo> requests = new List<UserRequestInfo>();
-            if (await UserHelper.IsAuthenticatedUserAsync(authUserId, User.Identity.Name, _db))
+            if (await UserHelper.IsAuthenticatedUserAsync(authUserId, User.Identity.Name, _repository))
             {
-                requests = await _db.UserRequestsHistory.Where(r => r.UserId == authUserId).OrderByDescending(req => req.Id).Take(20).ToListAsync();
+                requests = await _repository.GetUserRequestsHistoryAsync(authUserId);
             }
             else
             {
@@ -191,10 +189,10 @@ namespace MessageList.Controllers
         public async Task<IActionResult> GetLastUserActivityAsync([FromQuery] int authUserId)
         {
             UserRequestInfo lastUserRequest = new UserRequestInfo();
-            if (await UserHelper.IsAuthenticatedUserAsync(authUserId, User.Identity.Name, _db))
+            if (await UserHelper.IsAuthenticatedUserAsync(authUserId, User.Identity.Name, _repository))
             {
-                List<UserRequestInfo> userRequests = _db.UserRequestsHistory.Where(r => r.UserId == authUserId).OrderBy(req => req.Id).ToList();
-                lastUserRequest = userRequests.Count > 0 ? userRequests.Last() : new UserRequestInfo();
+                IEnumerable<UserRequestInfo> userRequests = await _repository.GetUserRequestsHistoryAsync(authUserId);
+                lastUserRequest = userRequests.ToList().Count > 0 ? userRequests.Last() : new UserRequestInfo();
             }
             else
             {
