@@ -192,7 +192,7 @@ namespace MessageList.Controllers
             if (await UserHelper.IsAuthenticatedUserAsync(authUserId, User.Identity.Name, _repository))
             {
                 IEnumerable<UserRequestInfo> userRequests = await _repository.GetUserRequestsHistoryAsync(authUserId);
-                lastUserRequest = userRequests.ToList().Count > 0 ? userRequests.Last() : new UserRequestInfo();
+                lastUserRequest = userRequests.Count() > 0 ? userRequests.FirstOrDefault() : new UserRequestInfo();
             }
             else
             {
