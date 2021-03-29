@@ -77,7 +77,7 @@ namespace MessageList.Models.Helpers
             return newUser.Id;
         }
 
-        public static async Task UpdateUserInfo(QueryUserInfo userInfo, User userToUpdate, IRepository repository)
+        public static async Task UpdateUserInfoAsync(QueryUserInfo userInfo, User userToUpdate, IRepository repository)
         {
             User user = await repository.GetUserByEmailAsync(userInfo.Email);
             if (user != null && user.Id != userInfo.Id)

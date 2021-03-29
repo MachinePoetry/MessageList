@@ -70,7 +70,7 @@ namespace MessageList.Controllers
             try
             {
                 User user = await _repository.GetUserByIdAsync((int)userInfo.Id);
-                await UserHelper.UpdateUserInfo(userInfo, user, _repository);
+                await UserHelper.UpdateUserInfoAsync(userInfo, user, _repository);
                 await RoleHelper.CheckThatRoleUserIsIn(userInfo.RolesIds, _repository);
                 int res = await RoleHelper.ChangeUserRoles(userInfo.RolesIds, user, _repository);
                 result = ResultInfo.CreateResultInfo(res, "UserUpdated", "Данные пользователя успешно обновлены", "UserUpdateFailed", "Произошла ошибка при обновлении данных пользователя");
