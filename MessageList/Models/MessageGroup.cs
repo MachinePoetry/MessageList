@@ -24,11 +24,13 @@ namespace MessageList.Models
 
         public MessageGroup() {
             Name = "DefaultName";
+            Messages = new List<Message>();
         }
         public MessageGroup(string name, int userId)
         {
             Name = name;
             UserId = userId;
+            Messages = new List<Message>();
         }
     }
 }
