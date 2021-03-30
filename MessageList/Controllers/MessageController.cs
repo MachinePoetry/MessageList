@@ -31,11 +31,11 @@ namespace MessageList.Controllers
             if (await UserHelper.IsAuthenticatedUserAsync(id, User.Identity.Name, _repository))
             {
                 User user = await _repository.GetUserByIdAsync(id);
-                IEnumerable<MessageGroup> messageGroups = await MessageHepler.GetMessageGroups(user, _repository);
+                IEnumerable<MessageGroup> messageGroups = await MessageHepler.GetMessageGroupsAsync(user, _repository);
 
                 if (counter != null && groupId != null)
                 {
-                    IEnumerable<Message> messages = await MessageHepler.GetMessages((int)groupId, (int)counter, _repository);
+                    IEnumerable<Message> messages = await MessageHepler.GetMessagesAsync((int)groupId, (int)counter, _repository);
                     await MessageHepler.FillMessagesWithFilesAsync(messages, _repository);
                     messageGroups.FirstOrDefault(mg => mg.Id == groupId).Messages = messages.ToList();
                 }
@@ -53,7 +53,7 @@ namespace MessageList.Controllers
             if (await UserHelper.IsAuthenticatedUserAsync(sp.AuthUserId, User.Identity.Name, _repository))
             {
                 User user = await _repository.GetUserByIdAsync(sp.AuthUserId);
-                IEnumerable<MessageGroup> messageGroups = await MessageHepler.GetMessageGroups(user, _repository);
+                IEnumerable<MessageGroup> messageGroups = await MessageHepler.GetMessageGroupsAsync(user, _repository);
 
                 if (!String.IsNullOrEmpty(sp.StringToSearch) && sp.DateToSearch == null)
                 {

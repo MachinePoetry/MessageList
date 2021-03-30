@@ -27,7 +27,7 @@ namespace MessageList.Controllers
             ResultInfo result = new ResultInfo();
             if (await UserHelper.IsAuthenticatedUserAsync(mg.AuthUserId, User.Identity.Name, _repository))
             {
-                result = await MessageHepler.ApplyActionToMessageGroup(mg, _repository, "create");
+                result = await MessageHepler.ApplyActionToMessageGroupAsync(mg, _repository, "create");
             }
             else
             {
@@ -42,7 +42,7 @@ namespace MessageList.Controllers
             ResultInfo result = new ResultInfo();
             if (await UserHelper.IsAuthenticatedUserAsync(mg.AuthUserId, User.Identity.Name, _repository))
             {
-                result = await MessageHepler.ApplyActionToMessageGroup(mg, _repository, "update");
+                result = await MessageHepler.ApplyActionToMessageGroupAsync(mg, _repository, "update");
             }
             else
             {
@@ -58,7 +58,7 @@ namespace MessageList.Controllers
             ResultInfo result = new ResultInfo();
             if (await UserHelper.IsAuthenticatedUserAsync(mg.AuthUserId, User.Identity.Name, _repository))
             {
-                result = await MessageHepler.ApplyActionToMessageGroup(mg, _repository, "delete");
+                result = await MessageHepler.ApplyActionToMessageGroupAsync(mg, _repository, "delete");
             }
             else
             {

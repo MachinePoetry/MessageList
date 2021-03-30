@@ -13,7 +13,7 @@ namespace MessageList.Models.Helpers
 {
     public static class MessageHepler
     {
-        public static async Task<ResultInfo> ApplyActionToMessageGroup(QueryMessageGroup mg, IRepository repository, string mode)
+        public static async Task<ResultInfo> ApplyActionToMessageGroupAsync(QueryMessageGroup mg, IRepository repository, string mode)
         {
             ResultInfo result = new ResultInfo();
             if (mode.Equals("delete") || Validator.IsMessageGroupNameValid(mg.Name))
@@ -32,20 +32,20 @@ namespace MessageList.Models.Helpers
             return result;
         }
 
-        public static async Task<IEnumerable<MessageGroup>> GetMessageGroups(User user, IRepository repository)
+        public static async Task<IEnumerable<MessageGroup>> GetMessageGroupsAsync(User user, IRepository repository)
         {
             // message groups are filled only by images and url previews, because they are lightweight. Other files are uploaded to message later in controller without blob data. 
             IEnumerable<MessageGroup> messageGroups = await repository.GetMessageGroupsAsync(user.Id);
             foreach (var mg in messageGroups)
             {
-                mg.Messages = mg.Messages.AsEnumerable().Reverse().Take(Validator.IsMessagesToLoadAmountValid(user.MessagesToLoadAmount) && user.MessagesToLoadAmount != 0 ? 
+                mg.Messages = mg.Messages.AsEnumerable().Reverse().Take(Validator.IsMessagesToLoadAmountValid(user.MessagesToLoadAmount) && user.MessagesToLoadAmount != 0 ?
                                                                                                               user.MessagesToLoadAmount : int.MaxValue).Reverse().ToList();
                 await FillMessagesWithFilesAsync(mg.Messages, repository);
             }
             return messageGroups;
         }
 
-        public static async Task<List<Message>> GetMessages(int groupId, int counter, IRepository repository)
+        public static async Task<IEnumerable<Message>> GetMessagesAsync(int groupId, int counter, IRepository repository)
         {
             IEnumerable<Message> messages = await repository.GetMessages(groupId);
             await FillMessagesWithFilesAsync(messages, repository);
@@ -56,12 +56,9 @@ namespace MessageList.Models.Helpers
         {
             foreach (var m in messages)
             {
-                IQueryable<VideoFile> video = repository.GetVideoFiles(m.FileCollection.Id);
-                m.FileCollection.Video = await video.ToListAsync();
-                IQueryable<AudioFile> audio = repository.GetAudioFiles(m.FileCollection.Id);
-                m.FileCollection.Audio = await audio.ToListAsync();
-                IQueryable<OtherFile> files = repository.GetOtherFiles(m.FileCollection.Id);
-                m.FileCollection.Files = await files.ToListAsync();
+                m.FileCollection.Video = await repository.GetVideoFiles(m.FileCollection.Id).ToListAsync();
+                m.FileCollection.Audio = await repository.GetAudioFiles(m.FileCollection.Id).ToListAsync();
+                m.FileCollection.Files = await repository.GetOtherFiles(m.FileCollection.Id).ToListAsync();
             }
         }
 
