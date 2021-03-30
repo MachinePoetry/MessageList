@@ -21,15 +21,15 @@ namespace MessageList.Models.Helpers
             return result;
         }
 
-        public static async Task CheckThatRoleUserIsIn(IEnumerable<int> rolesIds, IRepository repository)
+        public static async Task CheckThatRoleUserIsInAsync(IList<int> rolesIds, IRepository repository)
         {
-            if (rolesIds.ToList().Count > 0)
+            if (rolesIds.Count() > 0)
             {
                 Role userRole = await repository.GetRoleByNameAsync("User");
                 int userRoleId = userRole.Id;
                 if (!rolesIds.Contains(userRoleId))
                 {
-                    rolesIds.ToList().Add(userRoleId);
+                    rolesIds.Add(userRoleId);
                 }
             }
             else
@@ -38,17 +38,17 @@ namespace MessageList.Models.Helpers
             }
         }
 
-        public static async Task<int> AddRolesToUser(IEnumerable<int> rolesIds, int newUserId, IRepository repository)
+        public static async Task<int> AddRolesToUserAsync(IEnumerable<int> rolesIds, int newUserId, IRepository repository)
         {
             IEnumerable<int> uniqueRolesIds = rolesIds.Distinct();
             IEnumerable<RolesToUsers> rolesToAdd = uniqueRolesIds.Select(r => new RolesToUsers(userId: newUserId, roleId: r));
             return await repository.SaveUserRolesToDatabaseAsync(rolesToAdd);
         }
 
-        public static async Task<int> ChangeUserRoles(IEnumerable<int> rolesIds, User user, IRepository repository)
+        public static async Task<int> ChangeUserRolesAsync(IEnumerable<int> rolesIds, User user, IRepository repository)
         {
             int res = 0;
-            if (rolesIds.ToList().Count > 0)
+            if (rolesIds.Count() > 0)
             {
                 IEnumerable<int> uniqueRolesIds = rolesIds.Distinct();
                 IEnumerable<RolesToUsers> existingUserRoles = await repository.GetUserRolesAsync(user.Id);
@@ -61,7 +61,7 @@ namespace MessageList.Models.Helpers
                 {
                     IEnumerable<int> existingUserRolesIds = existingUserRoles.Select(r => r.RoleId);
                     IEnumerable<int> rolesIdsToAdd = uniqueRolesIds.Except(existingUserRolesIds);
-                    res = await AddRolesToUser(rolesIdsToAdd, user.Id, repository);
+                    res = await AddRolesToUserAsync(rolesIdsToAdd, user.Id, repository);
                 }
             }
             else

@@ -52,8 +52,8 @@ namespace MessageList.Controllers
             try
             {
                 int newUserId = await UserHelper.CreateUserAsync(userInfo, _repository);
-                await RoleHelper.CheckThatRoleUserIsIn(userInfo.RolesIds, _repository);
-                int res = await RoleHelper.AddRolesToUser(userInfo.RolesIds, newUserId, _repository);
+                await RoleHelper.CheckThatRoleUserIsInAsync(userInfo.RolesIds, _repository);
+                int res = await RoleHelper.AddRolesToUserAsync(userInfo.RolesIds, newUserId, _repository);
                 result = ResultInfo.CreateResultInfo(res, "UserCreated", "Новый пользователь успешно создан", "UserCreationFailed", "Произошла ошибка при добавлении ролей пользователю");
             }
             catch (Exception ex)
@@ -71,8 +71,8 @@ namespace MessageList.Controllers
             {
                 User user = await _repository.GetUserByIdAsync((int)userInfo.Id);
                 await UserHelper.UpdateUserInfoAsync(userInfo, user, _repository);
-                await RoleHelper.CheckThatRoleUserIsIn(userInfo.RolesIds, _repository);
-                int res = await RoleHelper.ChangeUserRoles(userInfo.RolesIds, user, _repository);
+                await RoleHelper.CheckThatRoleUserIsInAsync(userInfo.RolesIds, _repository);
+                int res = await RoleHelper.ChangeUserRolesAsync(userInfo.RolesIds, user, _repository);
                 result = ResultInfo.CreateResultInfo(res, "UserUpdated", "Данные пользователя успешно обновлены", "UserUpdateFailed", "Произошла ошибка при обновлении данных пользователя");
             }
             catch (Exception ex)

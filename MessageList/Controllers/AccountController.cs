@@ -73,7 +73,7 @@ namespace MessageList.Controllers
                     int newUserId = await UserHelper.CreateUserAsync(userInfo, _repository);
                     Role userRole = await _repository.GetRoleByNameAsync("User");
                     int userRoleId = userRole.Id;
-                    int res = await RoleHelper.AddRolesToUser(new List<int> { userRoleId }, newUserId, _repository);
+                    int res = await RoleHelper.AddRolesToUserAsync(new List<int> { userRoleId }, newUserId, _repository);
                     result = ResultInfo.CreateResultInfo(res, "UserCreated", "Новый пользователь успешно создан", "UserCreationFailed", "Произошла ошибка при добавлении ролей пользователю");
 
                     await HttpContext.SignOutAsync();
