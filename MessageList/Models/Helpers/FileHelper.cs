@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 using System.IO;
-using MessageList.Data;
 using MessageList.Models.QueryModels;
 
 namespace MessageList.Models.Helpers
@@ -23,16 +19,6 @@ namespace MessageList.Models.Helpers
                 fileData = ms.ToArray();
             }
             return fileData;
-        }
-
-        public static async Task<int> SaveFilesToDatabaseAsync<T>(IEnumerable<T> files, ApplicationDbContext db, DbSet<T> targetCollection) where T : class
-        {
-            foreach (var file in files)
-            {
-                await targetCollection.AddAsync(file);
-            }
-            int result = await db.SaveChangesAsync();
-            return result;
         }
 
         public static bool isMessageWithFiles(QueryMessage mes)
