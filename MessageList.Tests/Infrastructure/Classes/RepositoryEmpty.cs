@@ -31,9 +31,9 @@ namespace MessageList.Tests.Infrastructure.Classes
 
         // roles actions
         public async Task<IEnumerable<Role>> GetRolesAsync() => await Task.Run(() => new List<Role>());
-        public async Task<Role> GetRoleByNameAsync(string roleName) => null;
+        public async Task<Role> GetRoleByNameAsync(string roleName) => await Task.Run(() => new Role { Id = 1, Name = "User", RolesToUsers = new List<RolesToUsers>() });
         public async Task<IEnumerable<RolesToUsers>> GetUserRolesAsync(int userId) => await Task.Run(() => new List<RolesToUsers>());
-        public async Task<int> SaveUserRolesToDatabaseAsync(IEnumerable<RolesToUsers> userRoles) => await Task.Run(() => 0);
+        public async Task<int> SaveUserRolesToDatabaseAsync(IEnumerable<RolesToUsers> userRoles) => await Task.Run(() => 1);
         public async Task<int> RemoveUserRolesAsync(IEnumerable<RolesToUsers> rolesToRemove) => await Task.Run(() => 0);
 
         // message groups actions
