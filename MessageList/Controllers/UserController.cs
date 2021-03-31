@@ -84,7 +84,7 @@ namespace MessageList.Controllers
         {
             User user = await _repository.GetUserByEmailAsync(keyInfo.Email);
             ResultInfo result = new ResultInfo();
-            if (user != null && (Validator.IsChangePasswordKeyValid(user.Key) || !user.Key.Equals(keyInfo.Key.GetCustomAlgoHashCode(SHA256.Create()))))
+            if (user != null && (!Validator.IsChangePasswordKeyValid(keyInfo.Key) || !user.Key.Equals(keyInfo.Key.GetCustomAlgoHashCode(SHA256.Create()))))
             {
                 result = new ResultInfo("InvalidKey", "Неверный ключ восстановления пароля или недопустимый формат ключа");
             }

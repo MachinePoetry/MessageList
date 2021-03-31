@@ -20,7 +20,7 @@ namespace MessageList.Tests.Infrastructure.Classes
 
         // users actions
         public async Task<User> GetUserByIdAsync(int id) => await Task.Run(() => new User { Id = 10, Email = "email@email.com", Password = "password_hash", MessagesToLoadAmount = 30 });
-        public async Task<User> GetUserByEmailAsync(string email) => await Task.Run(() => new User { Id = 10, Email = "email@email.com", Password = "password_hash", MessagesToLoadAmount = 30 });
+        public async Task<User> GetUserByEmailAsync(string email) => await Task.Run(() => new User { Id = 10, Email = "email@email.com", Password = "password_hash", MessagesToLoadAmount = 30, Key = "6e3b0e6bd28267dc94feba47229b4cb749cbd6685ee8286fb8cd82d4dea99790" });
         public async Task<User> GetAuthenticatedUserAsync(string email) => await Task.Run(() => new User("email@email.com", "password_hash", 30));
         public async Task<User> GetUserByCredentialsAsync(string email, string password) => await Task.Run(() => new User("email@email.com", "password_hash", 30));
         public async Task<IEnumerable<User>> GetUsersFilteredByIdsAsync(IEnumerable<int> ids) => await Task.Run(() => new List<User> { new User("email@email.com", "password_hash", 30) });
