@@ -72,7 +72,8 @@ namespace MessageList.Controllers
                 User user = await _repository.GetUserByIdAsync((int)userInfo.Id);
                 await UserHelper.UpdateUserInfoAsync(userInfo, user, _repository);
                 await RoleHelper.CheckThatRoleUserIsInAsync(userInfo.RolesIds, _repository);
-                int res = await RoleHelper.ChangeUserRolesAsync(userInfo.RolesIds, user, _repository);
+                await RoleHelper.ChangeUserRolesAsync(userInfo.RolesIds, user, _repository);
+                int res = await _repository.UpdateUserInDatabaseAsync(user);
                 result = ResultInfo.CreateResultInfo(res, "UserUpdated", "Данные пользователя успешно обновлены", "UserUpdateFailed", "Произошла ошибка при обновлении данных пользователя");
             }
             catch (Exception ex)
