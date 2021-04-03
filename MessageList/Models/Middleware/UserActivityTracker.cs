@@ -33,10 +33,10 @@ namespace MessageList.Models.Middleware
                 {
                     UserRequestInfo previousUserRequest = db.UserRequestsHistory.Where(req => req.UserId == user.Id).OrderByDescending(r => r.Id).Count() > 0 ?
                                                           db.UserRequestsHistory.Where(req => req.UserId == user.Id).OrderByDescending(r => r.Id).FirstOrDefault() : null;
-                    //string userIp = context.Connection.RemoteIpAddress.ToString();
-                    string userIp = "5.166.180.69";
-                    //string requestString = $"http://ip-api.com/json/{userIp}?fields=query,status,message,country,countryCode,region,regionName,city,zip,lat,lon,timezone,isp,org,as,mobile";
-                    string requestString = "http://ip-api.com/json/5.166.180.69?fields=query,status,message,country,countryCode,region,regionName,city,zip,lat,lon,timezone,isp,org,as,mobile";
+                    string userIp = context.Connection.RemoteIpAddress.ToString();
+                    //string userIp = "5.166.180.69";
+                    string requestString = $"http://ip-api.com/json/{userIp}?fields=query,status,message,country,countryCode,region,regionName,city,zip,lat,lon,timezone,isp,org,as,mobile";
+                    //string requestString = "http://ip-api.com/json/5.166.180.69?fields=query,status,message,country,countryCode,region,regionName,city,zip,lat,lon,timezone,isp,org,as,mobile";
                     DateTime currentDate = DateTime.Now;
                     DateTime lastUserVisit = Convert.ToDateTime(previousUserRequest?.RequestDate);
                     TimeSpan userInactiveHours = currentDate - lastUserVisit;
