@@ -48,6 +48,7 @@ import { FeedbackModal } from './shared/modals/feedback/feedback.modal';
 
 import { RoundSpinner } from './shared/spinners/round/round.spinner';
 import { InlineSpinner } from './shared/spinners/inline/inline.spinner';
+import { PulseSpinner } from './shared/spinners/pulse/pulse.spinner';
 
 import { AuthUserInfoResolver } from './shared/resolvers/auth-user-info.resolver';
 
@@ -66,7 +67,7 @@ const routes: Routes = [
     AppComponent, FrontComponent, HeaderComponent, LoginComponent, RegisterComponent, MainComponent, ProfileComponent, FilePreviewComponent, UrlPreviewComponent, NotFoundComponent,
     MessageComponent, ToastsContainerComponent, AudioPlayerComponent, FocusDirective, EqualValidatorDirective, DateToLocalePipe, SafeUrlPipe, SecondsToTimePipe, BlobToSrcPipe,
     CutLongStringPipe, FileSizePipe, TermsOfUseModal, ConfirmModal, WarningModal, AttachFileModal, ActivityHistoryModal, UserManagementModal, UserInfoModal, FeedbackModal,
-    RoundSpinner, InlineSpinner, ChangePasswordComponent, RestorePasswordComponent
+    RoundSpinner, InlineSpinner, PulseSpinner, ChangePasswordComponent, RestorePasswordComponent
   ],
   imports: [
     BrowserModule, HttpClientModule, RouterModule.forRoot(routes), NgbModule, FormsModule, NgSelectModule, CommonModule, BrowserAnimationsModule
