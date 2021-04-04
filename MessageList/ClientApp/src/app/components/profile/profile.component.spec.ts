@@ -8,6 +8,7 @@ import { ChangePasswordComponent } from './../change-password/change-password.co
 import { ToastsContainerComponent } from './../toasts-container/toasts-container.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgForm, FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { HttpService } from './../../shared/services/http-service/http.service';
 import { ToastService } from './../../shared/services/toast-service/toast.service';
 import { User } from '../../shared/models/user';
@@ -31,6 +32,7 @@ describe('ProfileComponent', () => {
   let mockActivatedRoute = { snapshot: { data: { user: { id: 1 } } } };
   let mockHttpService = { post: jasmine.createSpy('post'), get: jasmine.createSpy('get') };
   let mockToastService = { showDanger: jasmine.createSpy('showDanger'), showSuccess: jasmine.createSpy('showSuccess') };
+  let mockRouter = { navigate: jasmine.createSpy('navigate') };
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -39,6 +41,7 @@ describe('ProfileComponent', () => {
       providers: [
         NgForm,
         { provide: ActivatedRoute, useValue: mockActivatedRoute },
+        { provide: Router, useValue: mockRouter },
         { provide: HttpService, useValue: mockHttpService },
         { provide: ToastService, useValue: mockToastService }
       ],
