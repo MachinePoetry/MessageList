@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { User } from './../../shared/models/user';
@@ -20,7 +20,7 @@ import { UserRequestInfo } from './../../shared/models/userRequestInfo';
   styleUrls: ['./profile.component.css']
 })
 
-export class ProfileComponent implements OnInit, AfterViewInit {
+export class ProfileComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private _httpService: HttpService, private _toastService: ToastService, private _modalService: NgbModal, private _route: ActivatedRoute) { }
 
   public authUserInfo: User = new User;
@@ -156,5 +156,9 @@ export class ProfileComponent implements OnInit, AfterViewInit {
     this._httpService.get('/api/users/getLastUserActivity', { authUserId: this.authUserInfo?.id }).subscribe((data: UserRequestInfo) => {
       this.lastUserRequest = data;
     })
+  }
+
+  ngOnDestroy() {
+    this._toastService.toasts = []
   }
 }

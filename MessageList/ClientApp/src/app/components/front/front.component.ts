@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { HttpService } from '../../shared/services/http-service/http.service';
 import { ToastService } from '../../shared/services/toast-service/toast.service';
@@ -12,7 +12,7 @@ import { FeedbackParams } from './../../shared/models/params/feedbackParams';
   styleUrls: ['./front.component.css']
 })
 
-export class FrontComponent implements OnInit {
+export class FrontComponent implements OnInit, OnDestroy {
   constructor(private _httpService: HttpService, private _toastService: ToastService) { }
 
   @ViewChild('feedbackForm') feedbackForm: NgForm;
@@ -46,5 +46,9 @@ export class FrontComponent implements OnInit {
     this._httpService.get('api/users/getAuthUserInfo').subscribe((data: User) => {
       this.authUserInfo = data;
     });
+  }
+
+  ngOnDestroy() {
+    this._toastService.toasts = []
   }
 }

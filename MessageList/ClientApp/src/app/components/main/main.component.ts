@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ViewChildren, ElementRef, HostListener, ViewEncapsulation, QueryList } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild, ViewChildren, ElementRef, HostListener, ViewEncapsulation, QueryList } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { HttpService } from './../../shared/services/http-service/http.service';
@@ -36,7 +36,7 @@ import { MessageParams } from './../../shared/models/params/messageParams';
   styleUrls: ['./main.component.css']
 })
 
-export class MainComponent implements OnInit, AfterViewInit {
+export class MainComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(private _httpService: HttpService, private _textService: TextService, private _route: ActivatedRoute, private _toastService: ToastService,
               private _modalService: NgbModal, private _fileService: FileService) { }
 
@@ -465,5 +465,9 @@ export class MainComponent implements OnInit, AfterViewInit {
       this.appUrls = this._textService.convertUrlsToAppUrls(urls, this.appUrls);
       this._textService.getPreviewsForUrls(this.appUrls, this.newMessage.urlPreviews);
     }, 2500);
+  }
+
+  ngOnDestroy() {
+    this._toastService.toasts = []
   }
 }
