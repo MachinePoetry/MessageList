@@ -74,6 +74,7 @@ namespace MessageList.Controllers
         }
 
         [HttpPost("create")]
+        [RequestSizeLimit(943_718_400)]
         public async Task<IActionResult> CreateMessageAsync([FromForm] QueryMessage mes)
         {
             int authUserId, messageGroupId;
@@ -113,6 +114,7 @@ namespace MessageList.Controllers
         }
 
         [HttpPost("update")]
+        [RequestSizeLimit(943_718_400)]
         public async Task<IActionResult> UpdateMessageAsync([FromForm] QueryMessage mes)
         {
             int authUserId, selectedMessageId;
