@@ -79,7 +79,7 @@ export class FilePreviewComponent implements AfterViewInit {
     });
   }
 
-  public getVideoData(video: HTMLMediaElement, videoAppFile: AppFile): void {
+  public getVideoData(video: any, videoAppFile: AppFile): void {
     this._fileService.getFileData(videoAppFile, 'video', video, null);
   }
 
