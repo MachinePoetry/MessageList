@@ -42,7 +42,7 @@ export class FileService {
     return fd;
   }
 
-  private _sendDataRequest(appFile: AppFile, fileType: string, mediaFile: any, link: any, addActionsToPromise: () => void): void {
+  private _sendDataRequest(appFile: AppFile, fileType: string, mediaFile: HTMLMediaElement, link: HTMLLinkElement, addActionsToPromise: () => void): void {
     let httpParams: HttpParams = new HttpParams();
     httpParams = httpParams.set('fileId', appFile.id.toString());
     httpParams = httpParams.set('fileType', fileType);
@@ -53,16 +53,16 @@ export class FileService {
       reader.readAsDataURL(data);
       reader.onload = function (e) {
         if (mediaFile) {
-          mediaFile.src = e.target.result;
+          mediaFile.src = e.target.result.toString();
         } else if (link) {
-          link.href = e.target.result;
+          link.href = e.target.result.toString();
           addActionsToPromise ? addActionsToPromise() : null;
         }
       };
     });
   }
 
-  public getFileData(appFile: AppFile, fileType: string, mediaFile?: any, link?: any): void {
+  public getFileData(appFile: AppFile, fileType: string, mediaFile?: HTMLMediaElement, link?: HTMLLinkElement): void {
     if (mediaFile) {
       this._sendDataRequest(appFile, fileType, mediaFile, null, null);
     } else if (link && !link.href.length) {

@@ -4,6 +4,7 @@ import { FilePreviewMode } from './../../shared/models/componentModes/filePrevie
 import { AppFile } from './../../shared/models/appFile';
 import { FileCollection } from './../../shared/models/fileCollection';
 import { BlobToSrcPipe } from './../../shared/pipes/blob-to-src/blob-to-src.pipe';
+import { SpinnerMode } from './../../shared/models/componentModes/spinnerMode';
 
 @Component({
   selector: 'file-preview',
@@ -28,7 +29,9 @@ export class FilePreviewComponent implements AfterViewInit {
   @ViewChildren('fileBlock') fileBlocks: QueryList<ElementRef>;
 
   public isImgModalVisible: boolean = false;
+  public uploadedVideoIds: number[] = []
   public filePreviewMode = FilePreviewMode;
+  public spinnerMode = SpinnerMode;
 
   public setPreviewWidth(collection: File[] | AppFile[]): number {
     return collection.length <= 3 ?  30 : 24;
@@ -79,8 +82,9 @@ export class FilePreviewComponent implements AfterViewInit {
     });
   }
 
-  public getVideoData(video: any, videoAppFile: AppFile): void {
+  public getVideoData(video: HTMLMediaElement, videoAppFile: AppFile): void {
     this._fileService.getFileData(videoAppFile, 'video', video, null);
+    this.uploadedVideoIds.push(videoAppFile.id);
   }
 
   ngAfterViewInit() {

@@ -22,10 +22,13 @@
     <video #video [src]="mode === filePreviewMode.preview ? videoBlock.src : null" class="w-100 h-auto" controls
            [poster]="mode === filePreviewMode.message && !video?.src?.startsWith('data:') ? './../../../assets/img/upload.jpg' : null"></video>
     <div *ngIf="mode === filePreviewMode.preview" class="close-button" (click)="deleteFile(videoBlock)"><span class="mdi mdi-close-box lh-1 close"></span></div>
-    <div *ngIf="videoBlock.id && !video?.src?.startsWith('data:')" id="getFileDataButton" class="close-button" (click)="getVideoData(video, videoBlock)"
+    <div *ngIf="videoBlock.id && !uploadedVideoIds.includes(videoBlock.id) && !video?.src?.startsWith('data:')" id="getFileDataButton" class="close-button" (click)="getVideoData(video, videoBlock)"
          [ngClass]="mode === filePreviewMode.message ? 'mt-1 mr-1' : 'mt-0 mr-4'">
       <span class="mdi mdi-download-circle lh-1 close" id="getFileDataButton" placement="top" container="body"
             ngbTooltip="Нажмите на кнопку, чтобы подгрузить видео для просмотра. Пока только так. &#10; ¯\_(ツ)_/¯"></span>
+    </div>
+    <div *ngIf="videoBlock.id && uploadedVideoIds.includes(videoBlock.id) && !video?.src?.startsWith('data:')" class="mt-2 mr-2" id="uploadDataSpinnerContainer">
+      <round-spinner [mode]="spinnerMode.uploadData"></round-spinner>
     </div>
     <div class="mx-1">
       <span class="small text-wrap" [ngClass]="mode === filePreviewMode.preview ? 'text-light' : 'dark-color-text'">{{videoBlock.name | cutLongString: 30:'  [ ... ]'}}</span>

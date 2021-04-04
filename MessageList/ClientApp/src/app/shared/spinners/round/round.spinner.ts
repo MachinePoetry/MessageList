@@ -18,6 +18,8 @@ export class RoundSpinner {
       result = 130;
     } else if (this.mode === this._spinnerMode.upLoad) {
       result = 30;
+    } else if (this.mode === this._spinnerMode.uploadData) {
+      result = 20;
     }
     return result;
   }

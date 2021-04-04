@@ -23,7 +23,7 @@ export class AudioPlayerComponent {
   public volume: number = 1;
   public filePreviewMode = FilePreviewMode;
 
-  public togglePlay(audio: any): void {
+  public togglePlay(audio: HTMLMediaElement): void {
 
     if ((this.audioFile instanceof File) && !audio.src.startsWith('data:')) {
       if (!this.audioFile.src) {

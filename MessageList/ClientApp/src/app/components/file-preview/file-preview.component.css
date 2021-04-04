@@ -116,6 +116,14 @@ span {
   cursor: pointer;
 }
 
+#uploadDataSpinnerContainer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: auto;
+  width: auto;
+}
+
 .enlarge-image-button span {
   font-size: 100%;
 }
