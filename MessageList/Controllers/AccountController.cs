@@ -91,9 +91,10 @@ namespace MessageList.Controllers
         }
 
         [HttpGet("signOut")]
-        public async Task SignOut()
+        public async Task<IActionResult> SignOut()
         {
             await HttpContext.SignOutAsync();
+            return Json(new User());
         }
 
         private async Task AuthenticateAsync(string userName)

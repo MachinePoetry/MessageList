@@ -1,5 +1,6 @@
 import { HeaderComponent } from './header.component';
 import { HttpService } from './../../shared/services/http-service/http.service';
+import { Router } from '@angular/router';
 import { User } from './../../shared/models/user';
 import { of } from 'rxjs';
 import { TestBed, ComponentFixture } from '@angular/core/testing';
@@ -10,16 +11,21 @@ describe('HeaderComponent', () => {
   let mockHttpService = {
     get: jasmine.createSpy('get').and.returnValue(of('report created'))
   };
+  let mockRouter = { navigate: jasmine.createSpy('navigate') };
 
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
       declarations: [HeaderComponent],
-      providers: [{ provide: HttpService, useValue: mockHttpService }]
+      providers: [
+        { provide: HttpService, useValue: mockHttpService },
+        { provide: Router, useValue: mockRouter },
+      ],
     });
     fixture = TestBed.createComponent(HeaderComponent);
     component = fixture.componentInstance;
     mockHttpService.get.calls.reset();
+    mockRouter.navigate.calls.reset();
 
     component.authUserInfo = new User();
     fixture.detectChanges();
