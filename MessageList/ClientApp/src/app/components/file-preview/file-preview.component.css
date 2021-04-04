@@ -118,8 +118,8 @@ span {
 
 #uploadDataSpinnerContainer {
   position: absolute;
-  top: 0;
-  right: 0;
+  top: -10px;
+  right: 22px;
   height: auto;
   width: auto;
 }
