@@ -102,7 +102,7 @@ input[type=range]:focus {
 }
 
   /*moz based*/
-input[type=range]::-moz-range-track {
+input[type=range].light-mode::-moz-range-track {
   position: relative;
   height: 2px;
   bottom: 1px;
@@ -112,7 +112,18 @@ input[type=range]::-moz-range-track {
   border-radius: 3px;
 }
 
-input[type=range]::-moz-range-thumb {
+input[type=range].dark-mode::-moz-range-track {
+  position: relative;
+  height: 2px;
+  bottom: 1px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: #142C40;
+  border-radius: 3px;
+}
+
+
+input[type=range].light-mode::-moz-range-thumb {
   height: 6px;
   width: 6px;
   border-radius: 7px;
@@ -121,8 +132,21 @@ input[type=range]::-moz-range-thumb {
   margin-top: -1px;
 }
 
-input[type="range"]::-moz-range-progress {
+input[type=range].dark-mode::-moz-range-thumb {
+  height: 6px;
+  width: 6px;
+  border-radius: 7px;
+  background: #142C40;
+  cursor: pointer;
+  margin-top: -1px;
+}
+
+input[type="range"].light-mode::-moz-range-progress {
   background-color: #F6F6F6;
+}
+
+input[type="range"].dark-mode::-moz-range-progress {
+  background-color: #142C40;
 }
 
   /*IE based*/
